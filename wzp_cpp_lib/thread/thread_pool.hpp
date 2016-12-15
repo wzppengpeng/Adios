@@ -74,7 +74,7 @@ namespace wzp{
 		}
 
 		template<typename F>
-		void submit(F f) {
+		void submit(F&& f) {
 			task_queue.push(Task(f));
 		}
 
