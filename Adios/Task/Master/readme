@@ -1,0 +1,4 @@
+Master is not a program which can run now, it is just a template of map, check and reduce
+
+it will give some template(not C++ template, just a type) to split job from different streams,
+users need to override these fucntions, although it has given a default method

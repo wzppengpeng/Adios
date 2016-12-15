@@ -1,0 +1,7 @@
+一个最基本的C++ rest api框架
+整个框架在使用时参照main.cpp
+使用一个哈希表来存路径和对应的handle,handle使用一个key值（string类型）来标示
+所以添加一个新的rest api只需两步
+    第一：在HandleFactory中添加对应的key对应的继承的模板handle(handle采用模板模式，只能有get和post两个公共接口)
+         因此在新加入的Handle中应自行注意验证参数
+    第二：在最外层server的run之前将路径对应的key值输入哈希表，如{{"/api/test", "test"}}

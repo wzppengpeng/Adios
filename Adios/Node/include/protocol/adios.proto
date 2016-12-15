@@ -1,0 +1,46 @@
+package adios_proto;
+
+enum MasterTaskType
+{
+    MANAGENODE = 1;
+    DELEVERY = 2;
+    ASK = 3;
+    PING = 4;
+}
+
+enum SlaveMessageType
+{
+    UPLOAD = 1;
+    ANSWER = 2;
+}
+
+message Task
+{
+    required string master_ip = 1;
+    required int32 master_port = 2;
+
+    required MasterTaskType task_type = 3;
+
+    optional string node_name = 4;
+    optional string task_queue_name = 5;
+
+    optional int64 task_id = 6;
+    optional string task_name = 7;
+
+    optional int32 check_info = 8;
+}
+
+message Result
+{
+    required string slave_ip = 1;
+    required int32 slave_port = 2;
+
+    required SlaveMessageType answer_type = 3;
+
+    optional string client_cmd = 4;
+
+    optional int64 task_id = 5;
+    optional string task_result = 6;
+
+    optional int32 answer_info = 7;
+}
