@@ -455,6 +455,9 @@ void test_thread_pool() {
     int i = 1;
     while(cin>>s) {
         pool.submit([&s, i]{ print(s, i);});
+        pool.submit([&s, i]{ print(s, i * 10);});
+        pool.submit([&s, i]{ print(s, i * 100);});
+        pool.submit([&s, i]{ print(s, i * 1000);});
         ++i;
     }
 }
