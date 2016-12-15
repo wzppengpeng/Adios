@@ -65,7 +65,6 @@ std::string HttpResponse::HttpResponse::headers() {
     res.append(server_info);
     res.append("Content-Type: text/html\r\n");
     res.append("\r\n");
-    res.append("hello world\r\n");
     return res;
 }
 
