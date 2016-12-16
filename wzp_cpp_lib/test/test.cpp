@@ -330,6 +330,10 @@ void test_funciton(){
     print("test print", 1, 4.5, "wzp");
     print("----------print ok----------");
 
+    print("test print_err");
+    print_err("this is not right");
+    print("----------------");
+
     print("------------");
     print("---test max----");
     print(wzp::max(1, 2.7, 5.7, 4, 8.6f));

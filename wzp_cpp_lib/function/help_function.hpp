@@ -119,7 +119,22 @@ void print(T&& t){
 template<typename T, typename... Args>
 void print(T&& t, Args&&... args){
     std::cout<<t<<" ";
-    print(args...);
+    print(std::forward<Args>(args)...);
+}
+
+template<typename T>
+/**
+ * [print_err description]
+ * @param t any type which can use <<
+ */
+void print_err(T&& t) {
+    std::cerr<<t<<std::endl;
+}
+
+template<typename T, typename... Args>
+void print_err(T&& t, Args&&... args) {
+    std::cerr<<t<<" ";
+    print_err(std::forward<Args>(args)...);
 }
 
 /*for now test max*/
