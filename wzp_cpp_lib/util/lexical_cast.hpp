@@ -66,6 +66,47 @@ namespace detail
         }
     };
 
+    //for string
+    template<>
+    struct Converter<int, string>
+    {
+        static int convert(const string& from) {
+            return std::stoi(from);
+        }
+    };
+
+    template<>
+    struct Converter<long, string>
+    {
+        static long convert(const string& from) {
+            return std::stol(from);
+        }
+    };
+
+    template<>
+    struct Converter<long long, string>
+    {
+        static long long convert(const string& from) {
+            return std::stoll(from);
+        }
+    };
+
+    template<>
+    struct Converter<double, string>
+    {
+        static double convert(const string& from) {
+            return std::stod(from);
+        }
+    };
+
+    template<>
+    struct Converter<float, string>
+    {
+        static float convert(const string& from) {
+            return std::stof(from);
+        }
+    };
+
     //to bool
     template <typename From>
     struct Converter<bool, From>

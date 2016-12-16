@@ -370,7 +370,14 @@ void test_util(){
     cout << lexical_cast<bool>(1) << endl;
     cout << lexical_cast<double>("1.2") << endl;
     cout << lexical_cast<float>("1.2") << endl;
-    string s = "true";
+    print("test from string");
+    string s("1.67");
+    print(lexical_cast<int>(s));
+    print(lexical_cast<float>(s));
+    print(lexical_cast<double>(s));
+    print(lexical_cast<long long>(s));
+    print("+++++++++++");
+    s = "true";
     cout << lexical_cast<bool>(s) << endl;
     const char* p = "false";
     cout << lexical_cast<bool>(p) << endl;
