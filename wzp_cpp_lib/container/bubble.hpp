@@ -83,6 +83,10 @@ public:
         return m_data[offset(n, c, h, w)];
     }
 
+    inline const Dtype& at(const int n, const int c = 0, const int h = 0, const int w = 0) const {
+        return m_data[offset(n, c, h, w)];
+    }
+
     //print the bubble
     void print_bubble();
 
