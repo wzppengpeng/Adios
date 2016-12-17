@@ -9,7 +9,7 @@ namespace wzp{
     class file_system{
     public:
         /*get all files info*/
-        static bool get_all_files(const std::string& dir_path,
+        inline static bool get_all_files(const std::string& dir_path,
                     std::vector<std::string>& files_vec){
             struct dirent* ptr;
             DIR* dir;
@@ -24,7 +24,7 @@ namespace wzp{
         }
 
         /*get the dir files by the postfix*/
-        static bool get_files_by_postfix(const std::string& dir_path,
+        inline static bool get_files_by_postfix(const std::string& dir_path,
                     std::vector<std::string>& files_vec, const std::string& postfix){
             struct dirent* ptr;
             DIR* dir;

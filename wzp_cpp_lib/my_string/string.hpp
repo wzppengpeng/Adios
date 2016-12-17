@@ -62,7 +62,7 @@ inline static bool trim(std::string& str) {
 
 /*the string format*/
 template<typename T>
-inline std::string format(std::string&& str, T&& t) {
+inline static std::string format(std::string&& str, T&& t) {
     auto begin = str.find_first_of('{');
     auto end = str.find_first_of('}');
     return std::move(str.substr(0, begin) + wzp::convert_to_string(std::forward<T>(t))
@@ -71,7 +71,7 @@ inline std::string format(std::string&& str, T&& t) {
 
 // /*the string format with any params*/
 template<typename T, typename... Args>
-inline std::string format(std::string&& str, T&& t, Args&&... args) {
+inline static std::string format(std::string&& str, T&& t, Args&&... args) {
     auto begin = str.find_first_of('{');
     auto end = str.find_first_of('}');
     return std::move(format(std::move(str.substr(0, begin) + wzp::convert_to_string(std::forward<T>(t))

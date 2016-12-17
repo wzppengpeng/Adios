@@ -70,7 +70,7 @@ namespace detail
     template<>
     struct Converter<int, string>
     {
-        static int convert(const string& from) {
+        inline static int convert(const string& from) {
             return std::stoi(from);
         }
     };
@@ -78,7 +78,7 @@ namespace detail
     template<>
     struct Converter<long, string>
     {
-        static long convert(const string& from) {
+        inline static long convert(const string& from) {
             return std::stol(from);
         }
     };
@@ -86,7 +86,7 @@ namespace detail
     template<>
     struct Converter<long long, string>
     {
-        static long long convert(const string& from) {
+        inline static long long convert(const string& from) {
             return std::stoll(from);
         }
     };
@@ -94,7 +94,7 @@ namespace detail
     template<>
     struct Converter<double, string>
     {
-        static double convert(const string& from) {
+        inline static double convert(const string& from) {
             return std::stod(from);
         }
     };
@@ -102,7 +102,7 @@ namespace detail
     template<>
     struct Converter<float, string>
     {
-        static float convert(const string& from) {
+        inline static float convert(const string& from) {
             return std::stof(from);
         }
     };
