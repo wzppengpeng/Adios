@@ -88,7 +88,7 @@ public:
     }
 
     //print the bubble
-    void print_bubble();
+    void print_bubble() const;
 
     /*********************************/
     /*             place                  */
@@ -259,7 +259,7 @@ Bubble<Dtype>::Bubble(const vector<int>& shape) {
 }
 
 template<typename Dtype>
-void Bubble<Dtype>::print_bubble() {
+void Bubble<Dtype>::print_bubble() const {
     cout<<"[";
     for(int n = 0; n < num(); ++n) {
         cout<<"\n[";
