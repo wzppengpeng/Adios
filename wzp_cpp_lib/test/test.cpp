@@ -25,6 +25,7 @@
 #include "util/serialize.hpp"
 #include "executor1.hpp"
 #include "executor2.hpp"
+#include "reflection/reflection.hpp"
 #include "thread/thread_pool.hpp"
 #include "task/task.hpp"
 #include "unix/cmd.hpp"
@@ -63,6 +64,31 @@ void print_vector(const vector<Dtype>& v) {
     }
     cout<<')'<<std::endl;
 }
+
+//test the reflection
+class B {
+public:
+    virtual void fuck() = 0;
+};
+
+class D : public B {
+public:
+    D() {}
+    void fuck() override {print("I'm D");}
+private:
+    static ReflectionRegister(B, D) regis_d;
+};
+
+class C : public B {
+public:
+    C() {}
+    void fuck() override {print("I'm C");}
+private:
+    static ReflectionRegister(B, C) regis_c;
+};
+
+ReflectionRegister(B, C) C::regis_c("C");
+ReflectionRegister(B, D) D::regis_d("D");
 
 /*help function*/
 
@@ -473,6 +499,15 @@ void test_thread_pool() {
     }
 }
 
+void test_reflection() {
+    print("******test reflection*********");
+    auto work = Reflection<B>::create_unique("D");
+    work->fuck();
+    work = Reflection<B>::create_unique("C");
+    work->fuck();
+    print("*****************************");
+}
+
 void test_task() {
     print("----------");
     print("test list task");
@@ -495,7 +530,7 @@ void test_unix() {
 
 void print_help(){
     print("test_string", "test_log", "test_funciton", "test_util", "test_array",
-        "test_factory", "test_thread_pool", "test_container", "test_task", "test_unix");
+        "test_factory", "test_thread_pool", "test_container", "test_task", "test_unix", "test_reflection");
 }
 
 int main(int argc, char* argv[]){
@@ -534,6 +569,9 @@ int main(int argc, char* argv[]){
     }
     else if(a == "test_unix") {
         test_unix();
+    }
+    else if(a == "test_reflection") {
+        test_reflection();
     }
     else
     {
