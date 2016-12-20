@@ -11,6 +11,7 @@
     . 类型转换, 类型打印, 定时器, 使用简便的序列化函数
     . 任务注册工厂
     . Redis数据库基于hiredis的C++二次封装，以及基于redis队列的循环任务监听
+    . Reflection(C++11轻量级反射)
     . Task，链式调用的函数对象
     . 一些unix命令或内核的封装
 
@@ -85,7 +86,9 @@
         * executor_factory.hpp：一个自动注册的对象工厂，使用宏在头文件中进行注册REGISTER_EXECUTOR(T, key)即可，实际上只是将该类型进行了构造函数的函数对象的注册，然后在使用中使用wzp::factory::produce_unique等进行对象的创建。注意，注册对象构造函数只能在hpp中完成，以免引起连接错误。
     . redis:
         * redis_oper.hpp:对hiredis.h的简单封装，新建对象后提供get/set/rpush/lpop/hash_set/hash_get/hash_delete/del等操作
-        * redis_task_listen.hpp:实际是对redis blpop brpop的二次封装，监听队列，然后pop队列调用一个上层所给的handler来处理即可，在使用上建议使用一个智能指针进行包裹后，可以使用多asnyc并行执行等。即封装一个worker类，类中包含比如算法等模块，然后将算法的调用接口封装为函数对象传入即可w
+        * redis_task_listen.hpp:实际是对redis blpop brpop的二次封装，监听队列，然后pop队列调用一个上层所给的handler来处理即可，在使用上建议使用一个智能指针进行包裹后，可以使用多asnyc并行执行等。即封装一个worker类，类中包含比如算法等模块，然后将算法的调用接口封装为函数对象传入即可
+    . reflection
+        * reflection.hpp:类似于之前的那个注册工厂，但是更加易于使用，重点在于简化factory模式，对于子类使用一个静态变量达到提前注册的目的，然后只需要根据注册的类名进行创建对象即可，目前不适用于模板类
     . task
         * task.hpp:包含一个链式传递函数对象的任务模板，可以设定要链式进行的任务，直到run才会真的执行
     . unix:
