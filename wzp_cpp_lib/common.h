@@ -30,4 +30,6 @@
         }
 #endif // DELETE
 
+//doc
+
 #endif // COMMON_H
