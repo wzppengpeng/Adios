@@ -158,7 +158,7 @@ namespace detail
     template <>
     struct Converter<bool, string>
     {
-        static bool convert(const string& from)
+        inline static bool convert(const string& from)
         {
             return detail::convert(from.c_str());
         }
@@ -167,7 +167,7 @@ namespace detail
     template <>
     struct Converter<bool, const char*>
     {
-        static bool convert(const char* from)
+        inline static bool convert(const char* from)
         {
             return detail::convert(from);
         }
@@ -176,7 +176,7 @@ namespace detail
     template <>
     struct Converter<bool, char*>
     {
-        static bool convert(char* from)
+        inline static bool convert(char* from)
         {
             return detail::convert(from);
         }
@@ -185,7 +185,7 @@ namespace detail
     template <unsigned N>
     struct Converter<bool, const char[N]>
     {
-        static bool convert(const char(&from)[N])
+        inline static bool convert(const char(&from)[N])
         {
             return detail::convert(from);
         }
@@ -194,7 +194,7 @@ namespace detail
     template <unsigned N>
     struct Converter<bool, char[N]>
     {
-        static bool convert(const char(&from)[N])
+        inline static bool convert(const char(&from)[N])
         {
             return detail::convert(from);
         }
@@ -204,7 +204,7 @@ namespace detail
     template <typename From>
     struct Converter<string, From>
     {
-        static string convert(const From& from)
+        inline static string convert(const From& from)
         {
             return std::to_string(from);
         }
