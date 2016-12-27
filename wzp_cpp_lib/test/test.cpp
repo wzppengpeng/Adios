@@ -1,5 +1,7 @@
 #include <iostream>
 #include <thread>
+#include <set>
+
 
 // #define LEVELDB
 
@@ -12,6 +14,7 @@
 #include "container/smart_singleton.hpp"
 #include "container/grid.hpp"
 #include "container/bubble.hpp"
+#include "container/binary_search.hpp"
 
 #ifdef LEVELDB
 #include "container/grid_plus.hpp"
@@ -261,6 +264,36 @@ void test_container() {
     gb.print_grid();
     print("-----------------------------");
     #endif
+
+    print("*******test Binary Search Container*******");
+    vector<int> data;
+    data.reserve(1000000);
+    for(int i = 1000000; i > 0; --i) {
+        data.push_back(i);
+    }
+    Timer t;
+    set<int> normal_set(data.begin(), data.end());
+    print("normal create time", t.elapsed_micro());
+    t.reset();
+
+    BinSet<int> bin_set(std::move(data));
+    print("bin create time", t.elapsed_micro());
+    print("-----test find function------");
+    t.reset();
+    auto normal = normal_set.find(676472);
+    print("normal find time", t.elapsed_micro(), *normal);
+    t.reset();
+    auto bin_ = bin_set.find(676472);
+    print("bin find time", t.elapsed_micro(), *bin_);
+    print("-------test erase---------");
+    t.reset();
+    normal_set.erase(676472);
+    print("normal erase time", t.elapsed_micro());
+    t.reset();
+    bin_set.erase(676472);
+    print("bin erase time", t.elapsed_micro());
+    print("exist 676472 ? ", bin_set.exist(676472));
+    print("******test finished********");
 }
 
 void test_array(){
