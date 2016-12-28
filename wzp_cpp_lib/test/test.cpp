@@ -422,6 +422,7 @@ void test_funciton(){
     print("right answer is 2^5 = 32", MetaPow(2, 5));
     print("right answer is 10^5 = 100000", MetaPow(10, 5));
     print("--------test ok-----------");
+
 }
 
 void test_util(){

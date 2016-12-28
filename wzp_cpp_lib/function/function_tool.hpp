@@ -2,6 +2,7 @@
 #define FUNCION_TOOL_HPP_
 
 #include <utility>
+#include <string>
 
 using std::declval;
 
