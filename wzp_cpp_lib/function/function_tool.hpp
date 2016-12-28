@@ -60,7 +60,62 @@ auto compose(Func1 f1, Func2 f2, Func3 f3, Fs... fs)
     return compose(compose(f1, f2), f3, fs...);
 }
 
+/*
+*******************
+some meta functions
+******************
+*/
+/*max function*/
+template<typename T, T... list>
+struct meta_max;
+
+template<typename T, T l, T r>
+struct meta_max<T, l, r>
+{
+    const static T value = l > r ? l : r;
+};
+
+template<typename T, T l, T r, T... rest>
+struct meta_max<T, l, r, rest...>
+{
+    const static T temp = meta_max<T, l, r>::value;
+    const static T value = meta_max<T, temp, rest...>::value;
+};
+/*--------------------------------*/
+
+/*meta min function*/
+template<typename T, T... list> struct meta_min;
+
+template<typename T, T l, T r>
+struct meta_min<T, l, r>
+{
+    const static int value = l < r ? l : r;
+};
+
+template<typename T, T l, T r, T... rest>
+struct meta_min<T, l, r, rest...>
+{
+    const static T temp = meta_min<T, l, r>::value;
+    const static T value = meta_min<T, temp, rest...>::value;
+};
+/*------------------------------*/
+
+/*the pow function*/
+template<size_t n, size_t m>
+struct meta_pow
+{
+    enum { value = n * meta_pow<n, m - 1>::value};
+};
+
+template<size_t n>
+struct meta_pow<n, 0>
+{
+    enum { value = 1 };
+};
 
 }//wzp
+
+//use macro to easy the call process
+#define MetaPow(n, m) wzp::meta_pow<n, m>::value
 
 #endif /*FUNCION_TOOL_HPP_*/

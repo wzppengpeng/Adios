@@ -174,40 +174,6 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 }
 
 
-/*max function*/
-template<typename T, T... list>
-struct meta_max;
-
-template<typename T, T l, T r>
-struct meta_max<T, l, r>
-{
-    const static T value = l > r ? l : r;
-};
-
-template<typename T, T l, T r, T... rest>
-struct meta_max<T, l, r, rest...>
-{
-    const static T temp = meta_max<T, l, r>::value;
-    const static T value = meta_max<T, temp, rest...>::value;
-};
-/*--------------------------------*/
-
-/*meta min function*/
-template<typename T, T... list> struct meta_min;
-
-template<typename T, T l, T r>
-struct meta_min<T, l, r>
-{
-    const static int value = l < r ? l : r;
-};
-
-template<typename T, T l, T r, T... rest>
-struct meta_min<T, l, r, rest...>
-{
-    const static T temp = meta_min<T, l, r>::value;
-    const static T value = meta_min<T, temp, rest...>::value;
-};
-/*------------------------------*/
 
 }//wzp
 

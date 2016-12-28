@@ -417,6 +417,11 @@ void test_funciton(){
     print("meta max of 1, 3, 5, 2:", x);
     x = meta_min<int, 1, 3, 5, 2>::value;
     print("meta min of 1, 3, 5, 2:", x);
+
+    print("--------test meta pow function-----------");
+    print("right answer is 2^5 = 32", MetaPow(2, 5));
+    print("right answer is 10^5 = 100000", MetaPow(10, 5));
+    print("--------test ok-----------");
 }
 
 void test_util(){
