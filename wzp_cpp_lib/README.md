@@ -19,6 +19,7 @@
     . config：
         * config_parser.hpp:简单的按行处理的配置文件解析，可以设置注释符号
         * command_parser.hpp:单例模式处理命令行的解析，设置--xx，统一使用这种格式
+        * arg_parser.hpp:单例模式解析命令行（微软风格），使用config=xxx的形式
 
     . container:
         * threadsafe_queue.h:一个线程安全模板队列，可以设置处理优先级
