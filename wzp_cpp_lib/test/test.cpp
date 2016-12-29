@@ -5,7 +5,7 @@
 
 
 // #define LEVELDB
-
+#include "config/arg_parser.hpp"
 #include "my_string/string.hpp"
 #include "log/log.hpp"
 #include "container/array_args.hpp"
@@ -602,6 +602,10 @@ void print_help(){
 }
 
 int main(int argc, char* argv[]){
+    //test the arg_parser
+    // ArgParser::parse(argc, argv);
+    // print("the time is", ArgParser::get<int>("time"));
+    // print("the config is", ArgParser::get("config"));
     if(argc != 2){
         print_help();
         cerr<<"the input num is not ok"<<endl;
