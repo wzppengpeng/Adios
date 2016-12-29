@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <set>
+#include <map>
 
 
 // #define LEVELDB
@@ -293,6 +294,34 @@ void test_container() {
     bin_set.erase(676472);
     print("bin erase time", t.elapsed_micro());
     print("exist 676472 ? ", bin_set.exist(676472));
+
+    print("--------test binary map------");
+    vector<pair<int, int>> meta_data;
+    meta_data.reserve(1000000);
+    for(int i = 1000000; i > 0; --i) {
+        meta_data.emplace_back(i, i - 5);
+    }
+    t.reset();
+    std::map<int, int> normal_map(meta_data.begin(), meta_data.end());
+    print("normal create time", t.elapsed_micro());
+    t.reset();
+    BinMap<int, int> bin_map(std::move(meta_data));
+    print("bin map create time", t.elapsed_micro());
+    print("test find function----");
+    t.reset();
+    auto _normal = normal_map.find(676472);
+    print("normal find time", t.elapsed_micro(), _normal->second);
+    t.reset();
+    auto _bin = bin_map.find(676472);
+    print("bin find time", t.elapsed_micro(), _bin->second);
+    print("-------test erase---------");
+    t.reset();
+    normal_map.erase(676472);
+    print("normal erase time", t.elapsed_micro());
+    t.reset();
+    bin_map.erase(676472);
+    print("bin erase time", t.elapsed_micro());
+    print("exist 676472 ? ", bin_map.exist(676472));
     print("******test finished********");
 }
 
