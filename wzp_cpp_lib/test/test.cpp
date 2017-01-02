@@ -34,6 +34,8 @@
 #include "task/task.hpp"
 #include "unix/cmd.hpp"
 
+#include "linq/linq.hpp"
+
 #include "common.h"
 
 using namespace std;
@@ -596,9 +598,29 @@ void test_unix() {
     print("---------------------");
 }
 
+/**
+ * test Linq
+ */
+void test_linq() {
+    print("*******test the main from function********");
+    vector<int> v {1, 2, 5, 2, 6, 8, 2, 0, 5};
+    print_vector(v);
+    print("use from fcuntion to print(ie:use the for range function, implement by std::begin and std::end)");
+    for(auto i : from(v)) {
+        cout<<i<<" ";
+    }
+    cout<<endl;
+    for(auto i : from(from(from(v)))) {
+        cout<<i<<" ";
+    }
+    cout<<endl;
+    print("*******************************************");
+}
+
 void print_help(){
     print("test_string", "test_log", "test_funciton", "test_util", "test_array",
-        "test_factory", "test_thread_pool", "test_container", "test_task", "test_unix", "test_reflection");
+        "test_factory", "test_thread_pool", "test_container", "test_task", "test_unix",
+         "test_reflection", "test_linq");
 }
 
 int main(int argc, char* argv[]){
@@ -644,6 +666,9 @@ int main(int argc, char* argv[]){
     }
     else if(a == "test_reflection") {
         test_reflection();
+    }
+    else if(a == "test_linq") {
+        test_linq();
     }
     else
     {
