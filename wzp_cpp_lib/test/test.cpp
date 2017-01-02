@@ -614,6 +614,18 @@ void test_linq() {
         cout<<i<<" ";
     }
     cout<<endl;
+    print("*****test select function********");
+    auto q_range = from(v).select([](int x){ return x*2; });
+    cout<<"select the two out: ";
+    for(auto q : q_range) {
+        cout<<q<<" ";
+    }
+    cout<<endl;
+    print("the count of it is:", q_range.count());
+    print("*****test to_vector and some immeditate functions*****");
+    auto squre_vec = walk_vector<int>(from(v).select([](int x){
+     return x * x; }).select([](int x){ return x - 5; }));
+    print_vector(squre_vec);
     print("*******************************************");
 }
 

@@ -16,6 +16,17 @@ auto from(const Container& c)
     return LinqEnumerable<decltype(std::begin(c))>(std::begin(c), std::end(c));
 }
 
+/**
+ * walk the iterators, and change the LinqEnumarable into a vector
+ */
+template<typename T, typename Iterator>
+std::vector<T> walk_vector(const LinqEnumerable<Iterator>& linq_enumerable) {
+    std::vector<T> res;
+    for(auto q : linq_enumerable) {
+        res.emplace_back(static_cast<T>(q));
+    }
+    return std::move(res);
+}
 
 } //wzp
 
