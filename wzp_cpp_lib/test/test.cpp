@@ -621,7 +621,7 @@ void test_linq() {
         cout<<q<<" ";
     }
     cout<<endl;
-    print("the count of it is:", q_range.count());
+    print("the first is ", q_range.first(), " the count of it is:", q_range.count());
     print("*****test to_vector and some immeditate functions*****");
     auto squre_vec = walk_vector<int>(from(v).select([](int x){
      return x * x; }).select([](int x){ return x - 5; }));

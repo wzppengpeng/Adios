@@ -94,7 +94,8 @@ public:
     Element first() const {
         if(empty())
             throw std::logic_error("the Enumarable is empty");
-        return *m_begin;
+        auto it = m_begin;
+        return *it;
     }
 
     /**
