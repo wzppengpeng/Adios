@@ -14,6 +14,7 @@
     . Reflection(C++11轻量级反射)
     . Task，链式调用的函数对象
     . 一些unix命令或内核的封装
+    . LINQ:C#风格的容器LINQ操作，延迟运算，便利操作的语法糖
 
 ## 分目录情况：
     . config：
@@ -96,3 +97,8 @@
     . unix:
         * cmd.hpp:包含类似于php system函数的函数，输入一个字符串指令，子进程执行指令，将结果放入一个vector中，通过返回值bool来
         明确是否执行成功。
+    . linq:
+        *linq.hpp:实际使用只需引入这个文件即可，包含一个from函数将STL迭代器转为Enumarable对象，既保存了一对表示区间的迭代器
+        *linq_enumerable.hpp:最基本的保存迭代器的类型，包含select,where,to_vector,first,count等操作
+        *select_iterator.hpp:select迭代器，保存对于指向元素的运算方法
+        *where_iterator.hpp:where迭代器，保存是否指向元素符合bool要求

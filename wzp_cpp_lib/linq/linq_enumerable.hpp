@@ -8,14 +8,10 @@
 #include <stdexcept>
 
 #include "linq/select_iterator.hpp"
+#include "linq/where_iterator.hpp"
 
 namespace  wzp
 {
-/**
- * Some Traits
- */
-template<typename Iterator>
-using IteratorType = decltype(**(Iterator*)nullptr);
 
 /**
  * the Class LinqEnumerable is a pair of Iterator of STL Container
@@ -29,7 +25,7 @@ public:
     /**
      * the constructor
      */
-    LinqEnumerable(const Iterator& begin_, const Iterator& end_) : m_begin(begin_), m_end(end_)
+    LinqEnumerable(Iterator begin_, Iterator end_) : m_begin(begin_), m_end(end_)
     {}
 
     /**
@@ -73,6 +69,18 @@ public:
     }
 
     /**
+     * where function
+     */
+    template<typename Function>
+    auto where(const Function& f)
+    ->LinqEnumerable<WhereIterator<Iterator, Function>> {
+        return LinqEnumerable<WhereIterator<Iterator, Function>>(
+            WhereIterator<Iterator, Function>(m_begin, m_end, f),
+            WhereIterator<Iterator, Function>(m_end, m_end, f)
+        );
+    }
+
+    /**
      * ************
      * some imeditaly functions
      * ************
@@ -89,13 +97,34 @@ public:
     }
 
     /**
+     * to list functions
+     */
+    std::list<Element> to_list() const {
+        std::list<Element> l;
+        for(auto it = m_begin; it != m_end; ++it) {
+            l.emplace_back(*it);
+        }
+        return std::move(l);
+    }
+
+    /**
+     * to set function
+     */
+    std::unordered_set<Element> to_set() const {
+        std::unordered_set<Element> s;
+        for(auto it = m_begin; it != m_end; ++it) {
+            s.emplace(std::move(*it));
+        }
+        return std::move(s);
+    }
+
+    /**
      * the first element function
      */
-    Element first() const {
+    Element first() {
         if(empty())
             throw std::logic_error("the Enumarable is empty");
-        auto it = m_begin;
-        return *it;
+        return *m_begin;
     }
 
     /**

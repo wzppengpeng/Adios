@@ -614,8 +614,9 @@ void test_linq() {
         cout<<i<<" ";
     }
     cout<<endl;
-    print("*****test select function********");
-    auto q_range = from(v).select([](int x){ return x*2; });
+    print("*****test select function and where function********");
+    auto q_range = from(v).select([](int x){ return x*3; })
+    .where([](int x){ return x % 2 == 0; });
     cout<<"select the two out: ";
     for(auto q : q_range) {
         cout<<q<<" ";
@@ -623,9 +624,13 @@ void test_linq() {
     cout<<endl;
     print("the first is ", q_range.first(), " the count of it is:", q_range.count());
     print("*****test to_vector and some immeditate functions*****");
-    auto squre_vec = walk_vector<int>(from(v).select([](int x){
+    auto squre_vec = walk_vector<int>(from(v).where([](int x){ return x >= 5; })
+        .select([](int x){
      return x * x; }).select([](int x){ return x - 5; }));
     print_vector(squre_vec);
+    //test to list, set
+    auto to_list_ = q_range.to_list();
+    auto to_set_ = q_range.to_set();
     print("*******************************************");
 }
 

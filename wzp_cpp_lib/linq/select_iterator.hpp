@@ -17,7 +17,7 @@ public:
     /**
      * COnstructor
      */
-    SelectIterator(const Iterator& iter, const Function& f) : m_iterator(iter), m_fun(f)
+    SelectIterator(Iterator iter, Function f) : m_iterator(iter), m_fun(f)
     {}
 
     /**
