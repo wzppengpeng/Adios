@@ -1,15 +1,11 @@
 #ifndef WHERE_ITERATOR_HPP_
 #define WHERE_ITERATOR_HPP_
 
+#include "traits.hpp"
 
 namespace wzp
 {
 
-/**
- * Some Traits
- */
-template<typename Iterator>
-using IteratorType = decltype(**(Iterator*)nullptr);
 
 template<typename Iterator, typename Function>
 class WhereIterator {

@@ -616,8 +616,8 @@ void test_linq() {
     cout<<endl;
     print("*****test select function and where function********");
     auto q_range = from(v).select([](int x){ return x*3; })
-    .where([](int x){ return x % 2 == 0; });
-    cout<<"select the two out: ";
+    .where([](int x){ return x % 2 == 0; }).take(3);
+    cout<<"select the two out(only take 3): ";
     for(auto q : q_range) {
         cout<<q<<" ";
     }

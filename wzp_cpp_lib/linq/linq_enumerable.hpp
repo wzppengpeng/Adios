@@ -9,6 +9,7 @@
 
 #include "linq/select_iterator.hpp"
 #include "linq/where_iterator.hpp"
+#include "linq/take_iterator.hpp"
 
 namespace  wzp
 {
@@ -79,6 +80,18 @@ public:
             WhereIterator<Iterator, Function>(m_end, m_end, f)
         );
     }
+
+    /**
+     * take function
+     */
+    auto take(size_t c)
+    ->LinqEnumerable<TakeIterator<Iterator>> {
+        return LinqEnumerable<TakeIterator<Iterator>>(
+            TakeIterator<Iterator>(m_begin, m_end, c),
+            TakeIterator<Iterator>(m_end, m_end, c)
+        );
+    }
+
 
     /**
      * ************
