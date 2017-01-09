@@ -16,6 +16,7 @@
 #include "container/grid.hpp"
 #include "container/bubble.hpp"
 #include "container/binary_search.hpp"
+#include "container/matrix.hpp"
 
 #ifdef LEVELDB
 #include "container/grid_plus.hpp"
@@ -31,7 +32,7 @@
 #include "executor2.hpp"
 #include "reflection/reflection.hpp"
 #include "thread/thread_pool.hpp"
-#include "task/task.hpp"
+// #include "task/task.hpp"
 #include "unix/cmd.hpp"
 
 #include "linq/linq.hpp"
@@ -325,6 +326,28 @@ void test_container() {
     print("bin erase time", t.elapsed_micro());
     print("exist 676472 ? ", bin_map.exist(676472));
     print("******test finished********");
+
+    print("*************test matrix**************");
+    print("----test dot product-------");
+    vector<vector<int>> _data = {{1, 2, 3}, {2, 3, 4}, {1, 1, 8}};
+    vector<vector<int>> other_data = {{1, 0}, {2, 1}, {4, 5}};
+    Matrix<int, 3, 3> origin(_data);
+    Matrix<int, 3, 2> other(other_data);
+    print("---origin matrix is---");
+    origin.print();
+    print("test scalar product * 2");
+    (origin * 2).print();
+    print("test add cuntion, add self");
+    Matrix<int, 3, 3> tmp_add_mat(MatrixType::Eyes);
+    (origin + tmp_add_mat).print();
+    print("---test dot print---");
+    Matrix<size_t, 30, 500> AA(2);
+    Matrix<size_t, 500, 256> BB(3);
+    (origin * other).print();
+    t.reset();
+    AA * BB;
+    print("time", t.elapsed_micro());
+    print("****************************");
 }
 
 void test_array(){
@@ -579,12 +602,12 @@ void test_reflection() {
 }
 
 void test_task() {
-    print("----------");
-    print("test list task");
-    Task<int(int)> task([](int i){return i;});
-    auto result = task.then([](int a){return a+1;}).then([](int a){return a+2;}).then([](int a){return a+3;}).run(1);
-    print(result);
-    print("-----ok------");
+    // print("----------");
+    // print("test list task");
+    // Task<int(int)> task([](int i){return i;});
+    // auto result = task.then([](int a){return a+1;}).then([](int a){return a+2;}).then([](int a){return a+3;}).run(1);
+    // print(result);
+    // print("-----ok------");
 }
 
 void test_unix() {
