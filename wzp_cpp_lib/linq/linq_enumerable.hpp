@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <stdexcept>
+#include <memory>
+#include <algorithm>
 
 #include "linq/select_iterator.hpp"
 #include "linq/where_iterator.hpp"
@@ -92,6 +94,10 @@ public:
         );
     }
 
+    /**
+     * order by function
+     * sort the range first, then return new LinqEnumrable
+     */
 
     /**
      * ************
@@ -155,11 +161,41 @@ public:
      * to_list, to_map, to_set functions
      */
 
+    /**
+     * group by function, group by a fcuntion
+     * return pair<key, vector<element>>
+     */
+    template<typename Function>
+    auto group_by(const Function& f)
+    ->std::unordered_map<decltype(f(*(Element*)nullptr)), std::vector<Element>> {
+        using Key = decltype(f(*(Element*)nullptr));
+        using ValueVec = std::vector<Element>;
+        std::unordered_map<Key, ValueVec> map;
+        for(auto it = m_begin; it != m_end; ++it) {
+            auto value = *it;
+            auto key = f(value);
+            auto it_f = map.find(key);
+            if(it_f == map.end()) {
+                ValueVec tmp {value};
+                map.emplace(key, std::move(tmp));
+            }
+            else {
+                it_f->second.emplace_back(value);
+            }
+        }
+        return std::move(map);
+    }
+
 private:
     Iterator m_begin;
     Iterator m_end;
 };
 
 } //wzp
+
+/**
+ * easy the code
+ */
+#define Linq LinqEnumerable
 
 #endif /*LINQ_ENUMERABLE_HPP*/

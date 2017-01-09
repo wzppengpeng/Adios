@@ -603,8 +603,7 @@ void test_unix() {
  */
 void test_linq() {
     print("*******test the main from function********");
-    vector<int> v {1, 2, 5, 2, 6, 8, 2, 0, 5};
-    print_vector(v);
+    vector<int> v {1, 2, 5, 2, 6, 8, 2, 0, 5, 6, 7};
     print("use from fcuntion to print(ie:use the for range function, implement by std::begin and std::end)");
     for(auto i : from(v)) {
         cout<<i<<" ";
@@ -616,8 +615,8 @@ void test_linq() {
     cout<<endl;
     print("*****test select function and where function********");
     auto q_range = from(v).select([](int x){ return x*3; })
-    .where([](int x){ return x % 2 == 0; }).take(3);
-    cout<<"select the two out(only take 3): ";
+    .where([](int x){ return x % 2 == 0; }).take(6);
+    cout<<"select the two out(only take 6): ";
     for(auto q : q_range) {
         cout<<q<<" ";
     }
@@ -631,6 +630,13 @@ void test_linq() {
     //test to list, set
     auto to_list_ = q_range.to_list();
     auto to_set_ = q_range.to_set();
+    print("*******test group by**************");
+    print("group by the val%3");
+    auto key_value_res = from(v).where([](int x){ return x>=2; })
+                                .group_by([](int x){ return x%3; });
+    for(auto p : key_value_res) {
+        print_vector(p.second);
+    }
     print("*******************************************");
 }
 
