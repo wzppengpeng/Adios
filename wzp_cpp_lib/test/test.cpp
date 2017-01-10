@@ -350,6 +350,11 @@ void test_container() {
     t.reset();
     AA * BB;
     print("time", t.elapsed_micro());
+    print("-----test hard io----");
+    Matrix<float> CC;
+    CC.read_csv("a.csv");
+    CC.print();
+    CC.to_csv("c.csv");
     print("****************************");
 }
 

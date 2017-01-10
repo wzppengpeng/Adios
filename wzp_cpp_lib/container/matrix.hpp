@@ -4,8 +4,10 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
+#include <fstream>
 
 #include "thread/taskjob.hpp"
+#include "my_string/string.hpp"
 
 using std::vector;
 
@@ -291,6 +293,47 @@ public:
         }
     }
 
+    /**
+     * hard io function
+     */
+    /**
+     * read from csv file
+     * @param filename
+     */
+    void read_csv(const char* filename) noexcept {
+        vector<T>().swap(m_data);
+        std::ifstream ifile(filename, std::ios::in);
+        std::string line;
+        //read first line
+        std::getline(ifile, line);
+        auto strs = split_string(line, ',');
+        m_col = strs.size();
+        push_data(strs);
+        size_t row_cnt = 1;
+        //read other lines
+        while(std::getline(ifile, line)) {
+            strs = std::move(split_string(line, ','));
+            push_data(strs);
+            ++row_cnt;
+        }
+        m_row = row_cnt;
+        ifile.close();
+    }
+
+    void to_csv(const char* filename) noexcept {
+        if(m_data.empty()) return;
+        std::ofstream ofile(filename, std::ios::out);
+        for(size_t i = 0; i < m_row; ++i) {
+            size_t j = 0;
+            ofile<<at(i, j);
+            for(j = 1; j < m_col; ++j) {
+                ofile<<','<<at(i, j);
+            }
+            ofile<<std::endl;
+        }
+        ofile.close();
+    }
+
 private:
     void init(T init_val) {
         for(size_t i = 0; i < m_row; ++i) {
@@ -314,6 +357,12 @@ private:
         }
         else {
             m_type = ProcessType::SingleThread;
+        }
+    }
+
+    void push_data(const vector<std::string>& strs) {
+        for(auto& str : strs) {
+            m_data.emplace_back(convert_string<T>(str));
         }
     }
 
