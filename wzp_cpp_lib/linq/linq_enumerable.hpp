@@ -63,7 +63,7 @@ public:
      * select function
      */
     template<typename Function>
-    auto select(const Function& f)
+    auto select(Function f)
     ->LinqEnumerable<SelectIterator<Iterator, Function>> {
         return LinqEnumerable<SelectIterator<Iterator, Function>>(
             SelectIterator<Iterator, Function>(m_begin, f),
@@ -75,7 +75,7 @@ public:
      * where function
      */
     template<typename Function>
-    auto where(const Function& f)
+    auto where(Function f)
     ->LinqEnumerable<WhereIterator<Iterator, Function>> {
         return LinqEnumerable<WhereIterator<Iterator, Function>>(
             WhereIterator<Iterator, Function>(m_begin, m_end, f),

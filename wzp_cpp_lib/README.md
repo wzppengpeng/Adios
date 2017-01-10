@@ -99,6 +99,6 @@
         明确是否执行成功。
     . linq:
         *linq.hpp:实际使用只需引入这个文件即可，包含一个from函数将STL迭代器转为Enumarable对象，既保存了一对表示区间的迭代器
-        *linq_enumerable.hpp:最基本的保存迭代器的类型，包含select,where,to_vector,first,count等操作
+        *linq_enumerable.hpp:最基本的保存迭代器的类型，包含select,where,group_by, to_vector,first,count等操作
         *select_iterator.hpp:select迭代器，保存对于指向元素的运算方法
         *where_iterator.hpp:where迭代器，保存是否指向元素符合bool要求

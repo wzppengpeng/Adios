@@ -40,12 +40,33 @@ public:
     }
 };
 
+template<typename T, size_t N>
+struct MatDot
+{
+    static T eval(T* a, T* b, size_t C) {
+        return MatDot<T, 1>::eval(a, b, C) + MatDot<T, N-1>::eval(a + 1, b + C, C);
+    }
+};
+
+template<typename T>
+struct MatDot<T, 1>
+{
+    static T eval(T* a, T* b, size_t C) {
+        return (*a) * (*b);
+    }
+};
+
 } //details
 
 //the dot function
 template<size_t N, typename T>
 inline T dot(T*a, T* b) {
     return details::DotProduct<N, T>::eval(a, b);
+}
+
+template<typename T, size_t N>
+inline T _dot(T* a, T* b, size_t C) {
+    return details::MatDot<T, N>::eval(a, b, C);
 }
 
 /**
@@ -79,37 +100,41 @@ enum class ProcessType {
     MultiThread
 };
 
-template<typename T, size_t M, size_t N>
+template<typename T>
 class Matrix : private MatrixBase<T> {
 
-private:
+public:
     vector<T> m_data; // the data container
-    size_t Row = M;
-    size_t Col = N; // Row and Col;
+    size_t m_row;
+    size_t m_col; // Row and Col;
     ProcessType m_type = ProcessType::MultiThread;
 
 public:
     /**
      * Constructors
      */
-    Matrix() : m_data(M * N)
-    {}
+    Matrix() = default;
 
     //by a scalar value
-    Matrix(T init_val) : m_data(M * N, init_val)
+    Matrix(size_t M, size_t N, T init_val = 0) : m_data(M * N, init_val)
+                                            , m_row(M)
+                                            , m_col(N)
     {}
 
     //handle the type of eye
-    Matrix(MatrixType type, T init_val = 1) : m_data(M * N, 0)
+    Matrix(size_t M, MatrixType type, T init_val = 1) : m_data(M * M, 0)
+                                            , m_row(M)
+                                            , m_col(M)
     {
         if(type == MatrixType::Eyes) {
-            assert(M == N);
             init(init_val);
         }
     }
 
     //init by vector<vector<T>>
-    Matrix(const vector<vector<T>>& data) : m_data(M * N)
+    Matrix(size_t M, size_t N, const vector<vector<T>>& data) : m_data(M * N)
+                                            , m_row(M)
+                                            , m_col(N)
     {
         assert(M == data.size() && N == data[0].size());
         for(size_t i = 0; i < M; ++i) {
@@ -120,40 +145,71 @@ public:
     }
 
     /**
+     * [reshape description]
+     * @param new_row
+     * @param new_col
+     */
+    void reshape(size_t new_row, size_t new_col) {
+        m_row = new_row;
+        m_col = new_col;
+        auto new_capacity = new_row * new_col;
+        if(new_capacity > m_data.size()) {
+            m_data.resize(new_capacity);
+        }
+    }
+
+    /**
+     * reverse
+     */
+    Matrix<T>& t() {
+        vector<T> tmp(m_data);
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
+                tmp[j * m_row + i] = m_data[index(i, j)];
+            }
+        }
+        std::swap(tmp, m_data);
+        std::swap(m_row, m_col);
+        return *this;
+    }
+
+    /**
      * Operations
      */
     //scalar product
-    Matrix<T, M, N> operator*(T val) {
-        Matrix<T, M, N> res(*this);
-        for(size_t i = 0; i < M; ++i) {
-            for(size_t j = 0; j < N; ++j) {
+    Matrix<T> operator*(T val) {
+        Matrix<T> res(*this);
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
                 res.at(i, j) *= val;
             }
         }
         return std::move(res);
     }
 
-    Matrix<T, M, N>& operator*=(T val) {
-        for(size_t i = 0; i < M * N; ++i) {
+    Matrix<T>& operator*=(T val) {
+        for(size_t i = 0; i < m_row * m_col; ++i) {
             m_data[i] *= val;
         }
         return *this;
     }
 
     //add function
-    Matrix<T, M, N> operator+(const Matrix<T, M, N>& other) {
-        Matrix<T, M, N> res;
-        for(size_t i = 0; i < M; ++i) {
-            for(size_t j = 0; j < N; ++j) {
+    Matrix<T> operator+(const Matrix<T>& other) {
+        assert(m_row == other.rows() && m_col == other.cols());
+        Matrix<T> res(m_row, m_col);
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
                 res(i, j) = this->at(i, j) + other(i, j);
             }
         }
         return std::move(res);
     }
 
-    Matrix<T, M, N>& operator+=(const Matrix<T, M, N>& other) {
-        for(size_t i = 0; i < M; ++i) {
-            for(size_t j = 0; j < N; ++j) {
+    Matrix<T>& operator+=(const Matrix<T>& other) {
+        assert(m_row == other.rows() && m_col == other.cols());
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
                 this->at(i, j) = other(i, j);
             }
         }
@@ -163,35 +219,32 @@ public:
     /**
      * Dot Product, C is the new Col
      */
-    template<size_t C>
-    Matrix<T, M, C> operator*(const Matrix<T, N, C>& other) {
-        Matrix<T, M, C> res;
-        check(C);
+    Matrix<T> operator*(const Matrix<T>& other) {
+        assert(m_col == other.rows());
+        Matrix<T> res(m_row, other.cols());
+        check(other.cols());
         if(m_type == ProcessType::SingleThread) {
-            // vector<T> col_data;
-            for(size_t i = 0; i < M; ++i) {
-                for(size_t k = 0; k < C; ++k) {
-                    // col_data = std::move(other.get_col_at(k));
+            for(size_t i = 0; i < m_row; ++i) {
+                for(size_t k = 0; k < other.cols(); ++k) {
                     T sum(0);
-                    for(size_t j = 0; j < N; ++j) {
+                    for(size_t j = 0; j < m_col; ++j) {
                         sum += (this->at(i, j) * other(j, k));
                     }
-                    // res(i, k) = dot<N>(&m_data[index(i, 0)], &col_data[0]);
                     res(i, k) = sum;
                 }
             }
         }
         else {
-            for(size_t i = 0; i < M; ++i) {
+            for(size_t i = 0; i < m_row; ++i) {
                 vector<size_t> cols_index;
-                cols_index.reserve(C);
-                for(size_t k = 0; k < C; ++k) {
+                cols_index.reserve(other.cols());
+                for(size_t k = 0; k < other.cols(); ++k) {
                     cols_index.push_back(k);
                 }
                 ParallelForeach(cols_index.begin(),
                  cols_index.end(), [&res, this, i, &other](size_t k){
                     T sum(0);
-                    for(size_t j = 0; j < N; ++j) {
+                    for(size_t j = 0; j < m_col; ++j) {
                         sum += at(i, j) * other(j, k);
                     }
                     res(i, k) = sum;
@@ -204,9 +257,9 @@ public:
     /**
      * Some getter
      */
-    inline size_t rows() const { return Row; }
+    inline size_t rows() const { return m_row; }
 
-    inline size_t cols() const { return Col; }
+    inline size_t cols() const { return m_col; }
 
     inline T at(size_t i, size_t j) const { return m_data[index(i, j)]; }
     inline T& at(size_t i, size_t j) { return m_data[index(i, j)]; }
@@ -220,17 +273,6 @@ public:
     }
 
     /**
-     * get one col data
-     */
-    vector<T> get_col_at(size_t j) const {
-        vector<T> col_data(M);
-        for(size_t i = 0; i < M; ++i) {
-            col_data[i] = this->at(i, j);
-        }
-        return std::move(col_data);
-    }
-
-    /**
      * Set funtions
      */
     void set_process_type(ProcessType type) {
@@ -241,8 +283,8 @@ public:
      * print function
      */
     void print() {
-        for(size_t i = 0; i < M; ++i) {
-            for(size_t j = 0; j < N; ++j) {
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
                 std::cout<<at(i, j)<<" ";
             }
             std::cout<<std::endl;
@@ -251,7 +293,7 @@ public:
 
 private:
     void init(T init_val) {
-        for(size_t i = 0; i < M; ++i) {
+        for(size_t i = 0; i < m_row; ++i) {
             m_data[index(i, i)] = init_val;
         }
     }
@@ -263,11 +305,11 @@ private:
      * @return        the index in m_data
      */
     inline size_t index(size_t i, size_t j) const {
-        return i * N + j;
+        return i * m_col + j;
     }
 
     inline void check(size_t C) {
-        if(N > 256 || C > 256) {
+        if(m_col > 256 || C > 256) {
             m_type = ProcessType::MultiThread;
         }
         else {
@@ -278,7 +320,7 @@ private:
 };
 
 /**
- * Operators!!!!
+ * Simple Special
  */
 } //wzp
 
