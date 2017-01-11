@@ -37,6 +37,7 @@ public:
         Registry(const std::string& class_name) {
             Reflection<Base>::get().m_map.emplace(class_name, []{return new Sub();});
         }
+
     };
 
     /**

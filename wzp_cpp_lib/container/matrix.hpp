@@ -5,9 +5,11 @@
 #include <cassert>
 #include <iostream>
 #include <fstream>
+#include <iterator>
 
 #include "thread/taskjob.hpp"
 #include "my_string/string.hpp"
+#include "util/serialize.hpp"
 
 using std::vector;
 
@@ -274,6 +276,10 @@ public:
         return m_data[index(i, j)];
     }
 
+    inline const T* row_at(size_t i ) const {
+        return &m_data[index(i, 0)];
+    }
+
     /**
      * Set funtions
      */
@@ -320,6 +326,10 @@ public:
         ifile.close();
     }
 
+    /**
+     * trainsform to csv file
+     * @param filename
+     */
     void to_csv(const char* filename) noexcept {
         if(m_data.empty()) return;
         std::ofstream ofile(filename, std::ios::out);
@@ -332,6 +342,32 @@ public:
             ofile<<std::endl;
         }
         ofile.close();
+    }
+
+    /**
+     * trainsform to binary file
+     * @param filename
+     */
+    void to_bin_file(const char* filename) noexcept {
+        if(m_data.empty()) return;
+        std::ofstream ofile(filename, std::ios::binary);
+        //serilize data into a string
+        std::string cache;
+        //first write the row and col nnumber, second the vector data
+        serialize(&cache, m_row, m_col, m_data);
+        ofile.write(cache.c_str(), sizeof(char) * cache.size());
+        ofile.close();
+    }
+
+    void read_bin_file(const char* filename) noexcept {
+        vector<T>().swap(m_data);
+        std::ifstream ifile(filename);
+        std::string file((std::istreambuf_iterator<char>(ifile)),
+            std::istreambuf_iterator<char>());
+        deserialize(file, m_row, m_col);
+        reshape(m_row, m_col);
+        file = std::move(file.substr(2 * sizeof(decltype(m_row))));
+        deserialize(file, m_data);
     }
 
 private:

@@ -355,6 +355,10 @@ void test_container() {
     CC.read_csv("a.csv");
     CC.print();
     CC.to_csv("c.csv");
+    Matrix<float> CC_;
+    print("----test read bin file---");
+    CC_.read_bin_file("a.dat");
+    CC_.print();
     print("****************************");
 }
 
