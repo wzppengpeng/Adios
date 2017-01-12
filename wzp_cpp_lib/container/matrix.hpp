@@ -280,6 +280,10 @@ public:
         return &m_data[index(i, 0)];
     }
 
+    // inline T* row_at(size_t i) {
+    //     return &m_data[index(i, 0)];
+    // }
+
     /**
      * Set funtions
      */
@@ -290,7 +294,7 @@ public:
     /**
      * print function
      */
-    void print() {
+    void print() const {
         for(size_t i = 0; i < m_row; ++i) {
             for(size_t j = 0; j < m_col; ++j) {
                 std::cout<<at(i, j)<<" ";
@@ -330,7 +334,7 @@ public:
      * trainsform to csv file
      * @param filename
      */
-    void to_csv(const char* filename) noexcept {
+    void to_csv(const char* filename) const noexcept {
         if(m_data.empty()) return;
         std::ofstream ofile(filename, std::ios::out);
         for(size_t i = 0; i < m_row; ++i) {
@@ -348,7 +352,7 @@ public:
      * trainsform to binary file
      * @param filename
      */
-    void to_bin_file(const char* filename) noexcept {
+    void to_bin_file(const char* filename) const noexcept {
         if(m_data.empty()) return;
         std::ofstream ofile(filename, std::ios::binary);
         //serilize data into a string
@@ -368,6 +372,22 @@ public:
         reshape(m_row, m_col);
         file = std::move(file.substr(2 * sizeof(decltype(m_row))));
         deserialize(file, m_data);
+    }
+
+    /**
+     * Slice
+     */
+    Matrix<T> slice(size_t row_begin, size_t col_begin,
+     size_t row_end, size_t col_end) {
+        assert(row_end >= row_begin && col_end >= col_begin
+         && col_end <= cols() && row_end <= rows());
+        Matrix<T> res(row_end - row_begin, col_end - col_begin);
+        for(size_t i = row_begin; i < row_end; ++i) {
+            for(size_t j = col_begin; j < col_end; ++j) {
+                res(i - row_begin, j - col_begin) = at(i, j);
+            }
+        }
+        return std::move(res);
     }
 
 private:

@@ -359,6 +359,8 @@ void test_container() {
     print("----test read bin file---");
     CC_.read_bin_file("a.dat");
     CC_.print();
+    print("-----test slice------");
+    CC.slice(1, 1, 3, 3).print();
     print("****************************");
 }
 
