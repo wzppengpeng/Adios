@@ -148,6 +148,26 @@ public:
         }
     }
 
+    //move constructor
+    Matrix(Matrix<T>&& other) : m_data(std::move(other.m_data)),
+                                m_row(other.m_row),
+                                m_col(other.m_col),
+                                m_type(other.m_type)
+    {}
+
+    Matrix<T>& operator= (Matrix&& other) {
+        assert(this != &other);
+        m_data = std::move(other.m_data);
+        m_row = other.m_row;
+        m_col = other.m_col;
+        m_type = other.m_type;
+        return *this;
+    }
+
+    //copy constructor
+    Matrix(const Matrix<T>&) = default;
+    Matrix<T>& operator= (const Matrix<T>&) = default;
+
     /**
      * [reshape description]
      * @param new_row
