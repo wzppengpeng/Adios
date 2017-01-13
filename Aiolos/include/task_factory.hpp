@@ -30,15 +30,7 @@ template<>
 class TaskFactory<Classify> {
 public:
     inline static std::shared_ptr<Classify> create(const std::string& task) {
-        if(task == "knn") {
-            return wzp::Reflection<Classify>::create_shared("knn");
-        }
-        else if(task == "classify_tree") {
-            return wzp::Reflection<Classify>::create_shared("classify_tree");
-        }
-        else {
-            return nullptr;
-        }
+        return wzp::Reflection<Classify>::create_shared(task);
     }
 };
 

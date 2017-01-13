@@ -53,11 +53,11 @@ wzp::Matrix<int> ClassifyTree::predict(wzp::Matrix<Type>& predict_matrix) {
 }
 
 void ClassifyTree::dump_model(const char* filename) {
-
+    log::fatal("Simple Tree Need Not To Dump Model, Please Use Both Mode");
 }
 
 void ClassifyTree::restore_model(const char* filename) {
-
+    log::fatal("Simple Tree Need Not To Dump Model, Please Use Both Mode");
 }
 
 /**
