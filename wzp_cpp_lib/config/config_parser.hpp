@@ -47,6 +47,20 @@ public:
         }
     }
 
+    /**
+     * update config
+     * @param std::string key, value
+     */
+    void update(const std::string& key, const std::string& value) {
+        std::map<std::string, std::string>::iterator it = m_params_map.find(key);
+        if(it != m_params_map.end()) {
+            it->second = value;
+        }
+        else {
+            m_params_map.insert(std::pair<std::string, std::string>(key, value));
+        }
+    }
+
 private:
     bool parse() {
         std::ifstream input(m_config_path.c_str(), std::ios::in);

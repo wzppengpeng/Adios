@@ -51,14 +51,13 @@ public:
         }
     }
 
-private:
     //local static function to get the container to store the args
     static std::unordered_map<string, string>& Get() {
         static std::unordered_map<string, string> args_map;
         return args_map;
     }
 
-    //
+private:
     inline static void Parse(int index, char** argv) {
         string cache(argv[index]);
         auto pos = cache.find('=');

@@ -5,6 +5,7 @@
 
 
 #include "config/config_parser.hpp"
+#include "config/arg_parser.hpp"
 #include "container/matrix.hpp"
 
 #include "common.hpp"
@@ -61,6 +62,11 @@ private:
 
 void IoHelper::set_parser(wzp::ConfigParser* parser) {
     m_parser = parser;
+    for(auto& p : wzp::ArgParser::Get()) {
+        if(p.first != "conf") {
+            m_parser->update(p.first, p.second);
+        }
+    }
 }
 
 
