@@ -60,11 +60,11 @@ Matrix<int> KNN::predict(wzp::Matrix<Type>& predict_matrix) {
 }
 
 void KNN::dump_model(const char* filename) {
-
+    log::fatal("KNN do not have model to dump, please set mode to both");
 }
 
 void KNN::restore_model(const char* filename) {
-
+    log::fatal("KNN do not have model to restore, please set mode to both");
 }
 
 void KNN::predict_one(const wzp::Matrix<Type>& predict_matrix, int row, int index,

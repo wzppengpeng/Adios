@@ -8,6 +8,7 @@
 #include "container/matrix.hpp"
 
 #include "common.hpp"
+
 /**
  * Some Operations to handle datas
  */
@@ -98,7 +99,70 @@ inline void auto_norm(wzp::Matrix<Type>& mat) {
      });
 }
 
+/**
+ * calcute shannon ent
+ */
+/**
+ * [cal_shannon_ent description]
+ * @param  label n*1 vector
+ * @return       float or double ent
+ */
+Type cal_shannon_ent(const wzp::Matrix<int>& label);
+
+/**
+ * count the majoryty in labels
+ * @param  labels
+ * @return majoruty count label
+ */
+int majority_cnt(const wzp::Matrix<int>& label);
+
+/**
+ * [count_label description]
+ * @param  label
+ * @return count result
+ */
+int count_label(const wzp::Matrix<int>& label, int val);
+
+/**
+ * Split Data Set
+ */
+template<typename T>
+/**
+ * a fucntion template to split a matrix by col
+ */
+std::pair<wzp::Matrix<T>, wzp::Matrix<int>> split_matrix_by_col(const wzp::Matrix<T>& data_set,
+    const wzp::Matrix<int>& labels, size_t axis, T value) {
+    assert(data_set.cols() > axis && data_set.rows() == labels.rows());
+    using std::vector;
+    vector<vector<T>> ret_data_set;
+    vector<vector<int>> ret_labels;
+    for(size_t i = 0; i < data_set.rows(); ++i) {
+        if(data_set(i, axis) == value) {
+            vector<T> reduced_feature_vec;
+            vector<int> reduced_label_vec(1);
+            reduced_feature_vec.reserve(data_set.cols() - 1);
+            size_t j = 0;
+            for(; j < axis; ++j) {
+                reduced_feature_vec.emplace_back(data_set(i, j));
+            }
+            for(j = axis + 1; j < data_set.cols(); ++j) {
+                reduced_feature_vec.emplace_back(data_set(i, j));
+            }
+            reduced_label_vec[0] = labels(i, 0);
+            ret_data_set.emplace_back(std::move(reduced_feature_vec));
+            ret_labels.emplace_back(std::move(reduced_label_vec));
+        }
+    }
+    if(ret_data_set.empty()) return {wzp::Matrix<T>(), wzp::Matrix<int>()};
+    else {
+        return {std::move(wzp::Matrix<T>(ret_data_set.size(),
+         ret_data_set[0].size(), ret_data_set)),
+          std::move(wzp::Matrix<int>(ret_labels.size(), (size_t)1, ret_labels))};
+    }
+}
+
 } //op
+
 } //aiolos
 
 #endif /*AIOLOS_OP_HPP*/

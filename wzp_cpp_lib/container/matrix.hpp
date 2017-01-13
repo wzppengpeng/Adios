@@ -281,6 +281,8 @@ public:
     /**
      * Some getter
      */
+    inline bool empty() const { return m_row == 0; }
+
     inline size_t rows() const { return m_row; }
 
     inline size_t cols() const { return m_col; }

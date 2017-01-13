@@ -33,6 +33,9 @@ public:
         if(task == "knn") {
             return wzp::Reflection<Classify>::create_shared("knn");
         }
+        else if(task == "classify_tree") {
+            return wzp::Reflection<Classify>::create_shared("classify_tree");
+        }
         else {
             return nullptr;
         }
