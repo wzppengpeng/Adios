@@ -53,6 +53,9 @@ void Aiolos::init(const std::string& objective) {
     }
     if(m_objective_type == ObjectiveType::Classify) {
         m_classify = TaskFactory<Classify>::create(task);
+        if(m_classify.get() == nullptr) {
+            log::fatal("Task Illegal", task);
+        }
     }
     else {
         log::fatal("Wrong Task With Wrong Objective", task);

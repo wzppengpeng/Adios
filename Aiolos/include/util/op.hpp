@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 
 #include "container/matrix.hpp"
@@ -122,6 +123,27 @@ int majority_cnt(const wzp::Matrix<int>& label);
  * @return count result
  */
 int count_label(const wzp::Matrix<int>& label, int val);
+
+/**
+ * count all labels, return a map to store each label and its count
+ */
+std::unordered_map<int, int> count_label(const wzp::Matrix<int>& label);
+
+template<typename T>
+/**
+ * compute a sum of a row in matrix
+ * @param  mat
+ * @param  row_index a row index
+ * @return           sum result
+ */
+T row_sum(const wzp::Matrix<T>& mat, size_t row_index) {
+    assert(row_index < mat.rows());
+    T sum = 0;
+    for(size_t j = 0; j < mat.cols(); ++j) {
+        sum += mat(row_index, j);
+    }
+    return sum;
+}
 
 /**
  * Split Data Set

@@ -56,5 +56,20 @@ int count_label(const wzp::Matrix<int>& label, int val) {
     return sum;
 }
 
+std::unordered_map<int, int> count_label(const wzp::Matrix<int>& label) {
+    unordered_map<int, int> label_cnt;
+    for(size_t i = 0; i < label.rows(); ++i) {
+        auto it = label_cnt.find(label(i, 0));
+        if(it != label_cnt.end()) {
+            ++it->second;
+        }
+        else {
+            label_cnt.emplace(label(i, 0), 1);
+        }
+    }
+    return std::move(label_cnt);
+}
+
+
 } //op
 } //aiolos

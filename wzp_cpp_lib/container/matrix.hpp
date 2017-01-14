@@ -374,15 +374,26 @@ public:
      * trainsform to binary file
      * @param filename
      */
+    inline void matrix_to_string(std::string* cache) {
+        serialize(cache, m_row, m_col, m_data);
+    }
+
     void to_bin_file(const char* filename) const noexcept {
         if(m_data.empty()) return;
         std::ofstream ofile(filename, std::ios::binary);
         //serilize data into a string
         std::string cache;
         //first write the row and col nnumber, second the vector data
-        serialize(&cache, m_row, m_col, m_data);
+        matrix_to_string(&cache);
         ofile.write(cache.c_str(), sizeof(char) * cache.size());
         ofile.close();
+    }
+
+    inline void string_to_matrix(std::string& cache) {
+        deserialize(cache, m_row, m_col);
+        reshape(m_row, m_col);
+        cache = std::move(cache.substr(2 * sizeof(decltype(m_row))));
+        deserialize(cache, m_data);
     }
 
     void read_bin_file(const char* filename) noexcept {
@@ -390,10 +401,7 @@ public:
         std::ifstream ifile(filename);
         std::string file((std::istreambuf_iterator<char>(ifile)),
             std::istreambuf_iterator<char>());
-        deserialize(file, m_row, m_col);
-        reshape(m_row, m_col);
-        file = std::move(file.substr(2 * sizeof(decltype(m_row))));
-        deserialize(file, m_data);
+        string_to_matrix(file);
     }
 
     /**
