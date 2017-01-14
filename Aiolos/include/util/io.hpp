@@ -28,7 +28,7 @@ std::string unordered_map_to_string(std::unordered_map<K, V>& m) {
 }
 
 /**
- * dewzp::serialize a map
+ * wzp::serialize a map
  */
 template<typename K, typename V>
 std::unordered_map<K, V> string_to_unordered_map(std::string& buffer) {
