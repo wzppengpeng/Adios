@@ -378,13 +378,13 @@ public:
         serialize(cache, m_row, m_col, m_data);
     }
 
-    void to_bin_file(const char* filename) const noexcept {
+    void to_bin_file(const char* filename) noexcept {
         if(m_data.empty()) return;
         std::ofstream ofile(filename, std::ios::binary);
         //serilize data into a string
         std::string cache;
         //first write the row and col nnumber, second the vector data
-        matrix_to_string(&cache);
+        serialize(&cache, m_row, m_col, m_data);
         ofile.write(cache.c_str(), sizeof(char) * cache.size());
         ofile.close();
     }

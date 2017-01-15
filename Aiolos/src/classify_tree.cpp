@@ -5,6 +5,7 @@
 #include "log/log.hpp"
 #include "container/array_args.hpp"
 
+#include "util/optimize.hpp"
 #include "util/op.hpp"
 
 using namespace std;
@@ -41,7 +42,22 @@ void ClassifyTree::train(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& inpu
 void ClassifyTree::train(wzp::Matrix<Type>& input_matrix,
      wzp::Matrix<int>& input_label, wzp::Matrix<Type>& validate_matrix,
      wzp::Matrix<int>& validate_label) {
-
+    m_input_matrix = &input_matrix;
+    m_input_label = &input_label;
+    m_validate_matrix = &validate_matrix;
+    m_validate_label = &validate_label;
+    auto axises = op::generate<vector<size_t>>(input_matrix.cols());
+    m_tree = create_tree(*m_input_matrix, *m_input_label, axises);
+    //check if print
+    int silent;
+    if(m_config_parser->get<int>("silent", silent) && silent == 1) {
+        log::info("print this tree");
+        m_tree.print_tree();
+    }
+    //validate
+    auto wrong_rate = eval::eval([this]{return predict(*m_validate_matrix);},
+        *m_validate_label, LossTypes::Error01);
+    wzp::log::info("Validate Error Rate", wrong_rate);
 }
 
 wzp::Matrix<int> ClassifyTree::predict(wzp::Matrix<Type>& predict_matrix) {

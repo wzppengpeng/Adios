@@ -37,6 +37,10 @@ private:
      */
     void classify();
 
+    void classify_train();
+
+    inline void classify_predict();
+
 private:
     enum class ObjectiveType {
         Classify,

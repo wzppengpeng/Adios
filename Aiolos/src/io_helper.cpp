@@ -16,6 +16,9 @@ std::pair<wzp::Matrix<Type>, wzp::Matrix<int>> IoHelper::read_data(const std::st
     }
     wzp::Matrix<Type> raw_data;
     raw_data.read_csv(input_data_path.c_str());
+    if(raw_data.empty() || raw_data.cols() == 0) {
+        log::fatal("Input Data Illegal");
+    }
     auto features = raw_data.slice(0, 0, raw_data.rows(), raw_data.cols() - 1);
     wzp::Matrix<int> labels(raw_data.rows(), 1);
     for(size_t i = 0; i < labels.rows(); ++i) {

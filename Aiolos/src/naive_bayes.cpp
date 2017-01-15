@@ -7,6 +7,7 @@
 
 #include "util/op.hpp"
 #include "util/io.hpp"
+#include "util/optimize.hpp"
 
 
 using namespace std;
@@ -33,6 +34,15 @@ void NaiveBayes::train(wzp::Matrix<Type>& input_matrix,
      wzp::Matrix<int>& input_label, wzp::Matrix<Type>& validate_matrix,
      wzp::Matrix<int>& validate_label) {
     //null now
+    m_input_matrix = &input_matrix;
+    m_input_label = &input_label;
+    m_validate_matrix = &validate_matrix;
+    m_validate_label = &validate_label;
+    //init the m_weights
+    train_naive_bayes();
+    auto wrong_rate = eval::eval([this]{return predict(*m_validate_matrix);},
+        *m_validate_label, LossTypes::Error01);
+    wzp::log::info("Validate Error Rate", wrong_rate);
 }
 
 wzp::Matrix<int> NaiveBayes::predict(wzp::Matrix<Type>& predict_matrix) {

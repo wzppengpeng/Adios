@@ -15,6 +15,21 @@ class MatrixArgs
 
 public:
     /**
+     * [vector_product]
+     * @param  a   vector
+     * @param  b   vector
+     * @param  len length of vector
+     * @return     float result
+     */
+    inline static Type vector_product(const Type* a, const Type* b, size_t len) {
+        Type sum = 0.0;
+        for(size_t i = 0; i < len; ++i) {
+            sum += a[i] * b[i];
+        }
+        return sum;
+    }
+
+    /**
      * [compute_distance description]
      * @param  a point
      * @param  b ponit

@@ -31,6 +31,14 @@ public:
     std::pair<wzp::Matrix<Type>, wzp::Matrix<int>> read_data(const std::string& path) noexcept;
 
     /**
+     * check has validate matrix
+     */
+    inline bool has_validate() {
+        string buffer;
+        return m_parser->get("validate_path", buffer);
+    }
+
+    /**
      * output data for a template matrix
      */
     template<typename Mat>

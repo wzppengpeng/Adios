@@ -81,8 +81,7 @@ void Aiolos::classify() {
     if(m_mode_type == Mode::Train) {
         //judge has validate?
         //TODO:
-        auto input = m_io_helper.read_data("input_path");
-        m_classify->train(input.first, input.second);
+        classify_train();
         auto path = m_io_helper.get_dump_path();
         if(path.empty()) {
             log::fatal("Miss Arg model_path");
@@ -95,18 +94,31 @@ void Aiolos::classify() {
             log::fatal("Miss Arg model_path");
         }
         m_classify->restore_model(path.c_str());
-        auto input = m_io_helper.read_data("predict_path");
-        auto res = m_classify->predict(input.first);
-        m_io_helper.output_data(res);
+        classify_predict();
+    }
+    else {
+        classify_train();
+        classify_predict();
+    }
+    log::info("Aiolos Job Success!");
+}
+
+void Aiolos::classify_train() {
+    if(m_io_helper.has_validate()) {
+        auto input = m_io_helper.read_data("input_path");
+        auto validate = std::move(m_io_helper.read_data("validate_path"));
+        m_classify->train(input.first, input.second, validate.first, validate.second);
     }
     else {
         auto input = m_io_helper.read_data("input_path");
         m_classify->train(input.first, input.second);
-        input = std::move(m_io_helper.read_data("predict_path"));
-        auto res = m_classify->predict(input.first);
-        m_io_helper.output_data(res);
     }
-    log::info("Aiolos Job Success!");
+}
+
+inline void Aiolos::classify_predict() {
+    auto input = m_io_helper.read_data("predict_path");
+    auto res = m_classify->predict(input.first);
+    m_io_helper.output_data(res);
 }
 
 }
