@@ -25,6 +25,8 @@ public:
      */
     inline void set_parser(wzp::ConfigParser* parser);
 
+    inline void set_parser_simple(wzp::ConfigParser* parser);
+
     /**
      * input data and trainsorm types
      */
@@ -75,6 +77,10 @@ void IoHelper::set_parser(wzp::ConfigParser* parser) {
             m_parser->update(p.first, p.second);
         }
     }
+}
+
+void IoHelper::set_parser_simple(wzp::ConfigParser* parser) {
+    m_parser = parser;
 }
 
 

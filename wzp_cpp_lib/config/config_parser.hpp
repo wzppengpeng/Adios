@@ -18,6 +18,13 @@ namespace wzp {
 class ConfigParser
 {
 public:
+    ConfigParser() : m_config_path(),
+                     m_equal_symbol("="),
+                     m_comment_symbol("#"),
+                     m_params_map()
+    {
+    }
+
     ConfigParser(const std::string& config) : m_config_path(config),
                                               m_equal_symbol("="),
                                               m_comment_symbol("#"),
