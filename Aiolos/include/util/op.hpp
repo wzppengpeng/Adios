@@ -101,6 +101,9 @@ inline void auto_norm(wzp::Matrix<Type>& mat) {
 }
 
 /**
+ * For Decision Tree, Some Calculation
+ */
+/**
  * calcute shannon ent
  */
 /**
@@ -181,6 +184,20 @@ std::pair<wzp::Matrix<T>, wzp::Matrix<int>> split_matrix_by_col(const wzp::Matri
          ret_data_set[0].size(), ret_data_set)),
           std::move(wzp::Matrix<int>(ret_labels.size(), (size_t)1, ret_labels))};
     }
+}
+
+
+/**
+ * Some Matrix Operations
+ */
+template<typename R = Type, typename T, typename U>
+wzp::Matrix<R> multiply(const wzp::Matrix<T>& left, const wzp::Matrix<U>& right) {
+    assert(left.rows() == right.rows());
+    wzp::Matrix<R> res(left.rows(), 1);
+    for(size_t i = 0; i < left.rows(); ++i) {
+        res.at(i, 0) = (static_cast<R>(left.at(i, 0)) * static_cast<R>(right.at(i, 0)));
+    }
+    return std::move(res);
 }
 
 } //op

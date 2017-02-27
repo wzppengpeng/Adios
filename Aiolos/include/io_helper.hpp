@@ -66,6 +66,8 @@ public:
      */
     std::string get_restore_path();
 
+    std::string read_new_data();
+
 private:
     wzp::ConfigParser* m_parser = nullptr;
 };

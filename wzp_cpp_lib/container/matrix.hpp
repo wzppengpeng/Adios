@@ -409,8 +409,9 @@ public:
      */
     Matrix<T> slice(size_t row_begin, size_t col_begin,
      size_t row_end, size_t col_end) {
-        assert(row_end >= row_begin && col_end >= col_begin
-         && col_end <= cols() && row_end <= rows());
+        assert(row_end >= row_begin && col_end >= col_begin);
+        assert(col_end <= cols());
+        assert(row_end <= rows());
         Matrix<T> res(row_end - row_begin, col_end - col_begin);
         for(size_t i = row_begin; i < row_end; ++i) {
             for(size_t j = col_begin; j < col_end; ++j) {
