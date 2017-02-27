@@ -55,11 +55,17 @@ private:
      * SVM DATAMEMBERS
      */
     std::unique_ptr<SMO> m_smo_runner;
+    std::string smo_method = "smo_platt";
+
     int m_silent = 1;
     //some params
     Type m_C = 0.6;
     Type m_toler = 0.001;
     int m_max_iter = 40;
+
+    //the alphas
+    Type m_b = 0.0;
+    wzp::Matrix<Type> m_W;
 
     /**
      * Reflection

@@ -234,7 +234,7 @@ public:
         assert(m_row == other.rows() && m_col == other.cols());
         for(size_t i = 0; i < m_row; ++i) {
             for(size_t j = 0; j < m_col; ++j) {
-                this->at(i, j) = other(i, j);
+                this->at(i, j) += other(i, j);
             }
         }
         return *this;

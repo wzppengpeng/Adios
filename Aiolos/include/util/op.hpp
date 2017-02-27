@@ -78,6 +78,18 @@ std::pair<size_t,size_t> arg_min_max(const wzp::Matrix<T>& mat, size_t col_index
 }
 
 /**
+ * Get nonzero list
+ */
+template<typename T>
+std::vector<size_t> nonzero(const wzp::Matrix<T>& m, size_t col) {
+    std::vector<size_t> nonzero_list;
+    for(size_t i = 0; i < m.rows(); ++i) {
+        if(m(i, col) != 0) nonzero_list.emplace_back(i);
+    }
+    return nonzero_list;
+}
+
+/**
  * auto norm
  */
 inline void auto_norm(wzp::Matrix<Type>& mat) {
