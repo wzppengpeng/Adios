@@ -3,4 +3,4 @@
 ## ClassifyDecisionTree
 ## NaiveBayes
 ## Logistic Regression
-## SVM
+## SVM(Linear SVM)

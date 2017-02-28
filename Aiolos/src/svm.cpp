@@ -3,7 +3,6 @@
 #include "log/log.hpp"
 
 #include "svm/def.hpp"
-// #include "util/matrix_args.hpp"
 
 using namespace std;
 using wzp::Matrix;
