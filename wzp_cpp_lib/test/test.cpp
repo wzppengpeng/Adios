@@ -362,6 +362,16 @@ void test_container() {
     print("-----test slice------");
     CC.slice(1, 1, 3, 3).print();
     print("****************************");
+
+    print("*****test det and inv*******");
+    vector<vector<double>> dddd = {{1,2,3},{2,2,1},{3,4,3}};
+    Matrix<double> det_inv(3, 3, dddd);
+    auto det_val = linear::det(det_inv);
+    print("***the det of det_inv is", det_val);
+    auto inv_val = det_inv.inv();
+    print("****the inv of det_inv is");
+    inv_val.print();
+    print("******************");
 }
 
 void test_array(){

@@ -73,6 +73,36 @@ inline T _dot(T* a, T* b, size_t C) {
     return details::MatDot<T, N>::eval(a, b, C);
 }
 
+namespace linear {
+
+/**
+ * Det of Matrix
+ */
+template<typename T=double, typename Mat>
+T det(const Mat& arcs) {
+    assert(arcs.rows() == arcs.cols());
+    size_t n = arcs.rows();
+    if(n == 1) return arcs(0, 0);
+    T ans = 0.0;
+    Mat temp(n - 1, n - 1);
+    for(size_t i = 0; i < n; ++i) {
+        for(size_t j = 0; j < n - 1; ++j) {
+            for(size_t k = 0; k < n - 1; ++k) {
+                temp(j, k) = arcs(j + 1, (k >= i ? k + 1 : k));
+            }
+        }
+        auto t = det(temp);
+        if(i % 2 == 0) {
+            ans += arcs(0, i) * t;
+        }
+        else {
+            ans -= arcs(0, i) * t;
+        }
+    }
+    return ans;
+}
+}
+
 /**
  * class of Matrix!!
  */
@@ -279,6 +309,64 @@ public:
     }
 
     /**
+     * Operations
+     */
+    Matrix<T> start() {
+        Matrix<T> ans(m_row, m_row);
+        if(m_row == 1) {
+            ans(0, 0) = 1;
+            return ans;
+        }
+        if(m_row <= 10) {
+            Matrix<T> temp(m_row - 1, m_row - 1);
+            for(size_t i = 0; i < m_row; ++i) {
+                for(size_t j = 0; j < m_row; ++j) {
+                    for(size_t k = 0; k < m_row - 1; ++k) {
+                        for(size_t t = 0; t < m_row - 1; ++t) {
+                            temp(k, t) = at((k >= i ? k + 1 : k), (t >= j ? t + 1 : t));
+                        }
+                    }
+                    ans(j, i) = linear::det<T>(temp);
+                    if((i + j) % 2 == 1) {
+                        ans(j, i) = -ans(j, i);
+                    }
+                }
+            }
+        }
+        else {
+            vector<size_t> index(m_row);
+            for(size_t i = 0; i < m_row; ++i) {
+                index[i] = i;
+            }
+            ParallelForeach(index.begin(), index.end(),
+             [&ans, this](size_t i) {
+                Matrix<T> temp(m_row - 1, m_row - 1);
+                for(size_t j = 0; j < m_row; ++j) {
+                    for(size_t k = 0; k < m_row - 1; ++k) {
+                        for(size_t t = 0; t < m_row - 1; ++t) {
+                            temp(k, t) = at((k >= i ? k + 1 : k), (t >= j ? t + 1 : t));
+                        }
+                    }
+                    ans(j, i) = linear::det<T>(temp);
+                    if((i + j) % 2 == 1) {
+                        ans(j, i) = -ans(j, i);
+                    }
+                }
+            });
+        }
+        return ans;
+    }
+
+    Matrix<T> inv() {
+        assert(m_row == m_col);
+        auto flag = linear::det<T>(*this);
+        assert(flag != 0);
+        auto start_mat = this->start();
+        start_mat *= static_cast<T>((1.0 / flag));
+        return start_mat;
+    }
+
+    /**
      * Some getter
      */
     inline bool empty() const { return m_row == 0; }
@@ -473,6 +561,10 @@ private:
 /**
  * Simple Special
  */
+
+
+
+
 } //wzp
 
 #endif /*WZP_MATRIX_HPP_*/
