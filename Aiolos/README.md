@@ -1,6 +1,8 @@
 # Aiolos is a machine learning framework and engine!
-## KNN
-## ClassifyDecisionTree
-## NaiveBayes
-## Logistic Regression
-## SVM(Linear SVM)
+##Classifier:
+    . KNN
+    . ClassifyDecisionTree
+    . NaiveBayes
+    . Logistic Regression
+    . SVM(Linear SVM)
+    . AdaBoost(Use Stump)
