@@ -160,6 +160,16 @@ T row_sum(const wzp::Matrix<T>& mat, size_t row_index) {
     return sum;
 }
 
+template<typename T>
+T col_sum(const wzp::Matrix<T>& mat, size_t col_index = 0) {
+    assert(col_index < mat.cols());
+    T sum = 0;
+    for(size_t i = 0; i < mat.rows(); ++i) {
+        sum += mat(i, col_index);
+    }
+    return sum;
+}
+
 /**
  * Split Data Set
  */
@@ -210,6 +220,22 @@ wzp::Matrix<R> multiply(const wzp::Matrix<T>& left, const wzp::Matrix<U>& right)
         res.at(i, 0) = (static_cast<R>(left.at(i, 0)) * static_cast<R>(right.at(i, 0)));
     }
     return std::move(res);
+}
+
+template<typename R = Type, typename T, typename U>
+/**
+ * two col vector vector_product
+ * @param  left
+ * @param  right [description]
+ * @return       [description]
+ */
+R vector_product(const wzp::Matrix<T>& left, const wzp::Matrix<U>& right) {
+    assert(left.rows() == right.rows());
+    R sum = 0.0;
+    for(size_t i = 0; i < left.rows(); ++i) {
+        sum += (static_cast<R>(left(i, 0)) * static_cast<R>(right(i, 0)));
+    }
+    return sum;
 }
 
 } //op

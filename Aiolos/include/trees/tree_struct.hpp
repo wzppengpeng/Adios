@@ -41,6 +41,16 @@ struct TreeNode
     vector<pair<function<bool(Type)>, shared_ptr<TreeNode<T>>> > m_tree_modes;
 };
 
+/**
+ * the struct of Stump, for adaboost as the base classifier
+ */
+template<typename T>
+struct Stump {
+    size_t dim = 0; //the axis of features
+    T thresh; // the theshold to judge
+    short ineq = 0; // 0 for lt, 1 for gt
+};
+
 
 /**
  * the struct of DecisionTree

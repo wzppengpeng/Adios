@@ -421,6 +421,21 @@ public:
         return std::move(res);
     }
 
+    /**
+     * Filter, Set Matrix Values If A Condition Is Reached
+     * the function should return bool, and input i, j
+     */
+    template<typename Function>
+    void filter(const Function& fun, T val) {
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
+                if(fun(i, j)) {
+                    this->at(i, j) = val;
+                }
+            }
+        }
+    }
+
 private:
     void init(T init_val) {
         for(size_t i = 0; i < m_row; ++i) {

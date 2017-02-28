@@ -80,6 +80,17 @@ inline Type aiolos_sigmoid(Type val) {
 }
 
 template<typename Mat>
+Mat aiolos_matrix_exp(const Mat& m) {
+    Mat res(m.rows(), m.cols());
+    for(size_t i = 0; i < m.rows(); ++i) {
+        for(size_t j = 0; j < m.cols(); ++j) {
+            res(i, j) = exp(m(i, j));
+        }
+    }
+    return std::move(res);
+}
+
+template<typename Mat>
 Mat aiolos_matrix_sigmoid(const Mat& m) {
     Mat res(m.rows(), m.cols());
     for(size_t i = 0; i < m.rows(); ++i) {
