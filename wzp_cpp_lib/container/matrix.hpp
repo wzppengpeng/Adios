@@ -91,7 +91,7 @@ T det(const Mat& arcs) {
                 temp(j, k) = arcs(j + 1, (k >= i ? k + 1 : k));
             }
         }
-        auto t = det(temp);
+        auto t = det<T>(temp);
         if(i % 2 == 0) {
             ans += arcs(0, i) * t;
         }

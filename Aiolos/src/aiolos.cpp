@@ -29,6 +29,9 @@ void Aiolos::run() {
     if(m_objective_type == ObjectiveType::Classify) {
         classify();
     }
+    else if(m_objective_type == ObjectiveType::Regression) {
+        regression();
+    }
 }
 
 Aiolos::Aiolos(const std::string& config) : parser(config), m_classify(nullptr)
@@ -43,6 +46,9 @@ void Aiolos::init(const std::string& objective) {
     if(objective == "classify") {
         m_objective_type = ObjectiveType::Classify;
     }
+    else if(objective == "regression") {
+        m_objective_type = ObjectiveType::Regression;
+    }
     else {
         m_objective_type = ObjectiveType::Classify;
     }
@@ -54,6 +60,12 @@ void Aiolos::init(const std::string& objective) {
     if(m_objective_type == ObjectiveType::Classify) {
         m_classify = TaskFactory<Classify>::create(task);
         if(m_classify.get() == nullptr) {
+            log::fatal("Task Illegal", task);
+        }
+    }
+    else if(m_objective_type == ObjectiveType::Regression) {
+        m_regression = TaskFactory<Regression>::create(task);
+        if(m_regression.get() == nullptr) {
             log::fatal("Task Illegal", task);
         }
     }
@@ -103,6 +115,33 @@ void Aiolos::classify() {
     log::info("Aiolos Job Success!");
 }
 
+void Aiolos::regression() {
+    m_regression->init(&parser);
+    if(m_mode_type == Mode::Train) {
+        //judge has validate?
+        //TODO:
+        regression_train();
+        auto path = m_io_helper.get_dump_path();
+        if(path.empty()) {
+            log::fatal("Miss Arg model_path");
+        }
+        m_regression->dump_model(path.c_str());
+    }
+    else if(m_mode_type == Mode::Predict) {
+        auto path = m_io_helper.get_restore_path();
+        if(path.empty()) {
+            log::fatal("Miss Arg model_path");
+        }
+        m_regression->restore_model(path.c_str());
+        regression_predict();
+    }
+    else {
+        regression_train();
+        regression_predict();
+    }
+    log::info("Aiolos Job Success!");
+}
+
 void Aiolos::classify_train() {
     if(m_io_helper.has_validate()) {
         auto input = m_io_helper.read_data("input_path");
@@ -115,9 +154,27 @@ void Aiolos::classify_train() {
     }
 }
 
+void Aiolos::regression_train() {
+    if(m_io_helper.has_validate()) {
+        auto input = m_io_helper.read_data_series("input_path");
+        auto validate = std::move(m_io_helper.read_data_series("validate_path"));
+        m_regression->train(input.first, input.second, validate.first, validate.second);
+    }
+    else {
+        auto input = m_io_helper.read_data_series("input_path");
+        m_regression->train(input.first, input.second);
+    }
+}
+
 inline void Aiolos::classify_predict() {
     auto input = m_io_helper.read_data("predict_path");
     auto res = m_classify->predict(input.first);
+    m_io_helper.output_data(res);
+}
+
+inline void Aiolos::regression_predict() {
+    auto input = m_io_helper.read_data_series("predict_path");
+    auto res = m_regression->predict(input.first);
     m_io_helper.output_data(res);
 }
 

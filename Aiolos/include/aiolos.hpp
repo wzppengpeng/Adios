@@ -41,6 +41,15 @@ private:
 
     inline void classify_predict();
 
+    /**
+     * regression function
+     */
+    void regression();
+
+    void regression_train();
+
+    inline void regression_predict();
+
 private:
     enum class ObjectiveType {
         Classify,
@@ -55,7 +64,11 @@ private:
     //members
     wzp::ConfigParser parser;
     IoHelper m_io_helper;
+    //classify
     std::shared_ptr<Classify> m_classify;
+    //regression
+    std::shared_ptr<Regression> m_regression;
+
     ObjectiveType m_objective_type;
     Mode m_mode_type = Mode::Train;
 

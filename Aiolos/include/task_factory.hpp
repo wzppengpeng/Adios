@@ -9,6 +9,7 @@
 
 
 #include "classify.hpp"
+#include "regression.hpp"
 
 namespace aiolos
 {
@@ -34,7 +35,13 @@ public:
     }
 };
 
-
+template<>
+class TaskFactory<Regression> {
+public:
+    inline static std::shared_ptr<Regression> create(const std::string& task) {
+        return wzp::Reflection<Regression>::create_shared(task);
+    }
+};
 
 } //aiolos
 
