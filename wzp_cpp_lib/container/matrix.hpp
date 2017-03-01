@@ -270,6 +270,28 @@ public:
         return *this;
     }
 
+    //minus fuunction
+    Matrix<T> operator-(const Matrix<T>& other) {
+        assert(m_row == other.rows() && m_col == other.cols());
+        Matrix<T> res(m_row, m_col);
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
+                res(i, j) = this->at(i, j) - other(i, j);
+            }
+        }
+        return std::move(res);
+    }
+
+    Matrix<T>& operator-=(const Matrix<T>& other) {
+        assert(m_row == other.rows() && m_col == other.cols());
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
+                this->at(i, j) -= other(i, j);
+            }
+        }
+        return *this;
+    }
+
     /**
      * Dot Product, C is the new Col
      */
