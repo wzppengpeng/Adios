@@ -101,7 +101,7 @@ T det(const Mat& arcs) {
     }
     return ans;
 }
-}
+}//linear
 
 /**
  * class of Matrix!!
@@ -271,7 +271,7 @@ public:
     }
 
     //minus fuunction
-    Matrix<T> operator-(const Matrix<T>& other) {
+    Matrix<T> operator-(const Matrix<T>& other) const{
         assert(m_row == other.rows() && m_col == other.cols());
         Matrix<T> res(m_row, m_col);
         for(size_t i = 0; i < m_row; ++i) {
