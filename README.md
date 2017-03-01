@@ -1,3 +1,6 @@
 # Adios
 ## Adios is my new personal project code
-### hope 
+    . Adios lib is a network lib(rest api and distributed task queue by
+    boost.asio)
+    . Aiolos lib is a machine learning engine(use C++11)
+    . wzp_cpp_lib is a C++11 lib
