@@ -18,7 +18,7 @@ namespace cart
  */
 template<typename Mat, typename Label, typename T>
 pair<pair<Mat, Label>, pair<Mat, Label>> bin_split_data_set(const Mat& m,
-     const Label& labels, size_t axis, T value) {
+    const Label& labels, size_t axis, T value) {
     vector<vector<T>> mat_less; vector<vector<T>> label_less;
     vector<vector<T>> mat_great; vector<vector<T>> label_great;
     for(size_t i = 0; i < m.rows(); ++i) {
@@ -140,14 +140,65 @@ CartTree<Type> create_tree(const Mat& mat, const Label& labels,
     return ret_tree;
 }
 
-/**
- * Fucntions of Tree ForeCast
- */
 //judge a tree node is leaf or not
 template<typename TNodePtr>
 inline bool is_leaf(const TNodePtr& n) {
     return n->is_leaf;
 }
+
+/**
+ * Post Prune Tree for Cart Tree
+ */
+//compute the mean of a tree
+template<typename TNodePtr>
+Type get_mean_of_cart_tree(const TNodePtr& ptr) {
+    Type left_val = is_leaf(ptr->left) ? ptr->left->val : get_mean_of_cart_tree(ptr->left);
+    Type right_val = is_leaf(ptr->right) ? ptr->right->val : get_mean_of_cart_tree(ptr->right);
+    return (left_val) / 2.0 + right_val / 2.0;
+}
+
+template<typename Label>
+Type validate_regression_error(const Label& labels, Type val) {
+    Type sum = 0.0;
+    for(size_t i = 0; i < labels.rows(); ++i) {
+        auto minus = labels(i, 0) - val;
+        sum += (minus * minus);
+    }
+    return sum;
+}
+
+template<typename TNodePtr, typename Mat, typename Label>
+TNodePtr prune(TNodePtr ptr, const Mat& mat, const Label& labels) {
+    if(mat.rows() == 0) {
+        ptr->is_leaf = true;
+        ptr->val = get_mean_of_cart_tree(ptr);
+        (ptr->left).reset(); (ptr->right).reset();
+        return ptr;
+    }
+    if(is_leaf(ptr)) return ptr;
+    auto split_mats = bin_split_data_set(mat, labels, ptr->axis, ptr->val);
+    if(!is_leaf(ptr->left)) ptr->left = prune(ptr->left, split_mats.first.first, split_mats.first.second);
+    if(!is_leaf(ptr->right)) ptr->right = prune(ptr->right, split_mats.second.first, split_mats.second.second);
+    //merge
+    if(is_leaf(ptr->left) && is_leaf(ptr->right)) {
+        // split_mats = std::move(bin_split_data_set(mat, labels, ptr->axis, ptr->val)); // question
+        auto error_no_merge = validate_regression_error(split_mats.first.second, ptr->left->val) +
+            validate_regression_error(split_mats.second.second, ptr->right->val);
+        auto tree_mean = get_mean_of_cart_tree(ptr);
+        auto error_merge = validate_regression_error(labels, tree_mean);
+        if(error_merge < error_no_merge) {
+            ptr->is_leaf = true;
+            ptr->val = tree_mean;
+            (ptr->left).reset(); (ptr->right).reset();
+            return ptr;
+        }
+    }
+    return ptr;
+}
+
+/**
+ * Fucntions of Tree ForeCast
+ */
 
 //cart tree eval
 template<typename TNodePtr>

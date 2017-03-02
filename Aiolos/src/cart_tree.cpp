@@ -12,6 +12,7 @@ ReflectionRegister(Regression, CartTreeRegression) regis_cart_tree("cart_tree");
 
 void CartTreeRegression::init(wzp::ConfigParser* config_parser) {
     m_config_parser = config_parser;
+    config_parser->get("silent", m_is_silent);
     config_parser->get("tol_s", tol_s);
     config_parser->get("tol_n", tol_n);
 }
@@ -31,6 +32,10 @@ void CartTreeRegression::train(wzp::Matrix<Type>& input_matrix,
     m_validate_matrix = &validate_matrix;
     m_validate_label = &validate_label;
     m = input_matrix.rows(); n = input_matrix.cols();
+    train_process();
+    auto new_root = cart::prune(m_root_tree.get_trees(), validate_matrix, validate_label);
+    m_root_tree = std::move(CartTree<Type>(new_root));
+    if(m_is_silent == 0) m_root_tree.print_tree();
 }
 
 wzp::Matrix<Type> CartTreeRegression::predict(wzp::Matrix<Type>& predict_matrix) {
@@ -59,7 +64,7 @@ void CartTreeRegression::train_process() {
      }, [](const Matrix<Type>&mat, const Matrix<Type>& labels) {
         return cart::reg_err(mat, labels);
      }, tol_s, tol_n);
-    m_root_tree.print_tree();
+    if(m_is_silent == 0) m_root_tree.print_tree();
 }
 
 

@@ -56,6 +56,8 @@ private:
     size_t m;
     size_t n;
 
+    int m_is_silent = 0;
+
     /**
      * Cart Tree Regression Members
      */

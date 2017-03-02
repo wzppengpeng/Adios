@@ -157,6 +157,10 @@ private:
 public:
     CartTree() = default;
 
+    CartTree(const CartTreeNodePtr& ptr) : m_trees(ptr) {}
+
+    CartTree(CartTreeNodePtr&& ptr) : m_trees(ptr) {}
+
     CartTree(T value) {
         m_trees = CartTreeNodePtr(new CartTreeNode<T>());
         m_trees->val = value;
