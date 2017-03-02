@@ -8,4 +8,5 @@
     . AdaBoost(Use Stump)
 
 ##Regression
-    . Stand Linear Regression
+    . Stand Linear Regression, LWLR Regression
+    . Cart Tree Regression
