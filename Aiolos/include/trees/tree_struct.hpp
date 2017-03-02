@@ -42,6 +42,20 @@ struct TreeNode
 };
 
 /**
+ * struct of Cart and Model Tree Node
+ */
+template<typename T>
+struct CartTreeNode
+{
+    bool is_leaf = false;
+    T val; // if it is leaf, then this is the leaf value
+    size_t axis; //if it is not leaf, then this is the node axis, and val is the axis val
+    vector<T> ws;
+    shared_ptr<CartTreeNode<T> > left; // if S[axis] > val
+    shared_ptr<CartTreeNode<T> > right; // ifS[axis] <= val
+};
+
+/**
  * the struct of Stump, for adaboost as the base classifier
  */
 template<typename T>
@@ -125,6 +139,79 @@ private:
                 cout<<" ] ";
             }
             cout<<" }";
+        }
+    }
+
+};
+
+template<typename T>
+class CartTree
+{
+
+using CartTreeNodePtr = shared_ptr<CartTreeNode<T> >;
+
+private:
+    //tree root
+    CartTreeNodePtr m_trees {nullptr};
+
+public:
+    CartTree() = default;
+
+    CartTree(T value) {
+        m_trees = CartTreeNodePtr(new CartTreeNode<T>());
+        m_trees->val = value;
+        m_trees->is_leaf = true;
+    }
+
+    CartTree(vector<T>&& other) {
+        m_trees = CartTreeNodePtr(new CartTreeNode<T>());
+        m_trees->is_leaf = true;
+        m_trees->ws = other;
+    }
+
+    CartTree(size_t index, T value) {
+        m_trees = CartTreeNodePtr(new CartTreeNode<T>());
+        m_trees->val = value;
+        m_trees->axis = index;
+    }
+
+    /**
+     * getter
+     */
+    inline const CartTreeNodePtr get_trees() const { return m_trees; }
+
+    inline CartTreeNodePtr get_trees() { return m_trees; }
+
+    inline void append_left(const CartTree<T>& son) {
+        m_trees->left = son.get_trees();
+    }
+
+    inline void append_right(const CartTree<T>& son) {
+        m_trees->right = son.get_trees();
+    }
+
+    void print_tree() const {
+        cout<<"{ ";
+        print(m_trees);
+        cout<<" }"<<endl;
+    }
+
+private:
+    void print(CartTreeNodePtr ptr) const {
+        if(ptr->is_leaf) {
+            cout<<" leaf value is: "<<ptr->val;
+        }
+        else {
+            cout<<" axis: "<<ptr->axis<<" > "<<ptr->val<<" {";
+            cout<<" [ ";
+            print(ptr->left);
+            cout<<" ] ";
+            cout<<" } ";
+            cout<<" axis: "<<ptr->axis<<" <= "<<ptr->val<<" {";
+            cout<<" [ ";
+            print(ptr->right);
+            cout<<" ] ";
+            cout<<" } ";
         }
     }
 
