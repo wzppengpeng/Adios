@@ -10,6 +10,7 @@
 
 #include "classify.hpp"
 #include "regression.hpp"
+#include "cluster.hpp"
 
 namespace aiolos
 {
@@ -22,25 +23,9 @@ public:
      * create function
      */
     inline static std::shared_ptr<Objective> create(const std::string& task) {
-        return nullptr;
+        return wzp::Reflection<Objective>::create_shared(task);
     }
 
-};
-
-template<>
-class TaskFactory<Classify> {
-public:
-    inline static std::shared_ptr<Classify> create(const std::string& task) {
-        return wzp::Reflection<Classify>::create_shared(task);
-    }
-};
-
-template<>
-class TaskFactory<Regression> {
-public:
-    inline static std::shared_ptr<Regression> create(const std::string& task) {
-        return wzp::Reflection<Regression>::create_shared(task);
-    }
 };
 
 } //aiolos

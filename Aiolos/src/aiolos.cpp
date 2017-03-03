@@ -32,6 +32,10 @@ void Aiolos::run() {
     else if(m_objective_type == ObjectiveType::Regression) {
         regression();
     }
+    else if(m_objective_type == ObjectiveType::Cluster) {
+        cluster();
+    }
+    log::info("Aiolos Job Success!");
 }
 
 Aiolos::Aiolos(const std::string& config) : parser(config), m_classify(nullptr)
@@ -48,6 +52,9 @@ void Aiolos::init(const std::string& objective) {
     }
     else if(objective == "regression") {
         m_objective_type = ObjectiveType::Regression;
+    }
+    else if(objective == "cluster") {
+        m_objective_type = ObjectiveType::Cluster;
     }
     else {
         m_objective_type = ObjectiveType::Classify;
@@ -69,10 +76,17 @@ void Aiolos::init(const std::string& objective) {
             log::fatal("Task Illegal", task);
         }
     }
+    else if(m_objective_type == ObjectiveType::Cluster) {
+        m_cluster = TaskFactory<Cluster>::create(task);
+        if(m_cluster.get() == nullptr) {
+            log::fatal("Task Illegal", task);
+        }
+    }
     else {
         log::fatal("Wrong Task With Wrong Objective", task);
     }
     //get mode
+    if(m_objective_type == ObjectiveType::Cluster) return;
     if(!parser.get("mode", task)) {
         log::error("Miss Arg mode");
     }
@@ -112,7 +126,6 @@ void Aiolos::classify() {
         classify_train();
         classify_predict();
     }
-    log::info("Aiolos Job Success!");
 }
 
 void Aiolos::regression() {
@@ -139,7 +152,6 @@ void Aiolos::regression() {
         regression_train();
         regression_predict();
     }
-    log::info("Aiolos Job Success!");
 }
 
 void Aiolos::classify_train() {
@@ -175,6 +187,13 @@ inline void Aiolos::classify_predict() {
 inline void Aiolos::regression_predict() {
     auto input = m_io_helper.read_data_series("predict_path");
     auto res = m_regression->predict(input.first);
+    m_io_helper.output_data(res);
+}
+
+void Aiolos::cluster() {
+    m_cluster->init(&parser);
+    auto input = m_io_helper.read_raw_data("input_path");
+    auto res = m_cluster->run(input);
     m_io_helper.output_data(res);
 }
 

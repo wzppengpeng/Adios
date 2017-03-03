@@ -138,9 +138,9 @@ template<typename T>
 class Matrix : private MatrixBase<T> {
 
 public:
-    vector<T> m_data; // the data container
-    size_t m_row;
-    size_t m_col; // Row and Col;
+    vector<T> m_data {}; // the data container
+    size_t m_row = 0;
+    size_t m_col = 0; // Row and Col;
     ProcessType m_type = ProcessType::MultiThread;
 
 public:

@@ -30,6 +30,7 @@ public:
     /**
      * input data and trainsorm types
      */
+    wzp::Matrix<Type> read_raw_data(const std::string& path) noexcept;
     std::pair<wzp::Matrix<Type>, wzp::Matrix<int>> read_data(const std::string& path) noexcept;
     std::pair<wzp::Matrix<Type>, wzp::Matrix<Type>> read_data_series(const std::string& path) noexcept;
 

@@ -161,6 +161,11 @@ T row_sum(const wzp::Matrix<T>& mat, size_t row_index) {
 }
 
 template<typename T>
+inline T row_mean(const wzp::Matrix<T>& mat, size_t row_index) {
+    return row_sum(mat, row_index) / static_cast<T>(mat.cols());
+}
+
+template<typename T>
 T col_sum(const wzp::Matrix<T>& mat, size_t col_index = 0) {
     assert(col_index < mat.cols());
     T sum = 0;
@@ -168,6 +173,11 @@ T col_sum(const wzp::Matrix<T>& mat, size_t col_index = 0) {
         sum += mat(i, col_index);
     }
     return sum;
+}
+
+template<typename T>
+inline T col_mean(const wzp::Matrix<T>& mat, size_t col_index) {
+    return col_sum(mat, col_index) / static_cast<T>(mat.rows());
 }
 
 /**

@@ -50,10 +50,16 @@ private:
 
     inline void regression_predict();
 
+    /**
+     * cluster function
+     */
+    void cluster();
+
 private:
     enum class ObjectiveType {
         Classify,
-        Regression
+        Regression,
+        Cluster
     };
 
     enum class Mode {
@@ -68,6 +74,8 @@ private:
     std::shared_ptr<Classify> m_classify;
     //regression
     std::shared_ptr<Regression> m_regression;
+    //cluster
+    std::shared_ptr<Cluster> m_cluster;
 
     ObjectiveType m_objective_type;
     Mode m_mode_type = Mode::Train;

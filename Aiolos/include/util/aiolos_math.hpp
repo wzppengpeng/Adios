@@ -36,10 +36,23 @@ template<typename T = unsigned>
  * @return T
  */
 inline T aiolos_random_int(T begin, T end) {
-    std::random_device rd;
-    std::default_random_engine e(rd());
+    static std::random_device rd;
+    static std::default_random_engine e(rd());
     std::uniform_int_distribution<T> u(begin, end);
     return u(e);
+}
+
+template<typename T>
+/**
+ * generate random float or double
+ * @param  begin the begin of range
+ * @param  end   the end of range
+ * @return       float random value
+ */
+inline Type aiolos_random_real(T begin, T end) {
+    static std::default_random_engine er;
+    static std::uniform_real_distribution<Type> ur(begin, end);
+    return ur(er);
 }
 
 template<typename T = unsigned, typename I>
