@@ -10,3 +10,4 @@
 ##Regression
     . Stand Linear Regression, LWLR Regression
     . Cart Tree Regression
+    . Model Tree Regression
