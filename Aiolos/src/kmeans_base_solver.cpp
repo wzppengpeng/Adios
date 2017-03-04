@@ -60,12 +60,7 @@ void KmeansBaseSolver::process(wzp::Matrix<Type>& cluster_assement) {
         //change the centroids location
         for(size_t cent = 0; cent < k; ++cent) {
             //generate the right indexs
-            vector<size_t> cent_indexs;
-            cent_indexs.reserve(m);
-            for(size_t i = 0; i < m; ++i) {
-                if(static_cast<size_t>(cluster_assement(i, 0)) == cent)
-                    cent_indexs.emplace_back(i);
-            }
+            auto cent_indexs = op::split_by_col_value(cluster_assement, cent);
             compute_col_mean(cent_indexs, cent);
         }
     }

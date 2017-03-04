@@ -48,7 +48,9 @@ private:
     wzp::ConfigParser* m_config_parser;
 
     wzp::Matrix<Type>* m_input_matrix;
+    wzp::Matrix<Type> m_in;
     wzp::Matrix<int>* m_input_label;
+    wzp::Matrix<int> m_ll;
     wzp::Matrix<Type>* m_validate_matrix;
     wzp::Matrix<int>* m_validate_label;
 

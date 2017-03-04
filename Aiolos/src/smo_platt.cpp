@@ -63,11 +63,11 @@ int SMOPlatt::inner_iter(size_t i, OptStruct& oS) {
         auto alpha_j_old = oS.alphas(j, 0);
         Type L, H;
         if(oS.label_mat->at(i, 0) != oS.label_mat->at(j, 0)) {
-            L = std::max(0.0f, oS.alphas(j, 0) - oS.alphas(i, 0));
+            L = std::max(0.0, oS.alphas(j, 0) - oS.alphas(i, 0));
             H = std::min(oS.C, oS.C + oS.alphas(j, 0) - oS.alphas(i, 0));
         }
         else {
-            L = std::max(0.0f, oS.alphas(j, 0) + oS.alphas(i, 0) - oS.C);
+            L = std::max(0.0, oS.alphas(j, 0) + oS.alphas(i, 0) - oS.C);
             H = std::min(oS.C, oS.alphas(j, 0) + oS.alphas(i, 0));
         }
         if(L == H) {

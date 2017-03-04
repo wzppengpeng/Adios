@@ -160,7 +160,7 @@ void AdaBoost::adaboost_train_process(int num_iter) {
         Type error = std::get<1>(ans);
         wzp::Matrix<Type> class_est = std::move(std::get<2>(ans));
         //compute alpha
-        Type alpha = 0.5 * log((1.0 - error) / std::max(error, 1e-16f));
+        Type alpha = 0.5 * log((1.0 - error) / std::max(error, 1e-16));
         m_weak_class_arrays.emplace_back(alpha, best_stump);
         auto expon = op::multiply(*m_input_label, class_est);
         expon *= (-1.0 * alpha);

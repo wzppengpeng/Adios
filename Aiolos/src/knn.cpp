@@ -27,8 +27,10 @@ void KNN::init(wzp::ConfigParser* config_parser) {
 }
 
 void KNN::train(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label) {
-    m_input_matrix = &input_matrix;
-    m_input_label = &input_label;
+    m_in = input_matrix;
+    m_ll = input_label;
+    m_input_matrix = &m_in;
+    m_input_label = &m_ll;
     if(k > m_input_matrix->rows()) {
         k = m_input_matrix->rows();
         log::error("the K is set to be too large");

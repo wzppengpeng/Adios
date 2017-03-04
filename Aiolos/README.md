@@ -15,3 +15,4 @@
 ##Cluster
     . Kmeans
         Base Kmeans Solution
+        binary Kmeans Solution

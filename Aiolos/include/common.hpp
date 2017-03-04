@@ -9,7 +9,7 @@ namespace aiolos
 /**
  * all T is float now
  */
-using Type = float;
+using Type = double;
 
 
 using wzp::print;

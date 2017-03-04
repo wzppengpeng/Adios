@@ -218,6 +218,29 @@ std::pair<wzp::Matrix<T>, wzp::Matrix<int>> split_matrix_by_col(const wzp::Matri
     }
 }
 
+template<typename U, typename T>
+std::vector<size_t> split_by_col_value(const wzp::Matrix<U>& data_set, T val, size_t col_index = 0) {
+    vector<size_t> indexs;
+    // indexs.reserve(data_set.rows());
+    for(size_t i = 0; i < data_set.rows(); ++i) {
+        if(static_cast<T>(data_set(i, col_index)) == val) {
+            indexs.emplace_back(i);
+        }
+    }
+    return std::move(indexs);
+}
+
+
+template<typename T>
+wzp::Matrix<T> get_new_mat_by_rows(const wzp::Matrix<T>& data_set, const std::vector<size_t>& indexs) {
+    wzp::Matrix<T> new_data_set(indexs.size(), data_set.cols());
+    for(size_t i = 0; i < indexs.size(); ++i) {
+        for(size_t j = 0; j < data_set.cols(); ++j) {
+            new_data_set(i, j) = data_set(indexs[i], j);
+        }
+    }
+    return std::move(new_data_set);
+}
 
 /**
  * Some Matrix Operations

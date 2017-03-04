@@ -55,11 +55,11 @@ void SMOSimple::process(Type& b, wzp::Matrix<Type>& alphas, int& iter, Type C, T
             //ensure the alpha is in 0 and C
             Type L, H;
             if(m_input_label->at(i, 0) != m_input_label->at(j, 0)) {
-                L = std::max(0.0f, alphas(j, 0) - alphas(i, 0));
+                L = std::max(0.0, alphas(j, 0) - alphas(i, 0));
                 H = std::min(C, C + alphas(j, 0) - alphas(i, 0));
             }
             else {
-                L = std::max(0.0f, alphas(j, 0) + alphas(i, 0) - C);
+                L = std::max(0.0, alphas(j, 0) + alphas(i, 0) - C);
                 H = std::min(C, alphas(j, 0) + alphas(i, 0));
             }
             if(L == H) {

@@ -33,6 +33,8 @@ private:
     /**
      * Kmeans Memebers
      */
+    std::string task {"bin"};
+
     size_t k = 3; // the number of cluster center
 
     std::unique_ptr<KmeansSolver> m_solver;
