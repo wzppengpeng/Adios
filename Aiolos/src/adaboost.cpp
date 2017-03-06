@@ -146,7 +146,7 @@ std::tuple<Stump<Type>, Type, wzp::Matrix<Type>> AdaBoost::build_stump(wzp::Matr
             }
         }
     }
-    return {best_stump, min_error, best_class_est};
+    return std::make_tuple(best_stump, min_error, best_class_est);
 }
 
 void AdaBoost::adaboost_train_process(int num_iter) {
