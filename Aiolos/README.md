@@ -4,7 +4,7 @@
     . ClassifyDecisionTree
     . NaiveBayes
     . Logistic Regression
-    . SVM(Linear SVM)
+    . SVM(Linear SVM, Kernal RBF)
     . AdaBoost(Use Stump)
 
 ##Regression

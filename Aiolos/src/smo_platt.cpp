@@ -21,7 +21,10 @@ std::pair<Type, wzp::Matrix<Type>> SMOPlatt::run(wzp::ConfigParser* config_parse
     m_config_parser = config_parser;
     m_config_parser->get("kernal_type", m_kernal_type);
     m_config_parser->get("sigma", m_sigma);
-    if(m_sigma > 0) m_use_kernal = true;
+    if(m_sigma > 0) {
+        m_use_kernal = true;
+        wzp::log::info("Use Kernal, Type", m_kernal_type);
+    }
     m_is_silent = is_silent;
     OptStruct oS(input_matrix, input_label, C, toler, m_kernal_type, m_sigma);
     int iter = 0;
