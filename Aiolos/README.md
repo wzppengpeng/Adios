@@ -6,6 +6,7 @@
     . Logistic Regression
     . SVM(Linear SVM, Kernal RBF)
     . AdaBoost(Use Stump)
+    . RandomForest
 
 ##Regression
     . Stand Linear Regression, LWLR Regression
