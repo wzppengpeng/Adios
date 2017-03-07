@@ -4,9 +4,12 @@
 #include <utility>
 #include <vector>
 #include <unordered_map>
+// #include <unordered_set>
 
 
 #include "container/matrix.hpp"
+
+#include "aiolos_math.hpp"
 
 #include "common.hpp"
 
@@ -29,6 +32,11 @@ Range generate(size_t len) {
     std::generate_n(begin(range_container), len-1, [&current]{return ++current; });
     return std::move(range_container);
 }
+
+/**
+ * randome select length axis from 0 ~ max_axis
+ */
+std::vector<size_t> random_choose(size_t max_axis, size_t length);
 
 /**
  * arg_min(col), row is in matrix_args
@@ -240,6 +248,19 @@ wzp::Matrix<T> get_new_mat_by_rows(const wzp::Matrix<T>& data_set, const std::ve
         }
     }
     return std::move(new_data_set);
+}
+
+/**
+ * booststrap, random choose a new dataset
+ */
+template<typename T>
+wzp::Matrix<T> booststrap(const wzp::Matrix<T>& data_set) {
+    wzp::Matrix<T> son_data_set(data_set.rows(), data_set.cols());
+    for(size_t i = 0; i < data_set.rows(); ++i) {
+        auto choose_row = math::aiolos_random_int<size_t>(0, data_set.rows() - 1);
+        son_data_set.place(data_set.row_at(choose_row), i);
+    }
+    return std::move(son_data_set);
 }
 
 /**

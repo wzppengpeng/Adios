@@ -546,6 +546,16 @@ public:
         }
     }
 
+    /**
+     * place one row data into matrix
+     */
+    void place(const T* data, size_t row_index) {
+        assert(row_index < m_row);
+        for(size_t j = 0; j < m_col; ++j) {
+            at(row_index, j) = data[j];
+        }
+    }
+
 private:
     void init(T init_val) {
         for(size_t i = 0; i < m_row; ++i) {
