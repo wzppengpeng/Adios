@@ -231,7 +231,7 @@ public:
      * Operations
      */
     //scalar product
-    Matrix<T> operator*(T val) {
+    Matrix<T> operator*(T val) const {
         Matrix<T> res(*this);
         for(size_t i = 0; i < m_row; ++i) {
             for(size_t j = 0; j < m_col; ++j) {
@@ -249,7 +249,7 @@ public:
     }
 
     //add function
-    Matrix<T> operator+(const Matrix<T>& other) {
+    Matrix<T> operator+(const Matrix<T>& other) const {
         assert(m_row == other.rows() && m_col == other.cols());
         Matrix<T> res(m_row, m_col);
         for(size_t i = 0; i < m_row; ++i) {
@@ -518,7 +518,7 @@ public:
      * Slice
      */
     Matrix<T> slice(size_t row_begin, size_t col_begin,
-     size_t row_end, size_t col_end) {
+     size_t row_end, size_t col_end) const {
         assert(row_end >= row_begin && col_end >= col_begin);
         assert(col_end <= cols());
         assert(row_end <= rows());

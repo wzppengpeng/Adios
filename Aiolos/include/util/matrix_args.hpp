@@ -30,17 +30,28 @@ public:
     }
 
     /**
+     * [compute_squre_distance description]
+     * @param  a   point
+     * @param  b   point
+     * @param  len length
+     * @return     double
+     */
+    inline static Type compute_squre_distance(const Type* a, const Type* b, size_t len) {
+        Type sum = 0.0;
+        for(size_t i = 0; i < len; ++i) {
+            sum += ((a[i] - b[i]) * (a[i] - b[i]));
+        }
+        return sum;
+    }
+
+    /**
      * [compute_distance description]
      * @param  a point
      * @param  b ponit
      * @return  float or double
      */
     inline static Type compute_distance(const Type* a, const Type* b, size_t len) {
-        Type sum = 0.0;
-        for(size_t i = 0; i < len; ++i) {
-            sum += ((a[i] - b[i]) * (a[i] - b[i]));
-        }
-        return sqrt(sum);
+        return sqrt(MatrixArgs::compute_squre_distance(a, b, len));
     }
 
     /**

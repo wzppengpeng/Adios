@@ -13,7 +13,7 @@ public:
     SMOSimple() = default;
 
     //run function
-    std::pair<Type, wzp::Matrix<Type>> run(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
+    std::pair<Type, wzp::Matrix<Type>> run(wzp::ConfigParser* config_parser, wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
         Type C, Type toler, int max_iter, bool is_silent = false) override;
 
 private:

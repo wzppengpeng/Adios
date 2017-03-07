@@ -2,6 +2,7 @@
 #define AIOLOS_SMO_HPP
 
 #include "container/matrix.hpp"
+#include "config/config_parser.hpp"
 
 #include "common.hpp"
 
@@ -17,7 +18,7 @@ public:
     /**
      * smo resolve function
      */
-    virtual std::pair<Type, wzp::Matrix<Type>> run(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
+    virtual std::pair<Type, wzp::Matrix<Type>> run(wzp::ConfigParser* config_parser, wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
         Type C, Type toler, int max_iter, bool is_silent = false) = 0;
 
 };

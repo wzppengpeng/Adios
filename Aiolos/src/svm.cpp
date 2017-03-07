@@ -33,7 +33,7 @@ void SVM::train(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label) 
     m_input_matrix = &input_matrix;
     m_input_label = &input_label;
     bool is_silent = (m_silent > 0);
-    auto res = m_smo_runner->run(*m_input_matrix, *m_input_label, m_C, m_toler, m_max_iter, is_silent);
+    auto res = m_smo_runner->run(m_config_parser, *m_input_matrix, *m_input_label, m_C, m_toler, m_max_iter, is_silent);
     m_b = res.first;
     m_W = calWs(res.second, *m_input_matrix, *m_input_label);
 }

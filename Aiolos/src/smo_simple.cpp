@@ -16,7 +16,7 @@ namespace aiolos
 ReflectionRegister(SMO, SMOSimple) regis_smo_simple("smo_simple");
 
 //the main interface
-std::pair<Type, wzp::Matrix<Type>> SMOSimple::run(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
+std::pair<Type, wzp::Matrix<Type>> SMOSimple::run(wzp::ConfigParser* config_parser, wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label,
         Type C, Type toler, int max_iter, bool is_silent) {
     //prepare for code
     m_input_matrix = &input_matrix;
