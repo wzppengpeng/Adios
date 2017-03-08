@@ -253,14 +253,16 @@ wzp::Matrix<T> get_new_mat_by_rows(const wzp::Matrix<T>& data_set, const std::ve
 /**
  * booststrap, random choose a new dataset
  */
-template<typename T>
-wzp::Matrix<T> booststrap(const wzp::Matrix<T>& data_set) {
+template<typename T, typename I>
+std::pair<wzp::Matrix<T>, wzp::Matrix<I>> booststrap(const wzp::Matrix<T>& data_set, const wzp::Matrix<I>& labels) {
     wzp::Matrix<T> son_data_set(data_set.rows(), data_set.cols());
+    wzp::Matrix<I> son_labels(labels.rows(), labels.cols());
     for(size_t i = 0; i < data_set.rows(); ++i) {
         auto choose_row = math::aiolos_random_int<size_t>(0, data_set.rows() - 1);
         son_data_set.place(data_set.row_at(choose_row), i);
+        son_labels.place(labels.row_at(choose_row), i);
     }
-    return std::move(son_data_set);
+    return {son_data_set, son_labels};
 }
 
 /**
