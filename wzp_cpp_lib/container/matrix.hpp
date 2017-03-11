@@ -165,6 +165,12 @@ public:
         }
     }
 
+    //init by vector<T> this is only for inner construct data
+    Matrix(size_t M, size_t N, vector<T>&& data) : m_data(data)
+                                            , m_row(M)
+                                            , m_col(N)
+    {}
+
     //init by vector<vector<T>>
     Matrix(size_t M, size_t N, const vector<vector<T>>& data) : m_data(M * N)
                                             , m_row(M)
@@ -225,6 +231,19 @@ public:
         std::swap(tmp, m_data);
         std::swap(m_row, m_col);
         return *this;
+    }
+
+    /**
+     * reverse function const
+     */
+    Matrix<T> t_() const {
+        vector<T> tmp(m_data);
+        for(size_t i = 0; i < m_row; ++i) {
+            for(size_t j = 0; j < m_col; ++j) {
+                tmp[j * m_row + i] = m_data[index(i, j)];
+            }
+        }
+        return std::move(Matrix<T>(m_col, m_row, std::move(tmp)));
     }
 
     /**
@@ -295,11 +314,11 @@ public:
     /**
      * Dot Product, C is the new Col
      */
-    Matrix<T> operator*(const Matrix<T>& other) {
+    Matrix<T> operator*(const Matrix<T>& other) const {
         assert(m_col == other.rows());
         Matrix<T> res(m_row, other.cols());
-        check(other.cols());
-        if(m_type == ProcessType::SingleThread) {
+        // check(other.cols());
+        if(m_col > 256 || other.cols() > 256) {
             for(size_t i = 0; i < m_row; ++i) {
                 for(size_t k = 0; k < other.cols(); ++k) {
                     T sum(0);
