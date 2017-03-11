@@ -7,6 +7,7 @@
     . SVM(Linear SVM, Kernal RBF)
     . AdaBoost(Use Stump)
     . RandomForest
+    . ANN
 
 ##Regression
     . Stand Linear Regression, LWLR Regression
