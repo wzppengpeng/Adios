@@ -294,6 +294,32 @@ R vector_product(const wzp::Matrix<T>& left, const wzp::Matrix<U>& right) {
     return sum;
 }
 
+/**
+ * add a vector values to a matrix for every row
+ */
+template<typename T>
+void add_vector(wzp::Matrix<T>& mat, const T* vec) {
+    for(size_t i = 0; i < mat.rows(); ++i) {
+        for(size_t j = 0; j < mat.cols(); ++j) {
+            mat(i, j) += vec[j];
+        }
+    }
+}
+
+/**
+ * Convert A Mat To Another Type Mat
+ */
+template<typename R, typename T>
+wzp::Matrix<R> convert(const wzp::Matrix<T>& raw_mat) {
+    wzp::Matrix<R> res(raw_mat.rows(), raw_mat.cols());
+    for(size_t i = 0; i < raw_mat.rows(); ++i) {
+        for(size_t j = 0; j < raw_mat.cols(); ++j) {
+            res(i, j) = static_cast<R>(raw_mat(i, j));
+        }
+    }
+    return std::move(res);
+}
+
 } //op
 
 } //aiolos

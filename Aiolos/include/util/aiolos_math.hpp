@@ -55,6 +55,28 @@ inline Type aiolos_random_real(T begin, T end) {
     return ur(er);
 }
 
+/**
+ * random generate normal
+ */
+template<typename T>
+inline T aiolos_random_normal(T mean, T val) {
+    static std::default_random_engine er;
+    static std::normal_distribution<T> normal(mean, val);
+    return normal(er);
+}
+
+/**
+ * random generate a matrix
+ */
+template<typename Mat, typename T>
+void aiolos_randn_matrix(Mat& mat, T mean, T val) {
+    for(size_t i = 0; i < mat.rows(); ++i) {
+        for(size_t j = 0; j < mat.cols(); ++j) {
+            mat(i, j) = aiolos_random_real(mean, val);
+        }
+    }
+}
+
 template<typename T = unsigned, typename I>
 /**
  * select a radom one except the previous one
