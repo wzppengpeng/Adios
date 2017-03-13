@@ -59,6 +59,12 @@ public:
 
     virtual const wzp::Matrix<Type>& get_layer_diff_output() const { return m_pre_diff; }
 
+    /**
+     * get weights and bias
+     */
+    virtual wzp::Matrix<Type>& get_weights() { return m_weights; }
+    virtual wzp::Matrix<Type>& get_bias() { return m_bias; }
+
 protected:
     const wzp::Matrix<Type>* m_pre_data;
     const wzp::Matrix<Type>* m_post_diff;

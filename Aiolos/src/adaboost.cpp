@@ -5,7 +5,8 @@
 #include "util/op.hpp"
 #include "util/aiolos_math.hpp"
 
-#include "util/serialize.hpp"
+// #include "util/serialize.hpp"
+#include "util/io.hpp"
 
 using namespace std;
 using wzp::Matrix;
@@ -64,21 +65,15 @@ void AdaBoost::dump_model(const char* filename) {
         wzp::serialize(&buffer, weak.first);
         wzp::serialize(&buffer, weak.second);
     }
-    std::ofstream ofile(filename, std::ios::binary);
-    ofile.write(buffer.c_str(), sizeof(char) * buffer.size());
-    ofile.close();
+    io::write_buffer(buffer, filename);
 }
 
 void AdaBoost::restore_model(const char* filename) {
     //restore the len
-    ifstream ifile;
-    ifile.open(filename);
-    std::string buffer((std::istreambuf_iterator<char>(ifile)),
-        std::istreambuf_iterator<char>());
+    auto buffer = io::read_buffer(filename);
     if(buffer.empty()) {
         wzp::log::fatal("Model File Illegal", filename);
     }
-    ifile.close();
     size_t len;
     wzp::deserialize(buffer, len);
     buffer = std::move(buffer.substr(sizeof(size_t)));

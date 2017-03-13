@@ -5,6 +5,7 @@
 
 #include "util/matrix_args.hpp"
 #include "util/op.hpp"
+#include "util/io.hpp"
 
 
 using namespace std;
@@ -61,10 +62,26 @@ wzp::Matrix<int> NN::predict(wzp::Matrix<Type>& predict_matrix) {
 }
 
 void NN::dump_model(const char* filename) {
-    //save the matrix or weights
+    //save the matrix or weights, mean, weights, bias
+    string buffer;
+    //write the mean matrix
+    io::append_matrix(m_mean_data, &buffer);
+    //write each layer's weights and bias
+    for(size_t i = 1; i < m_nets.size(); ++i) {
+        io::append_matrix(m_nets[i]->get_weights(), &buffer);
+        io::append_matrix(m_nets[i]->get_bias(), &buffer);
+    }
+    io::write_buffer(buffer, filename);
 }
 
 void NN::restore_model(const char* filename) {
+    auto buffer = io::read_buffer(filename);
+    //read mean
+    io::read_matrix<Type>(m_mean_data, buffer);
+    for(size_t i = 1; i < m_nets.size(); ++i) {
+        io::read_matrix<Type>(m_nets[i]->get_weights(), buffer);
+        io::read_matrix<Type>(m_nets[i]->get_bias(), buffer);
+    }
 }
 
 void NN::train_loop() {
