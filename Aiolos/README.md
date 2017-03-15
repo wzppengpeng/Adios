@@ -1,5 +1,5 @@
 # Aiolos is a machine learning framework and engine!
-##Classifier:
+## Classifier:
     . KNN
     . ClassifyDecisionTree
     . NaiveBayes
@@ -9,12 +9,12 @@
     . RandomForest
     . ANN
 
-##Regression
+## Regression
     . Stand Linear Regression, LWLR Regression
     . Cart Tree Regression
     . Model Tree Regression
 
-##Cluster
+## Cluster
     . Kmeans
         Base Kmeans Solution
         binary Kmeans Solution
