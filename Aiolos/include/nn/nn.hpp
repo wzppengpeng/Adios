@@ -63,6 +63,9 @@ private:
     int m_num_iter = 10;
     Type m_eta = 0.001;
     int m_batch_size = 10;
+
+    int m_use_relu = 0;
+
     std::string m_net_framework;
 
     wzp::Matrix<Type> m_mean_data;

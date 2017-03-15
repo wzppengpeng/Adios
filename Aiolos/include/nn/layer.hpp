@@ -38,6 +38,11 @@ public:
     virtual void init(int num_neural, int pre, Type eta) = 0;
 
     /**
+     * set the ActiveFunction
+     */
+    virtual void set_active_fun(ActiveFucntion fun_type) { m_active_fun_type = fun_type; }
+
+    /**
      * forward , input the pre layer's data
      */
     virtual void forward(const wzp::Matrix<Type>& pre_data) = 0;

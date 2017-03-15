@@ -25,6 +25,7 @@ void NN::init(wzp::ConfigParser* config_parser) {
     if(!m_config_parser->get("net_framework", m_net_framework)) {
         wzp::log::fatal("Miss The Defination Of Net");
     }
+    m_config_parser->get("relu", m_use_relu);
     layers_setup();
 }
 
@@ -101,8 +102,10 @@ void NN::layers_setup() {
     m_nets.emplace_back(wzp::Reflection<Layer>::create_shared("output"));
     //init
     m_nets[0]->init(std::stoi(net_def[0]), 0, m_eta);
+    if(m_use_relu > 0) m_nets[0]->set_active_fun(ActiveFucntion::Relu);
     for(size_t i = 1; i < net_def.size(); ++i) {
         m_nets[i]->init(std::stoi(net_def[i]), std::stoi(net_def[i - 1]), m_eta);
+        if(m_use_relu > 0) m_nets[i]->set_active_fun(ActiveFucntion::Relu);
     }
 }
 
