@@ -65,19 +65,19 @@ void Aiolos::init(const std::string& objective) {
         log::fatal("Miss Arg task");
     }
     if(m_objective_type == ObjectiveType::Classify) {
-        m_classify = TaskFactory<Classify>::create(task);
+        m_classify = std::move(TaskFactory<Classify>::create(task));
         if(m_classify.get() == nullptr) {
             log::fatal("Task Illegal", task);
         }
     }
     else if(m_objective_type == ObjectiveType::Regression) {
-        m_regression = TaskFactory<Regression>::create(task);
+        m_regression = std::move(TaskFactory<Regression>::create(task));
         if(m_regression.get() == nullptr) {
             log::fatal("Task Illegal", task);
         }
     }
     else if(m_objective_type == ObjectiveType::Cluster) {
-        m_cluster = TaskFactory<Cluster>::create(task);
+        m_cluster = std::move(TaskFactory<Cluster>::create(task));
         if(m_cluster.get() == nullptr) {
             log::fatal("Task Illegal", task);
         }

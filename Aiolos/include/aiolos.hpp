@@ -71,11 +71,11 @@ private:
     wzp::ConfigParser parser;
     IoHelper m_io_helper;
     //classify
-    std::shared_ptr<Classify> m_classify;
+    std::unique_ptr<Classify> m_classify;
     //regression
-    std::shared_ptr<Regression> m_regression;
+    std::unique_ptr<Regression> m_regression;
     //cluster
-    std::shared_ptr<Cluster> m_cluster;
+    std::unique_ptr<Cluster> m_cluster;
 
     ObjectiveType m_objective_type;
     Mode m_mode_type = Mode::Train;

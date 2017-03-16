@@ -22,8 +22,8 @@ public:
     /**
      * create function
      */
-    inline static std::shared_ptr<Objective> create(const std::string& task) {
-        return wzp::Reflection<Objective>::create_shared(task);
+    inline static std::unique_ptr<Objective> create(const std::string& task) {
+        return wzp::Reflection<Objective>::create_unique(task);
     }
 
 };
