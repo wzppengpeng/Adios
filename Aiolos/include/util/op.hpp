@@ -25,12 +25,17 @@ namespace op
  * generate function, to gen a range
  */
 template<typename Range>
-Range generate(size_t len) {
+inline Range generate(size_t len) {
     //gen 0 ~ len -1
     Range range_container(len);
     auto current = 0;
     std::generate_n(begin(range_container), len-1, [&current]{return ++current; });
     return std::move(range_container);
+}
+
+template<typename T>
+inline wzp::RangeImpl<T> xrange(T len) {
+    return wzp::range(len);
 }
 
 /**

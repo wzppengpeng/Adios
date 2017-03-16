@@ -51,6 +51,7 @@ Matrix<int> KNN::predict(wzp::Matrix<Type>& predict_matrix) {
     op::auto_norm(predict_matrix);
     for(size_t row = 0; row < predict_matrix.rows(); ++row) {
         auto indexs = op::generate<vector<int>>(m_input_matrix->rows());
+        // auto indexs = op::xrange<int>(m_input_matrix->rows());
         //result
         vector<pair<Type, int>> distances(m_input_matrix->rows());
         //judge use multi thread
