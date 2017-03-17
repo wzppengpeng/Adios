@@ -67,6 +67,7 @@
             group中保留了这些task的future, 可以接受Task, lambda, std::bind,vector<Task<void()>>
             调用run之后就开始在别的县城开始执行了，最后可以调用，wait函数阻塞主线程。
         * parallel_algorithm.hpp:提供了一组区间并行算法
+            ParallelRange():给一个index的区间，使用上和foreach是一样的，类似于openmp，旨在减少空间成本
             ParallelForeach():和for_each使用方法相同，只是改成了多线程并行执行的版本
             ParallelInvoke()：和task_group一样，接受一组函数对象进行并行执行，比TaskGroup更加方便而已。
             ParalleReduce():类似于分组后的reduce算法（python),逻辑和foreach相同，不过相互之间不独立，

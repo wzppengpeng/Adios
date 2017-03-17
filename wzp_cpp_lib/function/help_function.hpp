@@ -51,7 +51,7 @@ private:
 private:
     class Iterator{
     public:
-        using difference_type = ptrdiff_t;
+        // using difference_type = ptrdiff_t;
         /*constructor*/
         //the iterator point a value byu contain the reference of a RangeImpl's begin and step now
         Iterator(int start, RangeImpl& range) : m_current_step(start), m_range(range){

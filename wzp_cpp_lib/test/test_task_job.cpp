@@ -148,6 +148,25 @@ void test_parallel_invoke() {
             []{PrintThread(1000);}, []{print("I;m running");});
 }
 
+void test_parallel_range() {
+    print("---------test parallel range----------");
+    vector<int> v;
+    for (int i = 0; i < 100000; i++)
+    {
+        v.push_back(i + 1);
+    }
+    print("use single thread");
+    Timer t1;
+    std::for_each(begin(v), end(v), check_prime);
+    print("single thread use time:", t1.elapsed());
+    print("use parallel thread");
+    Timer t2;
+    ParallelRange(v.size(), [&v](int x){check_prime(v[x]);});
+    print("parallel use time:", t2.elapsed());
+    print("-----------------");
+}
+
+
 //test parallel reduce
 void test_parallel_reduce() {
     print("--------------------");
@@ -234,7 +253,8 @@ void test_pipeline_reader() {
 
 void print_help() {
     print("test_task", "test_when_all", "test_when_any", "test_task_group",
-        "test_parallel_foreach", "test_parallel_invoke", "test_parallel_reduce", "test_pipeline_reader");
+        "test_parallel_foreach", "test_parallel_invoke", "test_parallel_reduce", "test_pipeline_reader",
+        "test_parallel_range");
 }
 
 int main(int argc, char** argv) {
@@ -266,6 +286,9 @@ int main(int argc, char** argv) {
     }
     else if(a == "test_pipeline_reader") {
         test_pipeline_reader();
+    }
+    else if(a == "test_parallel_range") {
+        test_parallel_range();
     }
     else {
         auto fut = std::async(PrintThread, 100);

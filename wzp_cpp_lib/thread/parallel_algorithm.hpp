@@ -9,6 +9,49 @@
 
 namespace wzp {
 
+/**
+ * ParallelRange:input range i to len, and a function, the function need receive the index
+ */
+template<typename Index, typename Function>
+void ParallelRange(Index begin, Index end, Function&& fun) {
+    auto thread_num = std::thread::hardware_concurrency();
+    auto block_size = (end - begin) / thread_num;
+    TaskGroup group;
+    Index last = begin;
+    if(block_size) {
+        last += (thread_num - 1) * block_size;
+    }
+    else {
+        last = end;
+        block_size = 1;
+    }
+    group.reserve(thread_num + 1);
+    for(; begin < last; begin += block_size) {
+        group.run([&fun, begin, block_size] () {
+            for(Index i = begin; i < begin + block_size; ++i) {
+                fun(i);
+            }
+        });
+    }
+    //the last
+    if(begin < end) {
+        group.run([&fun, begin, end] () {
+            for(Index i = begin; i < end; ++i) {
+                fun(i);
+            }
+        });
+    }
+    group.wait();
+}
+
+/**
+ * the simple one
+ */
+template<typename Index, typename Function>
+void ParallelRange(Index end, Function&& fun) {
+    ParallelRange(Index(0), end, fun);
+}
+
 //use the hardware thread to parallel handle the fun
 template<typename Iterator, typename Function>
 void ParallelForeach(Iterator begin, Iterator end, Function&& fun) {

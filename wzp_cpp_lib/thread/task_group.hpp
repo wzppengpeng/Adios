@@ -56,6 +56,10 @@ public:
         }
     }
 
+    inline void reserve(size_t len) {
+        m_group.reserve(len);
+    }
+
 private:
     std::vector<std::shared_future<void>> m_group;
 };
