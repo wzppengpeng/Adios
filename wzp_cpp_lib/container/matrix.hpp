@@ -185,13 +185,13 @@ public:
     }
 
     //move constructor
-    Matrix(Matrix<T>&& other) : m_data(std::move(other.m_data)),
+    Matrix(Matrix<T>&& other) noexcept : m_data(std::move(other.m_data)),
                                 m_row(other.m_row),
                                 m_col(other.m_col),
                                 m_type(other.m_type)
     {}
 
-    Matrix<T>& operator= (Matrix&& other) {
+    Matrix<T>& operator= (Matrix&& other) noexcept {
         assert(this != &other);
         m_data = std::move(other.m_data);
         m_row = other.m_row;
