@@ -49,12 +49,12 @@ struct OptStruct
     {
         if(sigma > 0) {
             K = std::move(wzp::Matrix<Type>(m, m));
-            for(size_t i = 0; i < m; ++i) {
+            wzp::ParallelRange(m, [this, &kernal_type, sigma](size_t i) {
                 auto trans_vec = kernal_trans(*X, X->slice(i, 0, i + 1, n), kernal_type, sigma);
                 for(size_t j = 0; j < m; ++j) {
                     K(j, i) = trans_vec(j, 0);
                 }
-            }
+            });
         }
     }
 };

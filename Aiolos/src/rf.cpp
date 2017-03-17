@@ -29,9 +29,8 @@ void RandomForest::train(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& inpu
     m_input_matrix = &input_matrix;
     m_input_label = &input_label;
     //train by create function
-    auto tree_numbers = op::generate<vector<size_t>>(m_tree_numbers);
-    wzp::ParallelForeach(begin(tree_numbers), end(tree_numbers),
-        [&tree_numbers, this](size_t k) {
+    wzp::ParallelRange(m_tree_numbers,
+        [this](size_t k) {
         auto datasets = op::booststrap(*m_input_matrix, *m_input_label);
         auto axises = op::generate<vector<size_t>>(datasets.first.cols());
         m_tree[k] = create_tree(datasets.first, datasets.second, axises);

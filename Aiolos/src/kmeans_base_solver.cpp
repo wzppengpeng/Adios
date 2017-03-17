@@ -39,10 +39,10 @@ void KmeansBaseSolver::process(wzp::Matrix<Type>& cluster_assement) {
     rand_cent();
     bool is_cluster_changed = true;
     //use multi thread
-    auto row_indexs = op::generate<vector<size_t>>(m);
+    // auto row_indexs = op::generate<vector<size_t>>(m);
     while(is_cluster_changed) {
         is_cluster_changed = false;
-        wzp::ParallelForeach(row_indexs.begin(), row_indexs.end(),
+        wzp::ParallelRange(m,
          [&cluster_assement, this, &is_cluster_changed](size_t i) {
             Type min_dist = 1.0e20; size_t min_index;
             for(size_t j = 0; j < k; ++j) {

@@ -50,21 +50,12 @@ Matrix<int> KNN::predict(wzp::Matrix<Type>& predict_matrix) {
     Matrix<int> res(predict_matrix.rows(), 1);
     op::auto_norm(predict_matrix);
     for(size_t row = 0; row < predict_matrix.rows(); ++row) {
-        auto indexs = op::generate<vector<int>>(m_input_matrix->rows());
-        // auto indexs = op::xrange<int>(m_input_matrix->rows());
         //result
         vector<pair<Type, int>> distances(m_input_matrix->rows());
         //judge use multi thread
-        if(predict_matrix.cols() < 100) {
-            std::for_each(begin(indexs), end(indexs), [this, &predict_matrix, row, &distances](int index){
-                predict_one(predict_matrix, row, index, distances);
-            });
-        }
-        else {
-            ParallelForeach(begin(indexs), end(indexs), [this, &predict_matrix, row, &distances](int index){
-                predict_one(predict_matrix, row, index, distances);
-            });
-        }
+        ParallelRange(m_input_matrix->rows(), [this, &predict_matrix, row, &distances](int index){
+            predict_one(predict_matrix, row, index, distances);
+        });
         res(row, 0) = compute_max_cnt_index(distances);
     }
     return res;

@@ -84,9 +84,9 @@ size_t ClassifyTree::choose_best_feature_to_split(const wzp::Matrix<Type>& data_
     assert(!data_set.empty() && data_set.rows() == labels.rows());
     size_t num_features = data_set.cols();
     Type base_shannon_ent = op::cal_shannon_ent(labels);
-    auto axises = op::generate<vector<size_t>>(num_features);
+    // auto axises = op::generate<vector<size_t>>(num_features);
     vector<Type> info_gain_vec(num_features);
-    ParallelForeach(begin(axises), end(axises),
+    ParallelRange(num_features,
      [this, &data_set, &labels, &info_gain_vec, base_shannon_ent](size_t axis) {
         auto new_ent = choose_best_feature_to_split_each(data_set, labels, axis);
         info_gain_vec[axis] = base_shannon_ent - new_ent;

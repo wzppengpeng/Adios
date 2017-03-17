@@ -122,8 +122,8 @@ void NaiveBayes::train_naive_bayes() {
         });
     }
     //compute all feature sum
-    aixses = std::move(op::generate<vector<size_t>>(p_num.rows()));
-    wzp::ParallelForeach(begin(aixses), end(aixses),
+    // aixses = std::move(op::generate<vector<size_t>>(p_num.rows()));
+    wzp::ParallelRange(p_num.rows(),
      [this, &p_num](size_t class_index) {
         //compute all numbers of features
         auto all_features_num = op::row_sum(p_num, class_index) + 1.0;
