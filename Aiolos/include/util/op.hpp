@@ -107,8 +107,8 @@ std::vector<size_t> nonzero(const wzp::Matrix<T>& m, size_t col) {
  */
 inline void auto_norm(wzp::Matrix<Type>& mat) {
     //use multi thread
-    auto indexs = generate<std::vector<size_t>>(mat.cols());
-    wzp::ParallelForeach(begin(indexs), end(indexs),
+    // auto indexs = generate<std::vector<size_t>>(mat.cols());
+    wzp::ParallelRange(mat.cols(),
      [&mat](size_t col_index) {
         auto min_max = arg_min_max(mat, col_index);
         auto min_val = mat(min_max.first, col_index);
