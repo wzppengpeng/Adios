@@ -29,47 +29,6 @@ Type cal_shannon_ent(const wzp::Matrix<int>& label) {
     return shannon_ent;
 }
 
-int majority_cnt(const wzp::Matrix<int>& label) {
-    //use a map to store label and its count
-    if(label.empty()) return 0;
-    unordered_map<int, int> label_cnt;
-    for(size_t i = 0; i < label.rows(); ++i) {
-        auto it = label_cnt.find(label(i, 0));
-        if(it != label_cnt.end())
-            ++it->second;
-        else
-            label_cnt.emplace(label(i, 0), 0);
-    }
-    int max_label_key = label_cnt.begin()->first;
-    for(auto& p : label_cnt) {
-        if(p.second > label_cnt[max_label_key])
-            max_label_key = p.first;
-    }
-    return max_label_key;
-}
-
-int count_label(const wzp::Matrix<int>& label, int val) {
-    auto sum = 0;
-    for(size_t i = 0; i < label.rows(); ++i) {
-        if(label(i, 0) == val) ++sum;
-    }
-    return sum;
-}
-
-std::unordered_map<int, int> count_label(const wzp::Matrix<int>& label) {
-    unordered_map<int, int> label_cnt;
-    for(size_t i = 0; i < label.rows(); ++i) {
-        auto it = label_cnt.find(label(i, 0));
-        if(it != label_cnt.end()) {
-            ++it->second;
-        }
-        else {
-            label_cnt.emplace(label(i, 0), 1);
-        }
-    }
-    return std::move(label_cnt);
-}
-
 
 std::vector<size_t> random_choose(size_t max_axis, size_t length) {
     assert(length >= 1 && length <= max_axis);

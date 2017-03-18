@@ -53,26 +53,20 @@ private:
     /**
      * Personal Members
      */
-    size_t m_tree_numbers = 1;
-    int m_choose_nums = -1;
-    std::vector<DecisionTree<int>> m_tree {};
+
+    size_t m_tree_numbers = 2;
+    Type tol_s = 0.05;
+    size_t tol_n = 4;
+    wzp::Matrix<Type> m_input_label_convert;
+    std::vector<CartTree<Type>> m_cart_tree {};
 
     static ReflectionRegister(Classify, RandomForest) regis_random_forest;
 
 private:
-    size_t choose_best_feature_to_split(const wzp::Matrix<Type>& data_set,
-     const wzp::Matrix<int>& labels);
-    Type choose_best_feature_to_split_each(const wzp::Matrix<Type>& data_set,
-     const wzp::Matrix<int>& labels, size_t axis);
-
-    //create decison tree
-    DecisionTree<int> create_tree(wzp::Matrix<Type> data_set,
-     wzp::Matrix<int> labels, std::vector<size_t> axises);
-
-    //classify function
-    int classify(const wzp::Matrix<Type>& predict_matrix, size_t row_index, size_t tree_index);
 
     int majority(const vector<int>& propasal);
+
+    void train_process();
 
 };
 

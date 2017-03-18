@@ -90,6 +90,14 @@ inline Type reg_leaf(const Mat& mat, const Label& labels) {
 }
 
 /**
+ * compute the gini of classify cart tree
+ */
+template<typename Mat, typename Label>
+Type gini_leaf(const Mat& mat, const Label& labels) {
+    return op::majority_cnt(labels);
+}
+
+/**
  * Linear Solve Function
  */
 template<typename Mat, typename Label>
@@ -129,6 +137,20 @@ Type reg_err(const Mat& mat, const Label& labels) {
         error_sum += (minus * minus);
     }
     return error_sum;
+}
+
+/**
+ * the gini error
+ */
+template<typename Mat, typename Label>
+Type gini_err(const Mat& mat, const Label& labels) {
+    auto label_cnt = op::count_label(labels);
+    Type gini_sum = 1.0;
+    for(auto& p : label_cnt) {
+        auto gini = static_cast<Type>(p.second) / labels.rows();
+        gini_sum -= (gini) * (gini);
+    }
+    return gini_sum;
 }
 
 /**

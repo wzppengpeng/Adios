@@ -143,19 +143,56 @@ Type cal_shannon_ent(const wzp::Matrix<int>& label);
  * @param  labels
  * @return majoruty count label
  */
-int majority_cnt(const wzp::Matrix<int>& label);
+template<typename T>
+T majority_cnt(const wzp::Matrix<T>& label) {
+    if(label.empty()) return 0;
+    std::unordered_map<T, int> label_cnt;
+    for(size_t i = 0; i < label.rows(); ++i) {
+        auto it = label_cnt.find(label(i, 0));
+        if(it != label_cnt.end())
+            ++it->second;
+        else
+            label_cnt.emplace(label(i, 0), 0);
+    }
+    int max_label_key = label_cnt.begin()->first;
+    for(auto& p : label_cnt) {
+        if(p.second > label_cnt[max_label_key])
+            max_label_key = p.first;
+    }
+    return max_label_key;
+}
 
 /**
  * [count_label description]
  * @param  label
  * @return count result
  */
-int count_label(const wzp::Matrix<int>& label, int val);
+template<typename T>
+int count_label(const wzp::Matrix<T>& label, T val) {
+    auto sum = 0;
+    for(size_t i = 0; i < label.rows(); ++i) {
+        if(label(i, 0) == val) ++sum;
+    }
+    return sum;
+}
 
 /**
  * count all labels, return a map to store each label and its count
  */
-std::unordered_map<int, int> count_label(const wzp::Matrix<int>& label);
+template<typename T>
+std::unordered_map<T, int> count_label(const wzp::Matrix<T>& label) {
+    std::unordered_map<T, int> label_cnt;
+    for(size_t i = 0; i < label.rows(); ++i) {
+        auto it = label_cnt.find(label(i, 0));
+        if(it != label_cnt.end()) {
+            ++it->second;
+        }
+        else {
+            label_cnt.emplace(label(i, 0), 1);
+        }
+    }
+    return std::move(label_cnt);
+}
 
 template<typename T>
 /**
