@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include <algorithm>
+
 #include "common.hpp"
 
 // #include "container/matrix.hpp"
@@ -50,8 +52,20 @@ public:
      * @param  b ponit
      * @return  float or double
      */
-    inline static Type compute_distance(const Type* a, const Type* b, size_t len) {
-        return sqrt(MatrixArgs::compute_squre_distance(a, b, len));
+    inline static Type compute_distance(const Type* a, const Type* b, size_t len, int p = 2) {
+        if(p == 2) return sqrt(MatrixArgs::compute_squre_distance(a, b, len));
+        Type sum = 0.;
+        if(p == 1) {
+            for(size_t i = 0; i < len; ++i) {
+                sum += std::abs(a[i] - b[i]);
+            }
+        }
+        else {
+            for(size_t i = 0; i < len; ++i) {
+                sum = std::max(std::abs(a[i] - b[i]), sum);
+            }
+        }
+        return sum;
     }
 
     /**

@@ -55,6 +55,7 @@ private:
     wzp::Matrix<int>* m_validate_label;
 
     int k;// the k nn
+    int lp = 2;
 
     //reflection
     static ReflectionRegister(Classify, KNN) regis_knn;

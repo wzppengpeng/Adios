@@ -24,6 +24,7 @@ void KNN::init(wzp::ConfigParser* config_parser) {
         k = 3;
         log::error("Miss Arg K of KNN");
     }
+    m_config_parser->get("lp", lp); // the distance type
 }
 
 void KNN::train(wzp::Matrix<Type>& input_matrix, wzp::Matrix<int>& input_label) {
@@ -73,7 +74,7 @@ void KNN::predict_one(const wzp::Matrix<Type>& predict_matrix, int row, int inde
      std::vector<pair<Type, int>>& distances) {
     auto a = predict_matrix.row_at(row);
     auto b = m_input_matrix->row_at(index);
-    distances[index].first = MatrixArgs::compute_distance(a, b, m_input_matrix->cols());
+    distances[index].first = MatrixArgs::compute_distance(a, b, m_input_matrix->cols(), lp);
     distances[index].second = m_input_label->at(index, 0);
 }
 
