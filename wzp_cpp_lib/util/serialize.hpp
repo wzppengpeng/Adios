@@ -44,6 +44,22 @@ void serialize(std::string* cache, vector<Dtype>& v) {
     cache->append(std::move(temp));
 }
 
+template<typename T>
+/**
+ * serialize the point
+ */
+void serialize(std::string* cache, T* v, size_t len) {
+    string temp;
+    temp.resize(len * sizeof(T));
+    T* c = v;
+    auto work_ptr = reinterpret_cast<char*>(c);
+    for (int i = 0; i < temp.size(); ++i)
+    {
+        temp[i] = work_ptr[i];
+    }
+    cache->append(std::move(temp));
+}
+
 template<typename T, typename... Rest>
 /**
  * [serialize description]
