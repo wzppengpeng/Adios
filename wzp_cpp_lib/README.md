@@ -49,7 +49,7 @@
     . log:
         * log.hpp:可以设置日志等级的轻量级日志模块，可以设置日志的输出位置，最后会显示时间
     . my_string:
-        * string.hpp:包含一些字符串的处理，包括转换字符串到任意类型，分割字符串，join字符串，字符串消除空格, string的format等
+        * string.hpp:包含一些字符串的处理，包括转换字符串到任意类型，分割字符串，join字符串，字符串消除空格, string的format，startwith, end with等
     . thread:
         * thread_pool.hpp:一个安全的线程池，submit任务即可
         * task.hpp:对于async和函数对象的封装，以函数对象初始化，支持链式传递参数，前提是前一个函数是后一个的返回值，不能是void

@@ -78,6 +78,30 @@ inline static std::string format(std::string&& str, T&& t, Args&&... args) {
      + str.substr(end + 1)), std::forward<Args>(args)...));
 }
 
+/**
+ * the startwith function
+ */
+inline static bool start_with(const std::string& s, const std::string& p) {
+    if(p.size() > s.size()) return false;
+    for(size_t i = 0; i < p.size(); ++i) {
+        if(p[i] != s[i]) return false;
+    }
+    return true;
+}
+
+/**
+ * the end with function
+ */
+inline static bool end_with(const std::string& s, const std::string& p) {
+    if(p.size() > s.size()) return false;
+    auto len_s = s.size();
+    auto len_j = p.size();
+    for(size_t j = 0; j < len_j; ++j) {
+        if(p[len_j - 1 - j] != s[len_s - 1 - j]) return false;
+    }
+    return true;
+}
+
 }
 
 #endif
