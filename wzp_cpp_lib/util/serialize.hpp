@@ -95,6 +95,17 @@ void deserialize(const std::string& cache, T& t) {
     t = *work_ptr;
 }
 
+/**
+ * deserilize and it will cut string buffer
+ */
+template<typename T>
+void mutable_deserialize(std::string& cache, T& t) {
+    auto work_ptr = reinterpret_cast<T*>(const_cast<char*>(cache.c_str()));
+    t = *work_ptr;
+    //cut the cache
+    cache = std::move(cache.substr(sizeof(T)));
+}
+
 template<typename Dtype>
 /**
  * [deserialize description]
@@ -107,6 +118,20 @@ void deserialize(const std::string& cache, vector<Dtype>& v) {
     {
         v[i] = work_ptr[i];
     }
+}
+
+/**
+ * deseriaze and cut string buffer
+ */
+template<typename Dtype>
+void mutable_deserialize(std::string& cache, vector<Dtype>& v) {
+    auto work_ptr = reinterpret_cast<Dtype*>(const_cast<char*>(cache.c_str()));
+    for (int i = 0; i < v.size(); ++i)
+    {
+        v[i] = work_ptr[i];
+    }
+    //cut cache
+    cache = std::move(cache.substr(v.size() * sizeof(Dtype)));
 }
 
 template<typename T, typename... Rest>
@@ -122,6 +147,12 @@ void deserialize(const std::string& cache, T& t, Rest&... rest) {
     deserialize(rest_str, rest...);
 }
 
+template<typename T, typename... Rest>
+void mutable_deserialize(std::string& cache, T& t, Rest&... rest) {
+    mutable_deserialize<T>(cache, t);
+    mutable_deserialize(cache, rest...);
+}
+
 template<typename Dtype, typename... Rest>
 /**
  * [deserialize description]
@@ -133,6 +164,12 @@ void deserialize(const std::string& cache, vector<Dtype>& t, Rest&... rest) {
     deserialize<Dtype>(cache, t);
     auto rest_str = cache.substr(sizeof(Dtype) * t.size());
     deserialize(rest_str, rest...);
+}
+
+template<typename Dtype, typename... Rest>
+void mutable_deserialize(std::string& cache, vector<Dtype>& t, Rest&... rest) {
+    mutable_deserialize<Dtype>(cache, t);
+    mutable_deserialize(cache, rest...);
 }
 
 
