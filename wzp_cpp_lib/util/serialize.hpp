@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 using std::vector;
 using std::string;
@@ -170,6 +171,27 @@ template<typename Dtype, typename... Rest>
 void mutable_deserialize(std::string& cache, vector<Dtype>& t, Rest&... rest) {
     mutable_deserialize<Dtype>(cache, t);
     mutable_deserialize(cache, rest...);
+}
+
+/**
+ * write string buffer to file
+ */
+inline void write_buffer_to_disk(const std::string& buffer, const char* filename) {
+    std::ofstream ofile(filename, std::ios::binary);
+    ofile.write(buffer.c_str(), sizeof(char) * buffer.size());
+    ofile.close();
+}
+
+/**
+ * read disk content to buffer
+ */
+inline std::string read_buffer_from_disk(const char* filename) {
+    std::ifstream ifile;
+    ifile.open(filename);
+    std::string buffer((std::istreambuf_iterator<char>(ifile)),
+        std::istreambuf_iterator<char>());
+    ifile.close();
+    return std::move(buffer);
 }
 
 
