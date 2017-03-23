@@ -39,7 +39,7 @@
 ## How To Install
 ### Do These Operations
     . Change The Include Directories Of wzp_cpp_lib
-    . make -p build
+    . mkdir -p build
     . cd build
     . cmake ..
     . make -j4
