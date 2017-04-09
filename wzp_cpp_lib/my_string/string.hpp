@@ -38,6 +38,18 @@ inline static std::vector<std::string> split_string(const std::string& input, ch
     return std::move(result);
 }
 
+/**
+ * transform vector<string> to other type data
+ */
+template<typename T>
+inline static std::vector<T> transform(const std::vector<std::string>& strs) {
+    std::vector<T> datas(strs.size());
+    for(size_t i = 0; i < strs.size(); ++i) {
+        datas[i] = convert_string<T>(strs[i]);
+    }
+    return std::move(datas);
+}
+
 /*join a char into vector<string>, and get the string*/
 inline static std::string join_string(const std::vector<std::string>& strs, char delimiter) {
     if (strs.size() <= 0) {
