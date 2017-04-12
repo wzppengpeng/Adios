@@ -94,10 +94,12 @@ private:
         print("MULTITHREAD PID OVER", pid);
     }
 
-    void flat(std::vector<R>& res, const std::vector<std::vector<R> >& m_res_array) {
-        res.reserve(m_workers * m_res_array.front().size());
+    void flat(std::vector<R>& res, std::vector<std::vector<R> >& m_res_array) {
+        // res.reserve(m_workers * m_res_array.front().size());
         for(auto& res_array : m_res_array) {
             std::copy(std::begin(res_array), std::end(res_array), std::back_inserter(res));
+            //clear the memory
+            vector<R>().swap(res_array);
         }
     }
 
