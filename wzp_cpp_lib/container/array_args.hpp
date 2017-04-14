@@ -66,6 +66,17 @@ namespace wzp{
             }
         }
 
+        /**
+         * sum of a vector
+         */
+        inline static T sum(const std::vector<T>& array) {
+            T sum_val(0);
+            for(auto t : array) {
+                sum_val += t;
+            }
+            return sum_val;
+        }
+
     };
 
 }/*wzp namespace*/
