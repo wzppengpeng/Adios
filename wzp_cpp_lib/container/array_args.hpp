@@ -77,6 +77,18 @@ namespace wzp{
             return sum_val;
         }
 
+        /**
+         * mean of a vector
+         */
+        template<typename F = float>
+        inline static F mean(const std::vector<T>& array) {
+            T sum_val(0);
+            for(auto t : array) {
+                sum_val += t;
+            }
+            return static_cast<F>(sum_val) / static_cast<F>(array.size());
+        }
+
     };
 
 }/*wzp namespace*/
