@@ -130,6 +130,11 @@ public:
         return std::move(res);
     }
 
+    //slice for height and width
+    Tensor<T> slice(const pair<int, int>& height_range, const pair<int, int>& width_range) {
+        return std::move(slice(height_range, width_range, std::make_pair(-1, -1)));
+    }
+
 
 private:
     //the index function
