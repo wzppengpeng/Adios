@@ -132,7 +132,7 @@ public:
 
     //slice for height and width
     Tensor<T> slice(const pair<int, int>& height_range, const pair<int, int>& width_range) {
-        return std::move(slice(height_range, width_range, std::make_pair(-1, -1)));
+        return std::move(slice(height_range, width_range, std::make_pair(0, -1)));
     }
 
 
