@@ -66,7 +66,7 @@ public:
         m_height = new_h;
         m_width = new_w;
         m_channel = new_c;
-        size_t new_capacity = new_h * new_h * new_c;
+        int new_capacity = new_h * new_h * new_c;
         if(new_capacity > m_data.size()) {
             m_data.resize(new_capacity);
         }
@@ -110,8 +110,8 @@ public:
 
 
     // Slice Function
-    Tensor<T> slice(const pair<int, int>& height_range,
-        const pair<int, int>& width_range, const pair<int, int>& channel_range) {
+    Tensor<T> slice(pair<int, int> height_range,
+        pair<int, int> width_range, pair<int, int> channel_range) {
         assert(height_range.second <= m_height && width_range.second <= m_width && channel_range.second <= m_channel);
         //wash the range
         if(height_range.second < 0) height_range.second = height();
