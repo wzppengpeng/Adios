@@ -31,6 +31,18 @@ public:
         m_fn = f;
     }
 
+    /**
+     * get a big file's size
+     * @param  filename string
+     * @return          size
+     */
+    long long get_file_size(const std::string& filename) {
+        std::fstream f(filename.c_str(), std::fstream::ate|std::fstream::in);
+        auto res = f.tellg();
+        f.close();
+        return res;
+    }
+
     //the run function
     std::vector<R> run(const std::string& file) {
         auto file_size = get_file_size(file);
@@ -54,13 +66,6 @@ private:
     int m_workers;
 
 private:
-    long long get_file_size(const std::string& filename) {
-        std::fstream f(filename.c_str(), std::fstream::ate|std::fstream::in);
-        auto res = f.tellg();
-        f.close();
-        return res;
-    }
-
     std::vector<ll> compute_position(ll file_size) {
         std::vector<ll> pos_array(m_workers);
         auto block_size = file_size / m_workers;
