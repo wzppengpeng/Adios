@@ -50,6 +50,21 @@ inline static std::vector<T> transform(const std::vector<std::string>& strs) {
     return std::move(datas);
 }
 
+/**
+ * the combine type
+ */
+template<typename T>
+inline static std::vector<T> split_string_transform(const std::string& input, char split_delemeter) {
+    std::vector<T> result;
+    if (input.empty()) return std::move(result);
+    std::istringstream ss(input);
+    std::string cache;
+    while (std::getline(ss, cache, split_delemeter)) {
+        result.emplace_back(convert_string<T>(cache));
+    }
+    return std::move(result);
+}
+
 /*join a char into vector<string>, and get the string*/
 inline static std::string join_string(const std::vector<std::string>& strs, char delimiter) {
     if (strs.size() <= 0) {
