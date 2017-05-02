@@ -42,7 +42,7 @@ public:
         std::string filename;
         size_t pos = path.find_last_of('/');
         if(pos != std::string::npos) filename = std::move(path.substr(pos+1));
-        else filename = std::move(path);
+        else filename = path;
         return std::move(filename);
     }
 
