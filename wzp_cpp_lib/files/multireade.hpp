@@ -54,7 +54,6 @@ public:
             });
         std::vector<R> res;
         flat(res, m_res_array);
-        print("MULTITHREAD READING OVER");
         return std::move(res);
     }
 
@@ -78,7 +77,6 @@ private:
     //the process function
     void process(size_t pid, const std::vector<ll>& pos_array, const std::string& file,
         ll file_size, std::vector<std::vector<R> >& m_res_array) {
-        print("MULTITHREAD PID BEGIN", pid);
         std::fstream f(file, std::fstream::in);
         auto startpossition = pos_array[pid];
         auto endpossition = (pid == pos_array.size() - 1) ? file_size : pos_array[pid + 1];
@@ -96,7 +94,6 @@ private:
         }
         f.close();
         m_res_array[pid] = std::move(son_res_array);
-        print("MULTITHREAD PID OVER", pid);
     }
 
     void flat(std::vector<R>& res, std::vector<std::vector<R> >& m_res_array) {
