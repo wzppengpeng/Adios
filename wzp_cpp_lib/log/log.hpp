@@ -55,48 +55,48 @@ public:
 
     /*the debug level log*/
     template<typename... Args>
-    static void debug(const std::string& format, Args... args){
+    static void debug(const std::string& format, Args&&... args){
         if(get_level() >= log_level::Debug){
             std::string debug_str{"[Adios] [Debug] "};
             debug_str.append(format);
-            write(debug_str, args...);
+            write(debug_str, std::forward<Args>(args)...);
         }
     }
 
     template<typename... Args>
-    static void info(const std::string& format, Args... args){
+    static void info(const std::string& format, Args&&... args){
         if(get_level() >= log_level::Info){
             std::string info_str{"[Adios] [Info] "};
             info_str.append(format);
             if(get_type() == log_type::Console)
                 get_stream() <<WHITE;
-            write(info_str, args...);
+            write(info_str, std::forward<Args>(args)...);
             if(get_type() == log_type::Console)
                 get_stream() <<RESET;
         }
     }
 
     template<typename... Args>
-    static void error(const std::string& format, Args... args){
+    static void error(const std::string& format, Args&&... args){
         if(get_level() >= log_level::Error){
             std::string error_str{"[Adios] [Error] "};
             error_str.append(format);
             if(get_type() == log_type::Console)
                 get_stream() <<RED;
-            write(error_str, args...);
+            write(error_str, std::forward<Args>(args)...);
             if(get_type() == log_type::Console)
                 get_stream() <<RESET;
         }
     }
 
     template<typename... Args>
-    static void fatal(const std::string& format, Args... args){
+    static void fatal(const std::string& format, Args&&... args){
         if(get_level() >= log_level::Fatal){
             std::string error_str{"[Adios] [Fatal] "};
             error_str.append(format);
             if(get_type() == log_type::Console)
                 get_stream() <<BOLDRED;
-            write(error_str, args...);
+            write(error_str, std::forward<Args>(args)...);
             if(get_type() == log_type::Console)
                 get_stream() <<RESET;
             exit(1);
@@ -134,7 +134,7 @@ private:
     //the tool write funciton
     /*the end function*/
     template<typename T>
-    static void write(T t){
+    static void write(T&& t){
         using std::chrono::system_clock;
         auto tp = system_clock::now();
         auto time = system_clock::to_time_t(tp);
@@ -142,15 +142,15 @@ private:
         std::string str_time = std::ctime(&time);
         str_time.pop_back();
         format.append(str_time);
-        format.append("]");
-        get_stream()<<t<<" "<<format<<std::endl;
+        format.push_back(']');
+        get_stream() << t << " " << format << std::endl;
     }
 
     /*the normal write*/
     template<typename T, typename... Args>
-    static void write(T t, Args... args){
-        get_stream()<<t<<", ";
-        write(args...);
+    static void write(T&& t, Args&&... args){
+        get_stream() << t << ", ";
+        write(std::forward<Args>(args)...);
     }
 
 };
