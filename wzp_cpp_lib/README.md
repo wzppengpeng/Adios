@@ -41,6 +41,7 @@
         * files.hpp:可以获取一个目录下的所有文件名，也可以按照后缀名进行文件获取
         * multireader.hpp:使用多线程分块读取大文件，传入一个对每一行进行处理的单行处理函数，指定返回类型可以将文件内容以vector的形式加载进内存
         * file_loader.hpp:使用next的迭代器形式读取文件，使用regis注册处理每一行的函数对象以及要处理的文件名。
+        FileLoad~最新添加的类似STLwrapper的迭代器，可以用C++11的for(auto)结构进行循环迭代
         * path.hpp:使用和python类似的join/basename/splitext等函数
     . function:
         * function_tool.hpp:万能的函数包装器，可以接受任意类型的函数进行处理
