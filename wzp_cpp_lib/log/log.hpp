@@ -155,6 +155,14 @@ private:
 
 };
 
+//a macro to assert some bool
+#ifndef ASSERT
+#define ASSERT(BOOL_SYSBOL, STR) { \
+            if(!(BOOL_SYSBOL)) { \
+                wzp::log::fatal(STR); \
+            } \
+        }
+#endif
 
 }//wzp
 
