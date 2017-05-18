@@ -157,9 +157,9 @@ private:
 
 //a macro to assert some bool
 #ifndef ASSERT
-#define ASSERT(BOOL_SYSBOL, STR) { \
+#define ASSERT(BOOL_SYSBOL, STR, ...) { \
             if(!(BOOL_SYSBOL)) { \
-                wzp::log::fatal(STR); \
+                wzp::log::fatal(STR, ##__VA_ARGS__); \
             } \
         }
 #endif
