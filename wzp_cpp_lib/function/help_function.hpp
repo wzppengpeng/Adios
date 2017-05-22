@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include <vector>
+
 /*
     the range is just an iterator, use c++11 for(auto i : range()) to iter
 */
@@ -121,6 +123,18 @@ template<typename T, typename... Args>
 void print(T&& t, Args&&... args){
     std::cout<<t<<" ";
     print(std::forward<Args>(args)...);
+}
+
+/**
+ * print vector
+ */
+template<typename T>
+void print_vector(const std::vector<T>& v) {
+    std::cout << '[';
+    for(int i = 0; i < v.size() - 1; ++i) {
+        std::cout << v[i] << ' ';
+    }
+    std::cout << v.back() << ']' << std::endl;
 }
 
 template<typename T>
