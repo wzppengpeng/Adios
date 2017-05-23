@@ -188,6 +188,15 @@ std::unique_ptr<T> make_unique(Args&&... args) {
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
+/**
+ * the release function, use the swap method
+ */
+//release the stl container's memory
+template<typename T>
+inline void stl_release(T& stl_container) {
+    using R = typename std::remove_reference<T>::type;
+    R().swap(stl_container);
+}
 
 
 }//wzp
