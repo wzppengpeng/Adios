@@ -66,18 +66,22 @@ inline static std::vector<T> split_string_transform(const std::string& input, ch
 }
 
 /*join a char into vector<string>, and get the string*/
-inline static std::string join_string(const std::vector<std::string>& strs, char delimiter) {
-    if (strs.size() <= 0) {
-        return std::string("");
-    }
+
+/**
+ * join a char into a vector<T>, get the string
+ */
+template<typename T>
+inline static std::string join_string(const std::vector<T>& datas, char delimiter) {
+    if(datas.empty()) return "";
     std::stringstream ss;
-    ss << strs[0];
-    for (size_t i = 1; i < strs.size(); ++i) {
+    ss << datas[0];
+    for (size_t i = 1; i < datas.size(); ++i) {
         ss << delimiter;
-        ss << strs[i];
+        ss << datas[i];
     }
     return std::move(ss.str());
 }
+
 
 /*trim funciton*/
 inline static bool trim(std::string& str) {
