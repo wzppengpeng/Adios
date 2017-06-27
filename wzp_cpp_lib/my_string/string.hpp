@@ -19,9 +19,9 @@ inline static T convert_string(const std::string& input) {
 template<typename T>
 inline static std::string convert_to_string(T&& t) {
     std::stringstream ss;
-    ss<<t;
+    ss << t;
     std::string res;
-    ss>>res;
+    ss >> res;
     return res;
 }
 
