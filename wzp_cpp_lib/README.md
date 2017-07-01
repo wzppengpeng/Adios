@@ -50,6 +50,7 @@
                         提供类似python的print函数的功能，print(hsj,dhsjh,1,3.5)等等
                         提供一个make_unique方法，更加安全方便，和make_shared逻辑相统一
                         提供任意长度的任意常见类型的max和min，默认返回值是double,如果需要其他需自己指定
+        * apply_tuple.hpp:提供找寻tuple中index的函数
     . log:
         * log.hpp:可以设置日志等级的轻量级日志模块，可以设置日志的输出位置，最后会显示时间
     . my_string:
