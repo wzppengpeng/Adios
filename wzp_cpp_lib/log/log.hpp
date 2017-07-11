@@ -164,6 +164,15 @@ private:
         }
 #endif
 
+
+//a macro to CHECK, more good
+#ifndef CHECK
+#define CHECK(condition) \
+        if (!(condition)) wzp::log::fatal("Check Fatal: [" #condition \
+            "] in file", __FILE__,  "line", __LINE__);
+#endif //CHECK
+
+
 }//wzp
 
 #endif /*LOG_HPP_*/
