@@ -1,0 +1,5 @@
+include_directories(${AIOLOS_HEADER_DIR} /Users/wzp/workspace/wzp_cpp_lib)
+aux_source_directory(. SRC_LIST)
+LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
+add_executable(aiolos.app ${SRC_LIST})
+TARGET_LINK_LIBRARIES(aiolos.app aiolos)

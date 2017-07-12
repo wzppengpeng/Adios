@@ -43,3 +43,4 @@
     . cd build
     . cmake ..
     . make -j4
+### Or Just Use 'sh build.bash'
