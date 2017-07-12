@@ -104,6 +104,7 @@
     . unix:
         * cmd.hpp:包含类似于php system函数的函数，输入一个字符串指令，子进程执行指令，将结果放入一个vector中，通过返回值bool来
         明确是否执行成功。
+        * ip.hpp:添加了一个得到本地IP地址的辅助函数
     . linq:
         *linq.hpp:实际使用只需引入这个文件即可，包含一个from函数将STL迭代器转为Enumarable对象，既保存了一对表示区间的迭代器
         *linq_enumerable.hpp:最基本的保存迭代器的类型，包含select,where,group_by, to_vector,first,count等操作
