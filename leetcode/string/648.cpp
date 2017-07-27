@@ -41,3 +41,77 @@ public:
     }
 
 };
+
+/**
+ * 前缀树的方法
+ */
+
+class TerDict {
+private:
+    struct TerNode {
+        char c;
+        bool isWord;
+        TerNode *left, *right, *mid;
+        TerNode(char ch): c(ch), isWord(false), left(NULL), right(NULL), mid(NULL) {}
+    };
+    TerNode *root;
+public:
+    TerDict() {root = new TerNode('n');}
+
+    void insert(string word) {
+        if (word.empty()) return;
+        int i = 0, size = word.length();
+        TerNode *p = root;
+        while (i < size) {
+            if (p->c == word[i]) {
+                ++i;
+                if (i == size) break;
+                if (!p->mid) p->mid = new TerNode(word[i]);
+                p = p->mid;
+            } else if (p->c > word[i]) {
+                if (!p->left) p->left = new TerNode(word[i]);
+                p = p->left;
+            } else {
+                if (!p->right) p->right = new TerNode(word[i]);
+                p = p->right;
+            }
+        }
+        p->isWord = true;
+    }
+    // Return the length of the shortest prefix we found
+    int search(string word) {
+        if (word.empty()) return 0;
+        int i = 0, size = word.length();
+        TerNode *p = root;
+        while (true) {
+            if (p->c == word[i]) {
+                if (p->isWord) return i + 1;
+                if (i == size - 1 || !p->mid) break;
+                p = p->mid;
+                ++i;
+            } else if (p->c > word[i]) {
+                if (!p->left) break;
+                p = p->left;
+            } else {
+                if (!p->right) break;
+                p = p->right;
+            }
+        }
+        return size;
+    }
+};
+
+class Solution {
+public:
+    string replaceWords(vector<string>& dict, string sentence) {
+        stringstream ss(sentence);
+        TerDict myDict;
+        for (string s : dict) myDict.insert(s);
+        string ret = "", tmp;
+        while (ss >> tmp) {
+            if (!ret.empty()) ret += ' ';
+            ret += tmp.substr(0, myDict.search(tmp));
+        }
+        return ret;
+    }
+};
