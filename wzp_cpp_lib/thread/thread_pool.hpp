@@ -26,7 +26,6 @@ namespace wzp{
 					threads[i].join();
 				}
 			}
-			std::cout<<"END"<<std::endl;
 		}
 	};
 	/*the thread pool class*/
