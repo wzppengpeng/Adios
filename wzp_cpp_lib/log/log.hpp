@@ -3,8 +3,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <cstdarg>
 #include <string>
 #include <ctime>
 #include <ratio>
