@@ -40,6 +40,14 @@ namespace wzp{
             closedir(dir);
             return true;
         }
+
+        // clear dir
+        inline static void clear_dir(const std::string& dir_path) {
+            std::string cmd("mkdir -p " + dir_path);
+            int res = system(cmd.c_str());
+            cmd = "rm -rf " + dir_path + "/*";
+            res = system(cmd.c_str());
+        }
     };
 }
 
