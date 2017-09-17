@@ -43,7 +43,7 @@ public:
     }
 
     /*init function*/
-    static void log_init(log_level level, log_type type,
+    static void log_init(log_level level=log_level::Info, log_type type=log_type::Console,
                 std::string&& file_path="wzp.log"){
         set_log_level(level);
         set_log_type(type);
