@@ -8,7 +8,6 @@
 
 #include <Eigen/Dense>
 
-#include "function/help_function.hpp"
 
 namespace wzp
 {
