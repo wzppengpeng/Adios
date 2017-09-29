@@ -17,13 +17,13 @@
 + LINQ:C#风格的容器LINQ操作，延迟运算，便利操作的语法糖
 
 ## 分目录情况：
-+ config：
+    + config：
         * config_parser.hpp:简单的按行处理的配置文件解析，可以设置注释符号
         * command_parser.hpp:单例模式处理命令行的解析，设置--xx，统一使用这种格式
         * arg_parser.hpp:单例模式解析命令行（微软风格），使用config=xxx的形式
         * click.cpp:arg_parser.hpp与command_parser.hpp的结合改良版，首先定义键值，然后读取config=xxx形式的命令行进行解析，不正确会打印help()
 
-+ container:
+    + container:
         * threadsafe_queue.h:一个线程安全模板队列，可以设置处理优先级
         * array_args.hpp：目前只包括获得vector最大值的索引位置,以及任意值的索引返回值,对数组进行洗牌
         * singleton.hpp:单例模式的容器，通过T模板参数来现实化初始不同的类型的单例！
@@ -39,13 +39,13 @@
         * grid.hpp:一个vector<tuple>的封装，使用时相当于一个列可以是任意类型的矩阵表
         * bubble.hpp:一个四维张量，平铺保存，用来保存同类数据或者图像
         * binary_search.hpp:一个基于二分搜索的集合，可以有数据重复，主要针对数据移动较小的情况，主要是查找而不是增加删除（其实增加删除也还好），在查找为主的情况下可用来替代普通的set，map，更加高效并节省内存。
-+ files:
+    + files:
         * files.hpp:可以获取一个目录下的所有文件名，也可以按照后缀名进行文件获取
         * multireader.hpp:使用多线程分块读取大文件，传入一个对每一行进行处理的单行处理函数，指定返回类型可以将文件内容以vector的形式加载进内存
         * file_loader.hpp:使用next的迭代器形式读取文件，使用regis注册处理每一行的函数对象以及要处理的文件名。
         FileLoad~最新添加的类似STLwrapper的迭代器，可以用C++11的for(auto)结构进行循环迭代
         * path.hpp:使用和python类似的join/basename/splitext等函数
-+ function:
+    + function:
         * function_tool.hpp:万能的函数包装器，可以接受任意类型的函数进行处理
                             一个可以链式执行单个输入参数的类型
         * help_function.hpp:提供类似python的range函数，并且可以支持字符等的迭代，使用C++11的for循环使用，极其方便
@@ -53,11 +53,11 @@
                         提供一个make_unique方法，更加安全方便，和make_shared逻辑相统一
                         提供任意长度的任意常见类型的max和min，默认返回值是double,如果需要其他需自己指定
         * apply_tuple.hpp:提供找寻tuple中index的函数,提供一个函数包装器，允许将参数以tuple的形式传入，和python类似
-+ log:
+    + log:
         * log.hpp:可以设置日志等级的轻量级日志模块，可以设置日志的输出位置，最后会显示时间
-+ my_string:
+    + my_string:
         * string.hpp:包含一些字符串的处理，包括转换字符串到任意类型，分割字符串，join字符串，字符串消除空格, string的format，startwith, end with等
-+ thread:
+    + thread:
         * thread_pool.hpp:一个安全的线程池，submit任务即可
         * task.hpp:对于async和函数对象的封装，以函数对象初始化，支持链式传递参数，前提是前一个函数是后一个的返回值，不能是void
             ，直到调用run或者get才会开始运行，void返回类型只支持wait和run接口,get接口等效于run，但是会阻塞。
@@ -84,7 +84,7 @@
                 输入一个区间和一个初始值，输入最后的reduce函数即可，最后的返回值为reduceFunc的返回值
 
 
-+ util:
+    + util:
         * lexical_cast.hpp:各种类型的转换包括字符串转为bool类型
         * type_info.hpp：提供了一个简单的将类型连接打印的结构体，主要是学习结构体模板的写法
         * timer.hpp:提供了一个C++11的定时器，可以使用Timer t, t.elapsed()的方法获取来测时间，支持微妙、纳秒、分钟小时等
@@ -94,22 +94,22 @@
                      反序列化时采用相同的方法，输入一个字符串引用，以及内存连续类型的声明，需要注意的是，
                      序列化和反序列话用的函数要对应，即可变参数类型个数要对应，另外反序列化vector的size要提前准备好（这个比较坑。。。。还没想到更好的办法= =）
         * uuid.hpp:使用UUID()的方法可以获得全球唯一值，在Linux上可能需要-luuid
-+ executor:
+    + executor:
         * executor.hpp:一个最基本的任务调度模型，只包含默认构造函数和一个基本的方法，实际中应根据需要修改源代码，设计具体的接口
         * executor_factory.hpp：一个自动注册的对象工厂，使用宏在头文件中进行注册REGISTER_EXECUTOR(T, key)即可，实际上只是将该类型进行了构造函数的函数对象的注册，然后在使用中使用wzp::factory::produce_unique等进行对象的创建。注意，注册对象构造函数只能在hpp中完成，以免引起连接错误。
-+ redis:
+    + redis:
         * redis_oper.hpp:对hiredis.h的简单封装，新建对象后提供get/set/rpush/lpop/hash_set/hash_get/hash_delete/del等操作
         * redis_task_listen.hpp:实际是对redis blpop brpop的二次封装，监听队列，然后pop队列调用一个上层所给的handler来处理即可，在使用上建议使用一个智能指针进行包裹后，可以使用多asnyc并行执行等。即封装一个worker类，类中包含比如算法等模块，然后将算法的调用接口封装为函数对象传入即可
-+ reflection
+    + reflection
         * reflection.hpp:类似于之前的那个注册工厂，但是更加易于使用，重点在于简化factory模式，对于子类使用一个静态变量达到提前注册的目的，然后只需要根据注册的类名进行创建对象即可，目前不适用于模板类
         * factory.hpp:reflection的加强版，可以使用`FactoryRegister(Base, Sub, Args...)`来注册该类的名字，Args为构造函数中需要接受的参数，构造时使用tuple包一下.(保留reflection是为了和以前的代码兼容)
-+ task
+    + task
         * task.hpp:包含一个链式传递函数对象的任务模板，可以设定要链式进行的任务，直到run才会真的执行
-+ unix:
+    + unix:
         * cmd.hpp:包含类似于php system函数的函数，输入一个字符串指令，子进程执行指令，将结果放入一个vector中，通过返回值bool来
         明确是否执行成功。
         * ip.hpp:添加了一个得到本地IP地址的辅助函数
-+ linq:
+    + linq:
         *linq.hpp:实际使用只需引入这个文件即可，包含一个from函数将STL迭代器转为Enumarable对象，既保存了一对表示区间的迭代器
         *linq_enumerable.hpp:最基本的保存迭代器的类型，包含select,where,group_by, to_vector,first,count等操作
         *select_iterator.hpp:select迭代器，保存对于指向元素的运算方法
