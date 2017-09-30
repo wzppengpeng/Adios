@@ -17,7 +17,7 @@ class EMatrix {
 private:
     // the alias for inner use of raw eigen matrix
     template<typename F>
-    using RawMatrix = Eigen::Matrix<F, Eigen::Dynamic, Eigen::Dynamic>;
+    using RawMatrix = Eigen::Matrix<F, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
     // define the index type
     typedef Eigen::Index Index;
