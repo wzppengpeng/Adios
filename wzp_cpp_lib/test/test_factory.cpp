@@ -6,20 +6,21 @@ using namespace std;
 using namespace wzp;
 
 //test the reflection
+template<typename T>
 class B {
 public:
-    B(int x, int y) : x_(x), y_(y)
+    B(T x, T y) : x_(x), y_(y)
     {}
 
     virtual void fuck() = 0;
 
 protected:
-    int x_;
-    int y_;
+    T x_;
+    T y_;
 
 };
 
-class D : public B {
+class D : public B<int> {
 public:
     D(int x, int y) : B(x, y) {}
     void fuck() override {
@@ -27,10 +28,10 @@ public:
         print(x_, y_);
     }
 private:
-    static FactoryRegister(B, D, int, int) regis_d;
+    static FactoryRegister(B<int>, D, int, int) regis_d;
 };
 
-class C : public B {
+class C : public B<int> {
 public:
     C(int x, int y) : B(x, y) {}
     void fuck() override {
@@ -38,18 +39,18 @@ public:
         print(x_, y_);
     }
 private:
-    static FactoryRegister(B, C, int, int) regis_c;
+    static FactoryRegister(B<int>, C, int, int) regis_c;
 };
 
-FactoryRegister(B, D, int, int) D::regis_d("D");
-FactoryRegister(B, C, int, int) C::regis_c("C");
+FactoryRegister(B<int>, D, int, int) D::regis_d("D");
+FactoryRegister(B<int>, C, int, int) C::regis_c("C");
 
 
 int main(int argc, char const *argv[])
 {
-    auto it = wzp::Factory<B, int, int>::create_unique("D", std::make_tuple(1, 3));
+    auto it = wzp::Factory<B<int>, int, int>::create_unique("D", std::make_tuple(1, 3));
     it->fuck();
-    auto ii = wzp::Factory<B, int, int>::create_shared("C", std::make_tuple(2, 4));
+    auto ii = wzp::Factory<B<int>, int, int>::create_shared("C", std::make_tuple(2, 4));
     ii->fuck();
     return 0;
 }
