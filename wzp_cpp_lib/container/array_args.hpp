@@ -45,7 +45,7 @@ namespace wzp{
 
         /*shuffle an array*/
         inline static void shuffle(std::vector<T>& array) {
-            srand(time(NULL));
+            // srand(time(NULL));
             int i, j ;
             for(i = array.size() - 1; i > 0; --i) {
                 j = rand() % (i + 1);
@@ -57,7 +57,7 @@ namespace wzp{
         template<typename U>
         inline static void shuffle(std::vector<T>& data_array, std::vector<U>& label_array) {
             assert(data_array.size() == label_array.size());
-            srand(time(NULL));
+            // srand(time(NULL));
             int i, j;
             for(i = data_array.size() - 1; i > 0; --i) {
                 j = rand() % (i + 1);
