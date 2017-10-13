@@ -129,7 +129,7 @@ public:
             EMatrix<Dtype> tmp_mat(*this);
             for(Index i = 0; i < rows(); ++i) {
                 for(Index j = 0; j < cols(); ++j) {
-                    tmp_mat.at(i, j) = other(0, j);
+                    tmp_mat.at(i, j) + other(0, j);
                 }
             }
             return tmp_mat;
@@ -138,7 +138,7 @@ public:
             EMatrix<Dtype> tmp_mat(*this);
             for(Index j = 0; j < cols(); ++j) {
                 for(Index i = 0; i < rows(); ++i) {
-                    tmp_mat.at(i, j) = other(i, 0);
+                    tmp_mat.at(i, j) += other(i, 0);
                 }
             }
             return tmp_mat;
