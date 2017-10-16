@@ -199,6 +199,59 @@ inline void stl_release(T& stl_container) {
 }
 
 
+/**
+ * the reverse walk container
+ */
+namespace reverse_details
+{
+
+template<typename Range>
+class ReverseRangeWalker {
+public:
+    using Iter =  typename Range::reverse_iterator;
+
+
+    ReverseRangeWalker(Range& r) : m_r(&r) {}
+
+    inline Iter begin() { return m_r->rbegin(); }
+
+    inline Iter end() { return m_r->rend(); }
+
+private:
+    Range* m_r;
+    const Range* m_r_const;
+
+};
+
+template<typename Range>
+class ReverseConstRangeWaler {
+public:
+    using CIter = typename Range::const_reverse_iterator;
+
+
+    ReverseConstRangeWaler(const Range& r) : m_r_const(&r) {}
+
+    inline CIter begin() const { return m_r_const->crbegin(); }
+
+    inline CIter end() const { return m_r_const->crend(); }
+
+private:
+    const Range* m_r_const;
+};
+
+} //details
+
+// teh functions wo reverse walk the container
+template<typename Range>
+reverse_details::ReverseRangeWalker<Range> reverse_walk(Range& r) {
+    return reverse_details::ReverseRangeWalker<Range>(r);
+}
+
+template<typename Range>
+reverse_details::ReverseConstRangeWaler<Range> reverse_walk(const Range& r) {
+    return reverse_details::ReverseConstRangeWaler<Range>(r);
+}
+
 }//wzp
 
 #endif /*RANGE_HPP_*/
