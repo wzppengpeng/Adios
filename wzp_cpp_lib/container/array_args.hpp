@@ -12,7 +12,7 @@ namespace wzp{
 
     /*the contatiner's args op for vector*/
     template<class T>
-    class array_args{
+    class array_args {
     public:
         /*get the max value's index*/
         inline static size_t arg_max(const std::vector<T>& array){
@@ -40,6 +40,22 @@ namespace wzp{
             else{
                 auto reindex = array.size() + index;
                 return array[reindex];
+            }
+        }
+
+        inline static const T& any_index(const std::vector<T>& array, int index) {
+            if(index >= 0) return array[index];
+            else{
+                auto reindex = array.size() + index;
+                return array[reindex];
+            }
+        }
+
+        // extend another array into the raw array
+        template<typename U>
+        inline static void extend(std::vector<T>& array, const std::vector<U>& other) {
+            for(auto& o : other) {
+                array.emplace_back(static_cast<T>(o));
             }
         }
 
