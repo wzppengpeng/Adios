@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <vector>
 
+#include <initializer_list>
+
 /*
     the range is just an iterator, use c++11 for(auto i : range()) to iter
 */
@@ -152,35 +154,35 @@ void print_err(T&& t, Args&&... args) {
     print_err(std::forward<Args>(args)...);
 }
 
-/*for now test max*/
-template<typename Return=double, typename T, typename U>
-Return max(T&& l, U&& r) {
-    return l > r ? l : r;
+
+/**
+ * the max function for a list of same types
+ */
+template<typename List>
+inline typename List::value_type max(List il) {
+    typedef typename List::value_type ValType;
+    ValType max_val = *il.begin();
+    for(const auto& val : il) {
+        max_val = max_val > val ? max_val : val;
+    }
+    return max_val;
 }
 
 
-template<typename Return=double, typename T, typename U, typename R, typename... Args>
-Return max(T&& l, U&& r, R&& n, Args&&... args)
-{
-    auto new_l = wzp::max<Return>(std::forward<T>(l), std::forward<U>(r));
-    return wzp::max<Return>(std::forward<decltype(new_l)>(new_l),
-        std::forward<R>(n), std::forward<Args>(args)...);
+/**
+ * the min function for a list of same types
+ */
+template<typename List>
+inline typename List::value_type min(List il) {
+    typedef typename List::value_type ValType;
+    ValType min_val = *il.begin();
+    for(const auto& val : il) {
+        min_val = min_val < val ? min_val : val;
+    }
+    return min_val;
 }
 
-/*for temp test*/
-template<typename Return=double, typename T, typename U>
-Return min(T&& l, U&& r) {
-    return l < r ? l : r;
-}
 
-
-template<typename Return=double, typename T, typename U, typename R, typename... Args>
-Return min(T&& l, U&& r, R&& n, Args&&... args)
-{
-    auto new_l = wzp::min<Return>(std::forward<T>(l), std::forward<U>(r));
-    return wzp::min<Return>(std::forward<decltype(new_l)>(new_l),
-        std::forward<R>(n), std::forward<Args>(args)...);
-}
 
 //the function of make_unique, just like make_shared
 template<typename T, typename... Args>
