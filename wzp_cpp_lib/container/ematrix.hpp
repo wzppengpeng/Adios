@@ -211,6 +211,10 @@ public:
     inline Dtype& at(Index i, Index j) { return m_mat(i, j); }
     inline Dtype operator() (Index i, Index j) const { return at(i, j); }
     inline Dtype& operator() (Index i, Index j) { return at(i, j); }
+    inline Dtype at(Index i) const { return m_mat(i); }
+    inline Dtype& at(Index i) { return m_mat(i); }
+    inline Dtype operator() (Index i) const { return at(i); }
+    inline Dtype& operator() (Index i) { return at(i); }
 
     /**
      * some simple function
