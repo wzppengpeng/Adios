@@ -35,6 +35,11 @@ public:
     // construct by two size
     EMatrix(Index m, Index n, Dtype init_val = 0) : m_mat(m, n) {InitByValue(init_val); }
 
+    // construct by raw point
+    EMatrix(Index m, Index n, Dtype* raw_data_ptr) {
+        m_mat = std::move(Eigen::Map<RawMatrix<Dtype>>(raw_data_ptr, m, n));
+    }
+
     // construct by datas
     EMatrix(RawMatrix<Dtype>&& raw_mat) : m_mat(std::move(raw_mat)) {}
     EMatrix(const RawMatrix<Dtype>& raw_mat) : m_mat(raw_mat) {}
@@ -129,7 +134,7 @@ public:
             EMatrix<Dtype> tmp_mat(*this);
             for(Index i = 0; i < rows(); ++i) {
                 for(Index j = 0; j < cols(); ++j) {
-                    tmp_mat.at(i, j) + other(0, j);
+                    tmp_mat.at(i, j) += other(0, j);
                 }
             }
             return tmp_mat;
