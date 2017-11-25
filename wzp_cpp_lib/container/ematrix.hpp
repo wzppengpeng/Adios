@@ -85,6 +85,12 @@ public:
         return EMatrix<Dtype>(std::move(tmp));
     }
 
+    // inverse the matrix
+    EMatrix<Dtype> inverse() const {
+        auto tmp = m_mat.inverse();
+        return EMatrix<Dtype>(std::move(tmp));
+    }
+
     /**
      * operations by contant value
      */
