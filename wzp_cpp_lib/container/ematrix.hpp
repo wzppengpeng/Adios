@@ -23,6 +23,11 @@ private:
     typedef Eigen::Index Index;
 
 public:
+    enum MatrixType {
+        EYE
+    };
+
+public:
     /**
      * Constructors
      */
@@ -31,6 +36,18 @@ public:
 
     // construct by size
     EMatrix(Index m) : m_mat(m, m) { InitByValue(0); }
+
+    // construct an eye
+    EMatrix(Index m, MatrixType type) : m_mat(m, m) {
+        if(type == EYE) {
+            for(Index i = 0; i < m; ++i) {
+                for(Index j = 0; j < m; ++j) {
+                    if(i == j) m_mat(i, j) = 1;
+                    else m_mat(i, j) = 0;
+                }
+            }
+        }
+    }
 
     // construct by two size
     EMatrix(Index m, Index n, Dtype init_val = 0) : m_mat(m, n) {InitByValue(init_val); }
