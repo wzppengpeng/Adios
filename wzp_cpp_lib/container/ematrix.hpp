@@ -24,7 +24,9 @@ private:
 
 public:
     enum MatrixType {
-        EYE
+        EYE,
+        ZERO,
+        ONE
     };
 
 public:
@@ -35,17 +37,27 @@ public:
     EMatrix() : m_mat() {}
 
     // construct by size
-    EMatrix(Index m) : m_mat(m, m) { InitByValue(0); }
+    EMatrix(Index m) : m_mat() { m_mat.setZero(m, m); }
 
     // construct an eye
-    EMatrix(Index m, MatrixType type) : m_mat(m, m) {
+    EMatrix(Index m, MatrixType type) {
         if(type == EYE) {
-            for(Index i = 0; i < m; ++i) {
-                for(Index j = 0; j < m; ++j) {
-                    if(i == j) m_mat(i, j) = 1;
-                    else m_mat(i, j) = 0;
-                }
-            }
+            m_mat.setIdentity(m, m);
+        } else if(type == ZERO) {
+            m_mat.setZero(m, m);
+        } else if(type == ONE) {
+            m_mat.setOnes(m, m);
+        }
+    }
+
+    // construct with different shapes
+    EMatrix(Index m, Index n, MatrixType type) {
+        if(type == EYE) {
+            m_mat.setIdentity(m, n);
+        } else if(type == ZERO) {
+            m_mat.setZero(m, n);
+        } else if(type == ONE) {
+            m_mat.setOnes(m, n);
         }
     }
 
@@ -194,6 +206,53 @@ public:
             }
         } else {
             m_mat += other.get_raw_mat();
+        }
+        return *this;
+    }
+
+    EMatrix<Dtype> operator- (const EMatrix<Dtype>& other) const {
+        if(other.rows() == 1) {
+            assert(other.cols() == cols());
+            EMatrix<Dtype> tmp_mat(*this);
+            for(Index i = 0; i < rows(); ++i) {
+                for(Index j = 0; j < cols(); ++j) {
+                    tmp_mat.at(i, j) -= other(0, j);
+                }
+            }
+            return tmp_mat;
+        } else if(other.cols() == 1) {
+            assert(other.rows() == rows());
+            EMatrix<Dtype> tmp_mat(*this);
+            for(Index j = 0; j < cols(); ++j) {
+                for(Index i = 0; i < rows(); ++i) {
+                    tmp_mat.at(i, j) -= other(i, 0);
+                }
+            }
+            return tmp_mat;
+        } else {
+            auto tmp = m_mat - other.get_raw_mat();
+            return EMatrix<Dtype>(std::move(tmp));
+        }
+    }
+
+    EMatrix<Dtype>& operator-= (const EMatrix<Dtype>& other) {
+        if(other.rows() == 1) {
+            assert(other.cols() == cols());
+            for(Index i = 0; i < rows(); ++i) {
+                for(Index j = 0; j < cols(); ++j) {
+                    at(i, j) -= other(0, j);
+                }
+            }
+        } else if(other.cols() == 1) {
+            assert(other.rows() == rows());
+            EMatrix<Dtype> tmp_mat(*this);
+            for(Index j = 0; j < cols(); ++j) {
+                for(Index i = 0; i < rows(); ++i) {
+                    at(i, j) -= other(i, 0);
+                }
+            }
+        } else {
+            m_mat -= other.get_raw_mat();
         }
         return *this;
     }
