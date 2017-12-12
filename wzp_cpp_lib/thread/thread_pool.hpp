@@ -25,7 +25,7 @@ public:
 		decltype(threads.size()) i = 0;
 		for (; i < threads.size(); ++i) {
 			if (threads[i].joinable()) {
-				threads[i].join();
+				threads[i].detach();
 			}
 		}
 	}
@@ -57,8 +57,7 @@ public:
 		auto num = 0;
 		if (pool_num == -1) {
 			num = std::thread::hardware_concurrency();
-		}
-		else {
+		} else {
 			num = pool_num;
 		}
 		try {

@@ -42,6 +42,11 @@ public:
         data_cond.notify_one();
     }
 
+    /**
+     * notify all threads
+     */
+    inline void notify() { data_cond.notify_all(); }
+
     /*wait the queue if it is empty and pop one
     input:@ value is the reference of the output value
     */
