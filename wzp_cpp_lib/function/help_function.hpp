@@ -6,6 +6,7 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include <string>
 
 #include <initializer_list>
 
@@ -253,6 +254,27 @@ template<typename Range>
 reverse_details::ReverseConstRangeWaler<Range> reverse_walk(const Range& r) {
     return reverse_details::ReverseConstRangeWaler<Range>(r);
 }
+
+// the function to get the ptr of vector and string
+template<typename T>
+inline static T* vector_ptr(std::vector<T>& v, size_t idx = 0) {
+    return &v[idx];
+}
+
+template<typename T>
+inline static const T* vector_ptr(const std::vector<T>& v, size_t idx = 0) {
+    return &v[idx];
+}
+
+inline static char* string_ptr(std::string& s, size_t idx = 0) {
+    return &s[idx];
+}
+
+inline static const char* string_ptr(const std::string& s, size_t idx = 0) {
+    return &s[idx];
+}
+
+// /////////////////
 
 }//wzp
 
