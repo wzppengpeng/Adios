@@ -36,14 +36,24 @@ public:
         Get().emplace(key, std::make_pair("", desc));
     }
 
+    // add the default value
+    template<typename T>
+    inline static void add_argument(const string& key, T&& default_val, const string& desc) {
+        Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    }
+
+    template<typename T>
+    inline static void add_argument(string&& key, T&& default_val, string&& desc) {
+        Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    }
+
     /**
      * the function to parse the args
      */
     static void parse(int argc, char** argv) noexcept {
         if(argc != static_cast<int>(Get().size() + 1)) {
-            cerr << RED << "[Fatal] args size mismatch" << RESET << endl;
+            cout << MAGENTA << "[Warning] args size mismatch" << RESET << endl;
             help();
-            throw std::logic_error("args numbers mismatch");
         }
         for(int i = 1; i < argc; ++i) {
             Parse(i, argv);
@@ -60,6 +70,10 @@ public:
             throw std::logic_error("Key Missing, check your code");
         }
         else {
+            if(it->second.first.empty()) {
+                cerr<<RED<<"[Fatal] the key is not given: "<<key<<RESET<<std::endl;
+                throw std::logic_error("Key Missing, check your code");
+            }
             return it->second.first;
         }
     }
@@ -73,6 +87,10 @@ public:
             throw std::logic_error("Key Missing, check your code");
         }
         else {
+            if(it->second.first.empty()) {
+                cerr<<RED<<"[Fatal] the key is not given: "<<key<<RESET<<std::endl;
+                throw std::logic_error("Key Missing, check your code");
+            }
             return convert_string<T>(it->second.first);
         }
     }
