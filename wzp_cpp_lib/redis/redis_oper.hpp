@@ -45,6 +45,21 @@ public:
         return m_is_connected;
     }
 
+    /** handle the command */
+    bool command(const std::string& cmd) {
+        if(!m_is_connected)
+            return false;
+        redisReply* reply = (redisReply*)redisCommand(redis, cmd.c_str());
+        if(reply->type == REDIS_REPLY_ERROR) {
+            freeReplyObject(reply);
+            return false;
+        }
+        else {
+            freeReplyObject(reply);
+            return true;
+        }
+    }
+
     /*set the key = value*/
     template<typename Val_t>
     bool set(const std::string& key, Val_t&& t) {
@@ -52,6 +67,21 @@ public:
             return false;
         std::string cmd = "set {} {}";
         cmd = wzp::format(std::move(cmd), key, std::forward<Val_t>(t));
+        redisReply* reply = (redisReply*)redisCommand(redis, cmd.c_str());
+        if(reply->type == REDIS_REPLY_ERROR) {
+            freeReplyObject(reply);
+            return false;
+        }
+        else {
+            freeReplyObject(reply);
+            return true;
+        }
+    }
+
+    bool set_str(const std::string& key, const std::string& val) {
+        if(!m_is_connected)
+            return false;
+        std::string cmd = "set " + key + " " + val;
         redisReply* reply = (redisReply*)redisCommand(redis, cmd.c_str());
         if(reply->type == REDIS_REPLY_ERROR) {
             freeReplyObject(reply);
@@ -88,6 +118,21 @@ public:
             return false;
         std::string cmd = "rpush {} {}";
         cmd = wzp::format(std::move(cmd), key, std::forward<Val_t>(t));
+        redisReply* reply = (redisReply*)redisCommand(redis, cmd.c_str());
+        if(reply->type == REDIS_REPLY_ERROR) {
+            freeReplyObject(reply);
+            return false;
+        }
+        else {
+            freeReplyObject(reply);
+            return true;
+        }
+    }
+
+    bool rpush_str(const std::string& key, const std::string& val) {
+        if(!m_is_connected)
+            return false;
+        std::string cmd = "rpush " + key + " " + val;
         redisReply* reply = (redisReply*)redisCommand(redis, cmd.c_str());
         if(reply->type == REDIS_REPLY_ERROR) {
             freeReplyObject(reply);
