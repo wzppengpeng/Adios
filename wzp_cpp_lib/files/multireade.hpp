@@ -23,7 +23,7 @@ class MultiReader
 typedef long long ll;
 
 public:
-    MultiReader(int w = 8) : m_workers(w) {}
+    MultiReader(int w = std::thread::hardware_concurrency()) : m_workers(w) {}
 
     //the register function
     template<typename Fun>
