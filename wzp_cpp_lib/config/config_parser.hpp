@@ -68,6 +68,14 @@ public:
         }
     }
 
+    // the interface to add default values
+    template<typename T>
+    void add_default(const std::string& key, const T& val) {
+        if(m_params_map.count(key) == 0) {
+            m_params_map.emplace(key, std::to_string(val));
+        }
+    }
+
 private:
     bool parse() {
         std::ifstream input(m_config_path.c_str(), std::ios::in);
@@ -88,7 +96,7 @@ private:
             string value(line.substr(pos + 1));
             trim(key);
             trim(value);
-            m_params_map.emplace(key, value);
+            m_params_map[key] = value;
         }
         input.close();
         return true;
