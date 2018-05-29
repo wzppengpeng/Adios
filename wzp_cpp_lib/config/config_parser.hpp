@@ -35,6 +35,17 @@ public:
 
     bool config() { return parse(); }
 
+    // config with config file path
+    bool config(const std::string& config) {
+        m_config_path = config;
+        return parse();
+    }
+
+    // clear all cache parameters
+    void clear() {
+        m_params_map.clear();
+    }
+
     bool get(const std::string& key, string& val) {
         std::map<std::string, std::string>::iterator it = m_params_map.find(key);
         if(it == m_params_map.end()) return false;
