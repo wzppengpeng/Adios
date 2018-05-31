@@ -16,6 +16,18 @@ inline static T convert_string(const std::string& input) {
     return output;
 }
 
+// convert string to bool
+inline static bool convert_string_to_bool(const std::string& input) {
+    std::istringstream is(input);
+    bool b;
+    is >> std::boolalpha >> b;
+    return b;
+}
+
+inline static std::string convert_bool_to_string(bool b) {
+    return b ? "true" : "false";
+}
+
 template<typename T>
 inline static std::string convert_to_string(T&& t) {
     std::stringstream ss;
