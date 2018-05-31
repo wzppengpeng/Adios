@@ -22,6 +22,7 @@
         * command_parser.hpp:单例模式处理命令行的解析，设置--xx，统一使用这种格式
         * arg_parser.hpp:单例模式解析命令行（微软风格），使用config=xxx的形式
         * click.cpp:arg_parser.hpp与command_parser.hpp的结合改良版，首先定义键值，然后读取config=xxx形式的命令行进行解析，不正确会打印help()
+        * wflags.hpp: click.hpp的升级版，可以支持以FLAGS_DEFINE和FLAGS+类型的方式直接调用
 
     + container:
         * threadsafe_queue.h:一个线程安全模板队列，可以设置处理优先级
