@@ -14,7 +14,7 @@ namespace wzp {
 
 using std::string;
 
-namespace detail {   
+namespace detail {
 inline static void log_err(const std::string& content) {
     std::cerr << RED << "[Fatal] " << content << RESET << std::endl;
     exit(-1);
@@ -33,7 +33,7 @@ class WFlags {
 
 template<typename K, typename V>
 using Dict = std::unordered_map<K, V>;
-using ArgsDict = Dict<std::string, std::pair<std::string, std::string>>;
+using ArgsDict = Dict<std::string, std::pair<std::string, std::string> >;
 
 public:
     // the map getter
@@ -149,7 +149,7 @@ struct WFlagsGetter<bool> {
             if(it->second.first.empty()) {
                 detail::log_err("the key is not given: " + key);
             }
-            else return wzp::convert_string_to_bool(it->second.first);
+            else return wzp::convert_string<bool>(it->second.first);
         }
         return false;
     }

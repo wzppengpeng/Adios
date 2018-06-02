@@ -9,7 +9,7 @@ namespace wzp {
 
 /*convert string to any type, this is too old, please use lexical_cast<string> instead*/
 template<typename T>
-inline static T convert_string(const std::string& input) {
+inline T convert_string(const std::string& input) {
     std::istringstream ss(input);
     T output;
     ss >> output;
@@ -17,11 +17,17 @@ inline static T convert_string(const std::string& input) {
 }
 
 // convert string to bool
-inline static bool convert_string_to_bool(const std::string& input) {
+inline bool convert_string_to_bool(const std::string& input) {
     std::istringstream is(input);
     bool b;
     is >> std::boolalpha >> b;
     return b;
+}
+
+// convert string to bool
+template<>
+inline bool convert_string<bool>(const std::string& input) {
+    return convert_string_to_bool(input);
 }
 
 inline static std::string convert_bool_to_string(bool b) {
