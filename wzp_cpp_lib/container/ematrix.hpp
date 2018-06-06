@@ -70,11 +70,11 @@ public:
     }
 
     // construct by datas
-    EMatrix(RawMatrix<Dtype>&& raw_mat) : m_mat(std::move(raw_mat)) {}
+    EMatrix(RawMatrix<Dtype>&& raw_mat) noexcept : m_mat(std::move(raw_mat)) {}
     EMatrix(const RawMatrix<Dtype>& raw_mat) : m_mat(raw_mat) {}
 
     // move construct
-    EMatrix(EMatrix<Dtype>&& other) : m_mat(std::move(other.m_mat)) { }
+    EMatrix(EMatrix<Dtype>&& other) noexcept : m_mat(std::move(other.m_mat)) { }
 
     // move operator
     EMatrix<Dtype>& operator= (EMatrix<Dtype>&& other) {
