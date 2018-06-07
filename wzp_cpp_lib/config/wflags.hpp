@@ -28,6 +28,13 @@ inline static bool trim(std::string& str) {
 }
 } // detail
 
+// the declare of the Getter and Setter
+template<typename T>
+struct WFlagsGetter;
+
+template<typename T>
+struct WFlagsSetter;
+
 class WFlags {
 // some typedef
 
@@ -68,18 +75,12 @@ public:
     }
     // add the default value
     template<typename T>
-    inline static void add_argument(const string& key, T&& default_val, const string& desc) {
-        if(std::is_same<typename std::decay<T>::type, bool>::value)
-            Get().emplace(key, std::make_pair(convert_bool_to_string(default_val), desc));
-        else
-            Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    inline static void add_argument(const string& key, T default_val, const string& desc) {
+        WFlagsSetter<T>::set(key, default_val, desc);
     }
     template<typename T>
-    inline static void add_argument(string&& key, T&& default_val, string&& desc) {
-        if(std::is_same<typename std::decay<T>::type, bool>::value)
-            Get().emplace(key, std::make_pair(convert_bool_to_string(default_val), desc));
-        else
-            Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    inline static void add_argument(string&& key, T default_val, string&& desc) {
+        WFlagsSetter<T>::set(std::move(key), default_val, std::move(desc));
     }
 
 private:
@@ -154,6 +155,51 @@ struct WFlagsGetter<bool> {
         return false;
     }
 };
+
+template<typename T>
+struct WFlagsSetter {
+    static void set(const std::string& key, T val, const string& desc) {
+        WFlags::Get().emplace(key, std::make_pair(std::to_string(val), desc));
+    }
+
+    static void set(std::string&& key, T val, std::string&& desc) {
+        WFlags::Get().emplace(std::move(key), std::make_pair(std::to_string(val), std::move(desc)));
+    }
+};
+
+template<>
+struct WFlagsSetter<bool> {
+    static void set(const std::string& key, bool val, const string& desc) {
+        WFlags::Get().emplace(key, std::make_pair(convert_bool_to_string(val), desc));
+    }
+
+    static void set(std::string&& key, bool val, std::string&& desc) {
+        WFlags::Get().emplace(std::move(key), std::make_pair(convert_bool_to_string(val), std::move(desc)));
+    }
+};
+
+template<>
+struct WFlagsSetter<std::string> {
+    static void set(const std::string& key, std::string val, const string& desc) {
+        WFlags::Get().emplace(key, std::make_pair(std::move(val), desc));
+    }
+
+    static void set(std::string&& key, std::string val, std::string&& desc) {
+        WFlags::Get().emplace(std::move(key), std::make_pair(std::move(val), std::move(desc)));
+    }
+};
+
+template<>
+struct WFlagsSetter<const char*> {
+    static void set(const std::string& key, const char* val, const string& desc) {
+        WFlags::Get().emplace(key, std::make_pair(std::string(val), desc));
+    }
+
+    static void set(std::string&& key, const char* val, std::string&& desc) {
+        WFlags::Get().emplace(std::move(key), std::make_pair(std::string(val), std::move(desc)));
+    }
+};
+
 
 } // wzp
 
