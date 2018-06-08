@@ -6,7 +6,7 @@
 #include <leveldb/db.h> // only this machine have leveldb can use this
 // #include <mysql.h> // only this machin have mysql can use this
 
-#include "container/grid.hpp"
+#include "wzp_cpp_lib/container/grid.hpp"
 
 
 using std::string;

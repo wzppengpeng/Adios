@@ -7,7 +7,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "my_string/string.hpp"
+#include "wzp_cpp_lib/my_string/string.hpp"
 
 using std::vector;
 using std::cout;

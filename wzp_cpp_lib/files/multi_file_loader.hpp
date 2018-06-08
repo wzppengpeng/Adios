@@ -10,9 +10,9 @@
 #include <functional>
 #include <algorithm>
 
-#include "thread/parallel_algorithm.hpp"
+#include "wzp_cpp_lib/thread/parallel_algorithm.hpp"
 
-#include "function/help_function.hpp"
+#include "wzp_cpp_lib/function/help_function.hpp"
 
 namespace wzp
 {

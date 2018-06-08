@@ -7,7 +7,7 @@
 #include <atomic>
 // #include "container/threadsafe_queue.h"
 
-#include "thread/taskjob.hpp"
+#include "wzp_cpp_lib/thread/taskjob.hpp"
 
 namespace wzp {
 

@@ -9,9 +9,9 @@
 #include <utility>
 #include <tuple>
 
-#include "container/threadsafe_queue.h"
+#include "wzp_cpp_lib/container/threadsafe_queue.h"
 
-#include "function/apply_tuple.hpp"
+#include "wzp_cpp_lib/function/apply_tuple.hpp"
 
 
 namespace wzp {

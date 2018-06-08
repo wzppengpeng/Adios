@@ -7,8 +7,8 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "common.h"
-#include "my_string/string.hpp"
+#include "wzp_cpp_lib/common.h"
+#include "wzp_cpp_lib/my_string/string.hpp"
 
 using std::string;
 using std::cout;

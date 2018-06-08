@@ -7,9 +7,9 @@
 #include <fstream>
 #include <iterator>
 
-#include "thread/taskjob.hpp"
-#include "my_string/string.hpp"
-#include "util/serialize.hpp"
+#include "wzp_cpp_lib/thread/taskjob.hpp"
+#include "wzp_cpp_lib/my_string/string.hpp"
+#include "wzp_cpp_lib/util/serialize.hpp"
 
 using std::vector;
 

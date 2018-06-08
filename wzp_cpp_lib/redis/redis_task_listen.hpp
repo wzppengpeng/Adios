@@ -6,7 +6,7 @@
 #include <atomic>
 #include <memory>
 
-#include "redis/redis_oper.hpp"
+#include "wzp_cpp_lib/redis/redis_oper.hpp"
 
 namespace wzp {
 

@@ -5,7 +5,7 @@
 #include <future>
 #include <vector>
 
-#include "thread/task_group.hpp"
+#include "wzp_cpp_lib/thread/task_group.hpp"
 
 namespace wzp {
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include <chrono>
 
-#include "thread/task.hpp"
+#include "wzp_cpp_lib/thread/task.hpp"
 
 
 using std::vector;

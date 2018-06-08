@@ -5,8 +5,8 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "log/log.hpp"
-#include "function/help_function.hpp"
+#include "wzp_cpp_lib/log/log.hpp"
+#include "wzp_cpp_lib/function/help_function.hpp"
 
 
 namespace wzp {
