@@ -170,6 +170,18 @@ private:
             "] in file", __FILE__,  "line", __LINE__);
 #endif //CHECK
 
+// a macro to simple the call for functions
+#ifndef LOG_INFO
+#define LOG_INFO(STR, ...) wzp::log::info(STR, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_FATAL
+#define LOG_FATAL(STR, ...) wzp::log::fatal(STR, ##__VA_ARGS__)
+#endif
+
+#ifndef LOG_ERROR
+#define LOG_ERROR(STR, ...) wzp::log::error(STR, ##__VA_ARGS__)
+#endif
 
 }//wzp
 
