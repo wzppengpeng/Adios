@@ -25,6 +25,12 @@ inline static bool system(const std::string& cmd, std::vector<string>& cmd_resul
     return true;
 }
 
+
+// the command exec function for a simple version, no return values
+inline static void exec(const std::string& cmd) {
+    int res = system(cmd.c_str());
+}
+
 } // wzp
 
 #endif // CMD_HPP
