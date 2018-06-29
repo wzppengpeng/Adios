@@ -13,12 +13,12 @@
 namespace wzp {
 
 //the command exec function
-inline static bool system(const std::string& cmd, std::vector<string>& cmd_result) {
+inline static bool exec_with_res(const std::string& cmd, std::vector<std::string>& cmd_result) {
     auto ptr = popen(cmd.c_str(), "r");
     if(ptr == nullptr) return false;
     char str[MAXLINE];
     while(fgets(str, MAXLINE, ptr)) {
-        string cache(str);
+        std::string cache(str);
         cmd_result.emplace_back(cache.substr(0, cache.size() - 1));
     }
     if(pclose(ptr) == -1) return false;
