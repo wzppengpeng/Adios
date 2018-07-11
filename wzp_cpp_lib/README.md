@@ -40,6 +40,7 @@
         * grid.hpp:一个vector<tuple>的封装，使用时相当于一个列可以是任意类型的矩阵表
         * bubble.hpp:一个四维张量，平铺保存，用来保存同类数据或者图像
         * binary_search.hpp:一个基于二分搜索的集合，可以有数据重复，主要针对数据移动较小的情况，主要是查找而不是增加删除（其实增加删除也还好），在查找为主的情况下可用来替代普通的set，map，更加高效并节省内存。
+        * control_safe_queue.h: 简化版但是支持close的线程安全模板队列
     + files:
         * files.hpp:可以获取一个目录下的所有文件名，也可以按照后缀名进行文件获取
         * multireader.hpp:使用多线程分块读取大文件，传入一个对每一行进行处理的单行处理函数，指定返回类型可以将文件内容以vector的形式加载进内存
@@ -61,6 +62,7 @@
         * string.hpp:包含一些字符串的处理，包括转换字符串到任意类型，分割字符串，join字符串，字符串消除空格, string的format，startwith, end with等
     + thread:
         * thread_pool.hpp:一个安全的线程池，submit任务即可
+        * control_safe_thread_pool.hpp:解决之前的线程池不能手动关闭的问题，现在支持关闭之后主线程退出
         * task.hpp:对于async和函数对象的封装，以函数对象初始化，支持链式传递参数，前提是前一个函数是后一个的返回值，不能是void
             ，直到调用run或者get才会开始运行，void返回类型只支持wait和run接口,get接口等效于run，但是会阻塞。
             wait阻塞，get阻塞，run非阻塞。
