@@ -46,6 +46,19 @@ public:
         return std::move(filename);
     }
 
+    /**
+     * get the dir of a filename
+     * @param  path the raw path of the file
+     * @return      the dir name
+     */
+    inline static std::string dirname(const std::string& path) {
+        std::string dir;
+        size_t pos = path.find_last_of('/');
+        if(pos != std::string::npos) dir = std::move(path.substr(0, pos));
+        else dir = path;
+        return std::move(dir);
+    }
+
 
     /**
      * split the ext of a filename
