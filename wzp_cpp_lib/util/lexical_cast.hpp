@@ -8,12 +8,11 @@
 #include <stdexcept>
 #include <cctype>
 #include <cstring>
-using namespace std;
+
 namespace wzp{
+
 namespace detail
 {
-    const char* strue = "true";
-    const char* sfalse = "false";
 
     template <typename To, typename From>
     struct Converter
@@ -68,41 +67,41 @@ namespace detail
 
     //for string
     template<>
-    struct Converter<int, string>
+    struct Converter<int, std::string>
     {
-        inline static int convert(const string& from) {
+        inline static int convert(const std::string& from) {
             return std::stoi(from);
         }
     };
 
     template<>
-    struct Converter<long, string>
+    struct Converter<long, std::string>
     {
-        inline static long convert(const string& from) {
+        inline static long convert(const std::string& from) {
             return std::stol(from);
         }
     };
 
     template<>
-    struct Converter<long long, string>
+    struct Converter<long long, std::string>
     {
-        inline static long long convert(const string& from) {
+        inline static long long convert(const std::string& from) {
             return std::stoll(from);
         }
     };
 
     template<>
-    struct Converter<double, string>
+    struct Converter<double, std::string>
     {
-        inline static double convert(const string& from) {
+        inline static double convert(const std::string& from) {
             return std::stod(from);
         }
     };
 
     template<>
-    struct Converter<float, string>
+    struct Converter<float, std::string>
     {
-        inline static float convert(const string& from) {
+        inline static float convert(const std::string& from) {
             return std::stof(from);
         }
     };
@@ -117,7 +116,7 @@ namespace detail
         }
     };
 
-    bool checkbool(const char* from, const size_t len, const char* s)
+    inline static bool checkbool(const char* from, const size_t len, const char* s)
     {
         for (size_t i = 0; i < len; i++)
         {
@@ -139,14 +138,14 @@ namespace detail
         bool r = true;
         if (len == 4)
         {
-            r = checkbool(from, len, strue);
+            r = checkbool(from, len, "true");
 
             if (r)
                 return true;
         }
         else
         {
-            r = checkbool(from, len, sfalse);
+            r = checkbool(from, len, "false");
 
             if (r)
                 return false;
@@ -156,9 +155,9 @@ namespace detail
     }
 
     template <>
-    struct Converter<bool, string>
+    struct Converter<bool, std::string>
     {
-        inline static bool convert(const string& from)
+        inline static bool convert(const std::string& from)
         {
             return detail::convert(from.c_str());
         }
@@ -200,11 +199,11 @@ namespace detail
         }
     };
 
-    //to string
+    //to std::string
     template <typename From>
-    struct Converter<string, From>
+    struct Converter<std::string, From>
     {
-        inline static string convert(const From& from)
+        inline static std::string convert(const From& from)
         {
             return std::to_string(from);
         }
