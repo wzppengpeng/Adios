@@ -99,6 +99,7 @@
                      序列化和反序列话用的函数要对应，即可变参数类型个数要对应，另外反序列化vector的size要提前准备好（这个比较坑。。。。还没想到更好的办法= =）
         * uuid.hpp:使用UUID()的方法可以获得全球唯一值，在Linux上可能需要-luuid
         * waiter.hpp:可以方便的在不同线程之间公用同一Waiter对象，通过控制num_wait的数量来达到阻塞线程，唤醒线程的作用。
+        * random.hpp:封装STL的随机数模块，可以快速指定生成interger/floats/normal/bernoulli等类型的列表，只需声明一个类或者调用一个函数，默认使用random_device真随机数种子
     + executor:
         * executor.hpp:一个最基本的任务调度模型，只包含默认构造函数和一个基本的方法，实际中应根据需要修改源代码，设计具体的接口
         * executor_factory.hpp：一个自动注册的对象工厂，使用宏在头文件中进行注册REGISTER_EXECUTOR(T, key)即可，实际上只是将该类型进行了构造函数的函数对象的注册，然后在使用中使用wzp::factory::produce_unique等进行对象的创建。注意，注册对象构造函数只能在hpp中完成，以免引起连接错误。
