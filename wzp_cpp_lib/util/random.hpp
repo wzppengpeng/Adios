@@ -138,7 +138,21 @@ private:
     std::bernoulli_distribution distribution_;
 };
 
+/**
+ * the help function to generate one single random value
+ * input first / second is the valid inputs
+ */
+template<typename Random> inline
+typename Random::res_type random(typename Random::data_type a) {
+    Random rand(a); // construct
+    return rand.Next();
+}
 
+template<typename Random> inline
+typename Random::res_type random(typename Random::data_type a, typename Random::data_type b) {
+    Random rand(a, b);
+    return rand.Next();
+}
 
 /**
  * The help function to generate a list of numbers
