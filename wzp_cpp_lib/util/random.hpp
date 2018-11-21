@@ -26,8 +26,8 @@ public:
 public:
     // constructor, inclusive
     RandomInt(T begin, T end,
-        const rand_engine_type& rand = rand_engine_type(__get_random_seed()))
-        : rand_(rand), distribution_(begin, end) {}
+        unsigned seed = __get_random_seed())
+        : rand_(seed), distribution_(begin, end) {}
 
     inline T Next() {
         return distribution_(rand_);
@@ -57,8 +57,8 @@ public:
 public:
     // constructor, inclusive
     RandomFloats(T begin, T end,
-        const rand_engine_type& rand = rand_engine_type(__get_random_seed()))
-        : rand_(rand), distribution_(begin, end) {}
+        unsigned seed = __get_random_seed())
+        : rand_(seed), distribution_(begin, end) {}
 
     inline T Next() {
         return distribution_(rand_);
@@ -88,8 +88,8 @@ public:
 public:
     // constructor, gauss distribution
     RandomNormal(T mean, T val,
-        const rand_engine_type& rand = rand_engine_type(__get_random_seed()))
-        : rand_(rand), distribution_(mean, val) {}
+        unsigned seed = __get_random_seed())
+        : rand_(seed), distribution_(mean, val) {}
 
     inline T Next() {
         return distribution_(rand_);
@@ -119,8 +119,8 @@ public:
 public:
     // constructor, gauss distribution
     RandomBernoulli(T prob,
-        const rand_engine_type& rand = rand_engine_type(__get_random_seed()))
-        : rand_(rand), distribution_(prob) {}
+        unsigned seed = __get_random_seed())
+        : rand_(seed), distribution_(prob) {}
 
     inline bool Next() {
         return distribution_(rand_);
