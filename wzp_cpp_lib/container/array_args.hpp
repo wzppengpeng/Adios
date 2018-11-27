@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 namespace wzp{
 
@@ -86,11 +87,7 @@ namespace wzp{
          * sum of a vector
          */
         inline static T sum(const std::vector<T>& array) {
-            T sum_val(0);
-            for(auto t : array) {
-                sum_val += t;
-            }
-            return sum_val;
+            return std::accumulate(std::begin(array), std::end(array), T(0));
         }
 
         /**
@@ -98,10 +95,7 @@ namespace wzp{
          */
         template<typename F = float>
         inline static F mean(const std::vector<T>& array) {
-            T sum_val(0);
-            for(auto t : array) {
-                sum_val += t;
-            }
+            auto sum_val = sum(array);
             return static_cast<F>(sum_val) / static_cast<F>(array.size());
         }
 
