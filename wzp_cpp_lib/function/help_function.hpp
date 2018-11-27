@@ -10,12 +10,12 @@
 
 #include <initializer_list>
 
-/*
-    the range is just an iterator, use c++11 for(auto i : range()) to iter
-*/
 
 namespace wzp{
 
+/*
+    the range is just an iterator, use c++11 for(auto i : range()) to iter
+*/
 template<class value_t>
 class RangeImpl{
     class Iterator;
@@ -246,31 +246,39 @@ private:
 
 // teh functions wo reverse walk the container
 template<typename Range>
-reverse_details::ReverseRangeWalker<Range> reverse_walk(Range& r) {
+inline reverse_details::ReverseRangeWalker<Range> reverse_walk(Range& r) {
     return reverse_details::ReverseRangeWalker<Range>(r);
 }
 
 template<typename Range>
-reverse_details::ReverseConstRangeWaler<Range> reverse_walk(const Range& r) {
+inline reverse_details::ReverseConstRangeWaler<Range> reverse_walk(const Range& r) {
     return reverse_details::ReverseConstRangeWaler<Range>(r);
 }
 
 // the function to get the ptr of vector and string
 template<typename T>
 inline static T* vector_ptr(std::vector<T>& v, size_t idx = 0) {
+    if(v.empty())
+        return nullptr;
     return &v[idx];
 }
 
 template<typename T>
 inline static const T* vector_ptr(const std::vector<T>& v, size_t idx = 0) {
+    if(v.empty())
+        return nullptr;
     return &v[idx];
 }
 
 inline static char* string_ptr(std::string& s, size_t idx = 0) {
+    if(s.empty())
+        return nullptr;
     return &s[idx];
 }
 
 inline static const char* string_ptr(const std::string& s, size_t idx = 0) {
+    if(s.empty())
+        return nullptr;
     return &s[idx];
 }
 
