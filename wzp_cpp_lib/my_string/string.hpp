@@ -24,11 +24,16 @@ inline static char touppper(char in) {
 
 /*convert string to any type, this is too old, please use lexical_cast<string> instead*/
 template<typename T>
-inline T convert_string(const std::string& input) {
+inline typename std::enable_if<!std::is_same<T, std::string>::value, T>::type convert_string(const std::string& input) {
     std::istringstream ss(input);
     T output;
     ss >> output;
     return output;
+}
+
+template<typename T>
+inline typename std::enable_if<std::is_same<T, std::string>::value, std::string>::type convert_string(const std::string& input) {
+    return input;
 }
 
 // convert string to bool
