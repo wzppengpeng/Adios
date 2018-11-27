@@ -1,5 +1,5 @@
-#ifndef REFLECTION_HPP_
-#define REFLECTION_HPP_
+#ifndef REFLECTION_FACTORY_HPP_
+#define REFLECTION_FACTORY_HPP_
 
 #include <memory>
 #include <string>
@@ -115,4 +115,4 @@ public:
 #endif
 
 
-#endif
+#endif /*REFLECTION_FACTORY_HPP_*/
