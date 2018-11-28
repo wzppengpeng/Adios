@@ -4,10 +4,25 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <type_traits>
+
+/**
+ * How To Use :
+ * 1. convert_string: convert string to other types, can use the lexical_cast<T>(str), instead
+ * 2. convert_to_string: convert other types to string, depend on different types use the most effient functions
+ * 3. split_string: split a line string by delemeter into a list of small strings
+ * 4. transform: transform a list of strings into a list of other types
+ * 5. split_string_transform: combines above two
+ * 6. join_string: join a list of data into a line of string
+ * 7. trim: trim a string to remove the space
+ * 8. format: format the string, to use it just like python: "{} likes {}"
+ * 9. start_with: check s if starts with p
+ * 10. end_with: check s if ends with p
+ */
 
 namespace wzp {
 
-/*convert string to any type, this is too old, please use lexical_cast<string> instead*/
+/*convert string to any type, this is too old, please use lexical_cast<T> instead*/
 template<typename T>
 inline typename std::enable_if<!std::is_same<T, std::string>::value, T>::type convert_string(const std::string& input) {
     std::istringstream ss(input);
@@ -22,7 +37,7 @@ inline typename std::enable_if<std::is_same<T, std::string>::value, std::string>
 }
 
 // convert string to bool
-inline bool convert_string_to_bool(const std::string& input) {
+inline static bool convert_string_to_bool(const std::string& input) {
     std::istringstream is(input);
     bool b;
     is >> std::boolalpha >> b;
@@ -35,19 +50,36 @@ inline bool convert_string<bool>(const std::string& input) {
     return convert_string_to_bool(input);
 }
 
-inline static std::string convert_bool_to_string(bool b) {
-    return b ? "true" : "false";
+
+/**
+ * This part defines the convert_to_string meta functions
+ * convert common types into std::string by different functions
+ */
+namespace details {
+
+template<typename T>
+struct is_interger_or_float {
+    const static bool value = std::is_integral<T>::value || std::is_floating_point<T>::value;
+};
+
+} //details
+
+template<typename T>
+inline typename std::enable_if<details::is_interger_or_float<T>::value, std::string>::type convert_to_string(const T& t) {
+    return std::to_string(t);
 }
 
 template<typename T>
-inline static std::string convert_to_string(T&& t) {
-    std::stringstream ss;
-    ss << t;
-    std::string res;
-    ss >> res;
-    return res;
+inline typename std::enable_if<!details::is_interger_or_float<T>::value, std::string>::type convert_to_string(const T& t) {
+    return std::string(t);
 }
 
+template<>
+inline std::string convert_to_string<bool>(const bool& t) {
+    return t ? "true" : "false";
+}
+
+/* convert to string over */
 
 /*the specific one to split strings into vector<string>*/
 inline static std::vector<std::string> split_string(const std::string& input, char split_delemeter) {
