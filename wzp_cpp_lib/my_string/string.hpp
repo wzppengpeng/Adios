@@ -7,21 +7,6 @@
 
 namespace wzp {
 
-/** Convert the char to lower and to upper */
-// convert char to lower case
-inline static char tolower(char in) {
-    if (in <= 'Z' && in >= 'A')
-        return in - ('Z' - 'z');
-    return in;
-}
-
-// convert char to upper case
-inline static char touppper(char in) {
-    if(in <= 'z' && in >= 'a')
-        return in + ('Z' - 'z');
-    return in;
-}
-
 /*convert string to any type, this is too old, please use lexical_cast<string> instead*/
 template<typename T>
 inline typename std::enable_if<!std::is_same<T, std::string>::value, T>::type convert_string(const std::string& input) {
