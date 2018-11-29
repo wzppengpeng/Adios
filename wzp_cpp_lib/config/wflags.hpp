@@ -170,11 +170,11 @@ struct WFlagsSetter {
 template<>
 struct WFlagsSetter<bool> {
     static void set(const std::string& key, bool val, const string& desc) {
-        WFlags::Get().emplace(key, std::make_pair(convert_bool_to_string(val), desc));
+        WFlags::Get().emplace(key, std::make_pair(convert_to_string(val), desc));
     }
 
     static void set(std::string&& key, bool val, std::string&& desc) {
-        WFlags::Get().emplace(std::move(key), std::make_pair(convert_bool_to_string(val), std::move(desc)));
+        WFlags::Get().emplace(std::move(key), std::make_pair(convert_to_string(val), std::move(desc)));
     }
 };
 

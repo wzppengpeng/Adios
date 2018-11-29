@@ -3,7 +3,7 @@
 
 #include <ctime>
 #include <cstdlib>
-#include <assert.h>
+#include <cassert>
 
 #include <vector>
 #include <algorithm>

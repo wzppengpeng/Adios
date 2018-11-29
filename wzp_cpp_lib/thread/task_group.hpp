@@ -3,11 +3,9 @@
 
 #include <vector>
 #include <future>
-#include <memory>
 
 #include "wzp_cpp_lib/thread/task.hpp"
 
-using std::vector;
 namespace wzp {
 //the group use a vector to save the task function object
 //use run function to insert a task into group and let it run
@@ -64,7 +62,7 @@ private:
     std::vector<std::shared_future<void>> m_group;
 };
 
-using TaskGroupPtr = std::unique_ptr<TaskGroup>;
+// using TaskGroupPtr = std::unique_ptr<TaskGroup>; // this is not needed
 
 } // wzp
 

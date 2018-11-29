@@ -4,8 +4,19 @@
 #include <algorithm>
 #include <future>
 #include <vector>
+#include <iterator>
 
 #include "wzp_cpp_lib/thread/task_group.hpp"
+
+/**
+ * How to Use:
+ * a parallel function interfaces
+ * ParallelRange: just like the loop functions in openmp, parallel use for index
+ * ParallelForeach: std::for_each in parallel
+ * ParallelInvoke: run a list of functions immeditaly
+ * ParallelReduce: parallel reduce a range, just like obtain the max value in a vector
+ * ParallelSort: std::sort in parallel
+ */
 
 namespace wzp {
 
@@ -101,7 +112,7 @@ void ParallelInvoke(Funs&&... rest)
 //ParallelReduce function is for which not depentent each other
 //so map in different thread, then reduce to get answers
 template<typename Range, typename RangeFunc, typename ReduceFunc>
-inline typename std::remove_reference<Range>::type::value_type ParallelReduce(Range&& range,
+typename std::remove_reference<Range>::type::value_type ParallelReduce(Range&& range,
     typename std::remove_reference<Range>::type::value_type init, RangeFunc&& range_func, ReduceFunc&& reduce_func) {
     auto thread_num = std::thread::hardware_concurrency();
     auto begin = std::begin(std::forward<Range>(range));
@@ -144,8 +155,8 @@ inline typename std::remove_reference<Range>::type::value_type ParallelReduce(Ra
 
 //the reduce function and range function is the same type
 //most situations is like this
-template<typename Range, typename ReduceFunc>
-inline typename std::remove_reference<Range>::type::value_type ParallelReduce(Range&& range,
+template<typename Range, typename ReduceFunc> inline
+typename std::remove_reference<Range>::type::value_type ParallelReduce(Range&& range,
     typename std::remove_reference<Range>::type::value_type init, ReduceFunc&& reduce_func) {
     return ParallelReduce<Range, ReduceFunc>(std::forward<Range>(range),
         std::move(init),
@@ -153,6 +164,55 @@ inline typename std::remove_reference<Range>::type::value_type ParallelReduce(Ra
         std::forward<ReduceFunc>(reduce_func));
 }
 
+/**
+ * Parallel sort
+ */
+template<typename Iterator, typename Pr>
+void ParallelSort(Iterator _begin, Iterator _end, Pr pred) {
+    size_t len = _end - _begin;
+    const size_t kMinInnerLen = 1024; // the max size
+    if (len <= kMinInnerLen) {
+        std::sort(_begin, _end, pred);
+        return;
+    }
+    int num_threads = std::thread::hardware_concurrency();
+    size_t inner_size = (len + num_threads - 1) / num_threads;
+    inner_size = std::max(inner_size, kMinInnerLen);
+    num_threads = static_cast<int>((len + inner_size - 1) / inner_size);
+    ParallelRange(num_threads, [_begin, pred, inner_size, len](int i) {
+        size_t left = inner_size * i;
+        size_t right = left + inner_size;
+        right = std::min(right, len);
+        if(right > left) {
+            std::sort(_begin + left, _begin + right, pred);
+        }
+    });
+    // set the buffer to merge the result
+    std::vector<typename std::iterator_traits<Iterator>::value_type> temp_buf(len);
+    auto buf = temp_buf.begin();
+    size_t s = inner_size;
+    // recursive merge
+    while(s < len) {
+        int loop_size = static_cast<int>((len + s * 2 - 1) / (s * 2));
+        ParallelRange(loop_size, [s, len, _begin, buf, pred](int i) {
+            size_t left = i * 2 * s;
+            size_t mid = left + s;
+            size_t right = std::min(len, mid + s);
+            if (mid >= right) { return; }
+            std::copy(_begin + left, _begin + mid, buf + left);
+            std::merge(buf + left, buf + mid, _begin + mid, _begin + right, _begin + left, pred);
+        });
+        s *= 2;
+    }
+}
+
+// the simple version use <
+template<typename Iterator>
+void ParallelSort(Iterator _begin, Iterator _end) {
+    using vt = typename std::iterator_traits<Iterator>::value_type;
+    return ParallelSort(_begin, _end, [](const vt& left, const vt& right) { return left < right; });
+}
+//// parallel sort
 } // wzp
 
 #endif /*LIB_PARALLEL_ALGORITHM_HPP*/
