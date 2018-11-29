@@ -84,7 +84,7 @@ public:
     template<typename... Args>
     static void warning(const std::string& format, Args&&... args){
         if(get_level() >= log_level::Warning){
-            std::string error_str {"[Adios] [Error] "};
+            std::string error_str {"[Adios] [Warning] "};
             error_str.append(format);
             if(get_type() == log_type::Console)
                 get_stream() << YELLOW;
