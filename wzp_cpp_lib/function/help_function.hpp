@@ -11,13 +11,28 @@
 #include <initializer_list>
 
 
-namespace wzp{
+namespace wzp {
+
+/**
+ * How to use:
+ * 1. range(begin, end, step) : use just like python range function, use for(auto)
+ * 2. print(...) : print function in python style
+ * 3. print_vector : print the std::vector
+ * 4. any_min & any_max : any_min(a, b, c, d) or any_min(int a, double b)
+ * 5. make_unique : generate std::uniquePtr
+ * 6. str_release(STL container) : release the STL container by swap stategy
+ * 7. reverse_walk(Range container) : to reverse walk for(auto)
+ * 8. vector_ptr : to get the pointer of vector
+ * 9. string_ptr : to get the char* of string
+ */
+
+namespace details {
 
 /*
     the range is just an iterator, use c++11 for(auto i : range()) to iter
 */
 template<class value_t>
-class RangeImpl{
+class RangeImpl {
     class Iterator;
 public:
     RangeImpl(value_t begin, value_t end, value_t step = 1): m_begin(begin), m_end(end), m_step(step)
@@ -98,33 +113,35 @@ private:
 
 };
 
+} //details
+
 /*The range funcitons*/
 //the begin end and step not the same type
 template<typename T, typename V>
-auto range(T begin, T end, V stepsize) -> RangeImpl<decltype(begin + end + stepsize)>{
-    return RangeImpl<decltype(begin + end + stepsize)>(begin, end, stepsize);
+auto range(T begin, T end, V stepsize) -> details::RangeImpl<decltype(begin + end + stepsize)>{
+    return details::RangeImpl<decltype(begin + end + stepsize)>(begin, end, stepsize);
 }
 
 template<typename T>
-RangeImpl<T> range(T begin, T end){
-    return RangeImpl<T>(begin, end, 1);
+details::RangeImpl<T> range(T begin, T end){
+    return details::RangeImpl<T>(begin, end, 1);
 }
 
 template<typename T>
-RangeImpl<T> range(T end){
-    return RangeImpl<T>(T(), end, 1);
+details::RangeImpl<T> range(T end){
+    return details::RangeImpl<T>(T(), end, 1);
 }
 
 /*print function like python*/
 template<typename T>
 void print(T&& t){
-    std::cout<<t<<std::endl;
+    std::cout << std::forward<T>(t) << std::endl;
 }
 
 //the any print function
 template<typename T, typename... Args>
 void print(T&& t, Args&&... args){
-    std::cout<<t<<" ";
+    std::cout << std::forward<T>(t) << ' ';
     print(std::forward<Args>(args)...);
 }
 
@@ -140,49 +157,74 @@ void print_vector(const std::vector<T>& v) {
     std::cout << v.back() << ']' << std::endl;
 }
 
-template<typename T>
 /**
  * [print_err description]
  * @param t any type which can use <<
  */
+template<typename T>
 void print_err(T&& t) {
-    std::cerr<<t<<std::endl;
+    std::cerr << std::forward<T>(t) << std::endl;
 }
 
 template<typename T, typename... Args>
 void print_err(T&& t, Args&&... args) {
-    std::cerr<<t<<" ";
+    std::cerr << std::forward<T>(t) << ' ';
     print_err(std::forward<Args>(args)...);
 }
 
-
 /**
- * the max function for a list of same types
+ * The min max function help for any args inputs
  */
-template<typename List>
-inline typename List::value_type max(List il) {
-    typedef typename List::value_type ValType;
-    ValType max_val = *il.begin();
-    for(const auto& val : il) {
-        max_val = max_val > val ? max_val : val;
-    }
-    return max_val;
+namespace details {
+
+template<typename T>
+void min_max_help(bool is_min, T& res, T&& t) {
+    if(is_min && t < res)
+        res = t;
+    else if(!is_min && t > res)
+        res = t;
 }
 
-
-/**
- * the min function for a list of same types
- */
-template<typename List>
-inline typename List::value_type min(List il) {
-    typedef typename List::value_type ValType;
-    ValType min_val = *il.begin();
-    for(const auto& val : il) {
-        min_val = min_val < val ? min_val : val;
-    }
-    return min_val;
+template<typename T, typename... Args>
+void min_max_help(bool is_min, T& res, T&& t, Args&&... args) {
+    min_max_help(is_min, res, std::forward<T>(t));
+    min_max_help(is_min, res, std::forward<Args>(args)...);
 }
 
+} //details
+
+
+// any types for two min
+template<typename T, typename S> inline
+auto any_min(T&& left, S&& right) -> typename std::decay<decltype(left < right ? left : right)>::type {
+    return left < right ? left : right;
+}
+
+// a list to compute max
+template<typename T, typename... Args>
+typename std::decay<T>::type any_min(T&& first, Args&&... rest) {
+    static_assert(sizeof...(Args) > 2, "the any_min function must have more than two input");
+    using RT = typename std::decay<T>::type;
+    RT res = first;
+    details::min_max_help(true, res, std::forward<T>(first), std::forward<Args>(rest)...);
+    return res;
+}
+
+// any types for two min
+template<typename T, typename S> inline
+auto any_max(T&& left, S&& right) -> typename std::decay<decltype(left > right ? left : right)>::type {
+    return left > right ? left : right;
+}
+
+// a list to compute max
+template<typename T, typename... Args>
+typename std::decay<T>::type any_max(T&& first, Args&&... rest) {
+    static_assert(sizeof...(Args) > 2, "the any_max function must have more than two input");
+    using RT = typename std::decay<T>::type;
+    RT res = first;
+    details::min_max_help(false, res, std::forward<T>(first), std::forward<Args>(rest)...);
+    return res;
+}
 
 
 //the function of make_unique, just like make_shared
