@@ -9,12 +9,15 @@
 
 #include "wzp_cpp_lib/thread/parallel_algorithm.hpp"
 
-#include "wzp_cpp_lib/function/help_function.hpp"
-
 namespace wzp
 {
 
-using wzp::print;
+/**
+ * How to Use:
+ * MultiReader<ReturnType> reader(N); // RetureType is each row after been parsed, N is the core numbers
+ * reader.regis(Fun f); // f is the lambda like function object to handle each row, return the type ot ReturnType
+ * std::vector<ReturnType> res = reader.run(file_name); // obtain the result of vector of each row after been parsed
+ */
 
 template<typename R>
 class MultiReader
@@ -101,7 +104,7 @@ private:
         for(auto& res_array : m_res_array) {
             std::copy(std::begin(res_array), std::end(res_array), std::back_inserter(res));
             //clear the memory
-            vector<R>().swap(res_array);
+            std::vector<R>().swap(res_array);
         }
     }
 
