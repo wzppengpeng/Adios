@@ -8,6 +8,15 @@
 namespace wzp
 {
 
+/**
+ * How to use:
+ *  wzp::any a(std::vector<int>(10, 5));
+    print_vector(a.cast<std::vector<int>>());
+    a = 10;
+    a = 0.01;
+    print(a.cast<double>());
+ */
+
 class any {
 public:
     // the exception for any cast
