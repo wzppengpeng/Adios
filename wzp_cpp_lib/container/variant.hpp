@@ -111,7 +111,13 @@ public:
         handler_t::copy(other.type_index_, &other.data_, &data_);
     }
 
-    variant<Types...>& operator= (const variant<Types...>& other) = default;
+    variant<Types...>& operator= (const variant<Types...>& other) {
+        handler_t::destroy(type_index_, &data_);
+        type_index_ = other.type_index_;
+        index_ = other.index_;
+        handler_t::copy(type_index_, const_cast<store_type*>(&other.data_), &data_);
+        return *this;
+    }
 
     template<class T,
     class = typename std::enable_if<wzp::contain_of<typename std::remove_reference<T>::type, Types...>::value>::type>
