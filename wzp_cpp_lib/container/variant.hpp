@@ -17,6 +17,11 @@
     v1 = 0.01;
     v1 = string("wzp");
     v1 = cv(0.01); // move operator with move construct
+    // visit using
+    v1 = string("wzp");
+    v1.visit([](int i) {print("int", i);},
+        [](double& i){print("double", i);},
+        [](const string& s){ print("string", s);}); // run if been matched
  *
  *
  */
@@ -138,6 +143,8 @@ public:
 
     // return the type index of now
     inline std::type_index type() const { return type_index_; }
+    // return the index of the Types List now
+    inline int now_index() const { return index_; }
 
     // the most important get function
     template<typename T>
@@ -147,6 +154,38 @@ public:
             throw std::bad_cast();
         }
         return *(T*) (&data_);
+    }
+
+    // compare functuion of other objects
+    inline bool operator== (const variant& other) const {
+        return type_index_ == other.type_index_;
+    }
+
+    inline bool operator< (const variant& other) const {
+        return type_index_ < other.type_index_;
+    }
+
+    inline bool operator> (const variant& other) const {
+        return type_index_ > other.type_index_;
+    }
+
+    // the visit function, inputs a list of functions, run if been matched
+    template<typename F>
+    void visit(F&& f) {
+        using T = typename std::decay<typename function_traits<F>::template argument<0>::type>::type;
+        if(is<T>()) {
+            f(get<T>());
+        }
+    }
+
+    template<typename F, typename... Rest>
+    void visit(F&& f, Rest&&... rest) {
+        using T = typename std::decay<typename function_traits<F>::template argument<0>::type>::type;
+        if(is<T>()) {
+            visit(std::forward<F>(f));
+        } else {
+            visit(std::forward<Rest>(rest)...);
+        }
     }
 
 private:

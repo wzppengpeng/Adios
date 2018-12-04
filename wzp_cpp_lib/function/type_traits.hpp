@@ -2,6 +2,7 @@
 #define WZP_TYPE_TRAIITS_HPP_
 
 #include <type_traits>
+#include <tuple>
 
 namespace wzp {
 
@@ -79,6 +80,57 @@ struct index_to_type<I, First, List...> : index_to_type<I - 1, List...> {};
 
 template<typename First, typename... List>
 struct index_to_type<0, First, List...> { typedef First type; };
+
+/**
+ * The below is the function traits, to get function's type, return type and args types
+ */
+template<typename F>
+struct function_traits {
+private:
+    typedef function_traits<decltype(&F::operator())> call_type;
+
+public:
+    typedef typename call_type::return_type return_type;
+    const static size_t arity = call_type::arity - 1; // the first arg is the function type (lambda like)
+    template<size_t N>
+    struct argument {
+        static_assert(N < arity, "error: invalid parameter index.");
+        typedef typename call_type::template argument<N + 1>::type type;
+    };
+};
+
+template<typename R, typename... Args>
+struct function_traits<R(*)(Args...)> : public function_traits<R(Args...)> {};
+
+template<typename R, typename... Args>
+struct function_traits<R(Args...)> {
+    typedef R return_type;
+    const static size_t arity = sizeof...(Args);
+    template<size_t N>
+    struct argument {
+        static_assert(N < arity, "error: invalid parameter index.");
+        typedef typename std::tuple_element<N, std::tuple<Args...>>::type type;
+    };
+};
+
+
+// member function pointer
+template<typename C, typename R, typename... Args>
+struct function_traits<R(C::*)(Args...)> : public function_traits <R(C&, Args...)> {};
+
+// const member function pointer
+template<typename C, typename R, typename... Args>
+struct function_traits<R(C::*)(Args...) const> : public function_traits <R(C&, Args...)> {};
+
+// member object pointer
+template<typename C, typename R>
+struct function_traits<R(C::*)> : public function_traits <R(C&)> {};
+
+template<typename F>
+struct function_traits<F&> : public function_traits <F> {};
+
+template<typename F>
+struct function_traits<F&&> : public function_traits <F> {};
 
 } //wzp
 
