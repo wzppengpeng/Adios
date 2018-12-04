@@ -37,7 +37,7 @@ public:
         }
 
         Registry(std::string&& class_name) {
-            Factory<Base, Args...>::get().registry_map_.emplace(class_name,
+            Factory<Base, Args...>::get().registry_map_.emplace(std::move(class_name),
                 [](Args... args) { return new Sub(std::forward<Args>(args)...); } );
         }
     };
