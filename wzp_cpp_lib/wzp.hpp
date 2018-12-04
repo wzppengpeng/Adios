@@ -35,4 +35,7 @@
 #include "wzp_cpp_lib/util/random.hpp"
 #include "wzp_cpp_lib/util/timer.hpp"
 
+// reflection of factory
+#include "wzp_cpp_lib/reflection/factory.hpp"
+
 #endif /*WZP_CPP_LIB_H_PP_*/
