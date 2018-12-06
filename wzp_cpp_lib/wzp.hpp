@@ -11,6 +11,9 @@
 // container
 #include "wzp_cpp_lib/container/array_args.hpp"
 #include "wzp_cpp_lib/container/array_view.hpp"
+#include "wzp_cpp_lib/container/any.hpp"
+#include "wzp_cpp_lib/container/variant.hpp"
+#include "wzp_cpp_lib/container/optional.hpp"
 
 // for files and directories
 #include "wzp_cpp_lib/files/path.hpp"
