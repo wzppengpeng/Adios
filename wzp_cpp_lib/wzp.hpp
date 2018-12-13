@@ -4,6 +4,8 @@
 /**
  * This is the often used header files
  */
+#include "wzp_cpp_lib/uncopyable.hpp"
+
 // the config
 #include "wzp_cpp_lib/config/config_parser.hpp"
 #include "wzp_cpp_lib/config/click.hpp"
