@@ -58,7 +58,7 @@ struct variant_handler<T, Args...> {
         if(id == std::type_index(typeid(T))) {
             new (new_v) T(*reinterpret_cast<T*>(old_v));
         } else {
-            variant_handler<Args...>::move(id, old_v, new_v);
+            variant_handler<Args...>::copy(id, old_v, new_v);
         }
     }
 };
