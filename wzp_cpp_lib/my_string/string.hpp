@@ -1,9 +1,12 @@
 #ifndef MY_STRING_HPP_
 #define MY_STRING_HPP_
 
+#include <cstdio>
+
 #include <string>
 #include <sstream>
 #include <vector>
+#include <memory>
 #include <type_traits>
 
 /**
@@ -163,6 +166,17 @@ inline static std::string format(std::string&& str, T&& t, Args&&... args) {
     return std::move(format(std::move(str.substr(0, begin) + wzp::convert_to_string(std::forward<T>(t))
      + str.substr(end + 1)), std::forward<Args>(args)...));
 }
+
+
+/** format the string use c style */
+template<typename... Args>
+inline static std::string string_format(const std::string& format, Args... args) {
+    size_t size = snprintf(nullptr, 0, format.c_str(), args... ) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buffer(new char[size]);
+    snprintf(buffer.get(), size, format.c_str(), args...);
+    return std::string(buffer.get(), buffer.get() + (size - 1));
+}
+
 
 /**
  * the startwith function
