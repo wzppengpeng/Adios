@@ -38,13 +38,13 @@ public:
 
     // add the default value
     template<typename T>
-    inline static void add_argument(const string& key, T&& default_val, const string& desc) {
-        Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    inline static void add_argument(const string& key, const T& default_val, const string& desc) {
+        Get().emplace(key, std::make_pair(convert_to_string(default_val), desc));
     }
 
     template<typename T>
-    inline static void add_argument(string&& key, T&& default_val, string&& desc) {
-        Get().emplace(key, std::make_pair(std::to_string(default_val), desc));
+    inline static void add_argument(string&& key, const T& default_val, string&& desc) {
+        Get().emplace(key, std::make_pair(convert_to_string(default_val), desc));
     }
 
     /**
