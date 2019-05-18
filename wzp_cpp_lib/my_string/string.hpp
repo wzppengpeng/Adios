@@ -21,6 +21,8 @@
  * 8. format: format the string, to use it just like python: "{} likes {}"
  * 9. start_with: check s if starts with p
  * 10. end_with: check s if ends with p
+ * 11. string_format: a c style-format function (%d / %f / %u ...)
+ * 12. string_concat: concat different part into a single string (each part can not be string)
  */
 
 namespace wzp {
@@ -175,6 +177,32 @@ inline static std::string string_format(const std::string& format, Args... args)
     std::unique_ptr<char[]> buffer(new char[size]);
     snprintf(buffer.get(), size, format.c_str(), args...);
     return std::string(buffer.get(), buffer.get() + (size - 1));
+}
+
+
+namespace concat_details
+{
+
+template<typename A>
+void string_concat_with_stream(std::stringstream& ss, A&& a) {
+    ss << std::forward<A>(a);
+}
+
+template<typename A, typename... Args>
+void string_concat_with_stream(std::stringstream& ss, A&& a, Args&&... args) {
+    string_concat_with_stream(ss, std::forward<A>(a));
+    string_concat_with_stream(ss, std::forward<Args>(args)...);
+}
+
+} //concat_details
+
+
+/** concat different part string into one string **/
+template<typename... Args>
+inline static std::string string_concat(Args&&... args) {
+    std::stringstream ss;
+    concat_details::string_concat_with_stream(ss, std::forward<Args>(args)...);
+    return ss.str();
 }
 
 
