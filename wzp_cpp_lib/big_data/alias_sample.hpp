@@ -16,14 +16,32 @@ class AliasSampler {
 
 public:
     // constructor
-    AliasSampler(const std::unordered_map<Key, size_t>& count_dict) {
+    template<typename F>
+    AliasSampler(const std::unordered_map<Key, F>& count_dict) {
         InitTable(count_dict);
+        pos_sampler_ = new RandomInt<size_t>(0, names_.size() - 1);
+        prob_sampler_ = new RandomFloats<double>(0., 1.);
+    }
+
+    ~AliasSampler() {
+        if(pos_sampler_) {
+            delete pos_sampler_;
+            pos_sampler_ = nullptr;
+        }
+        if(prob_sampler_) {
+            delete prob_sampler_;
+            prob_sampler_ = nullptr;
+        }
+    }
+
+    inline size_t Size() const {
+        return names_.size();
     }
 
     // sample function to get the Key
     const Key& Sample() const {
-        auto pos = wzp::random<RandomInt<size_t>>(0, names_.size() - 1);
-        auto prob = wzp::random<RandomFloats<double>>(0., 1.);
+        auto pos = pos_sampler_->Next();
+        auto prob = prob_sampler_->Next();
         return prob <= probs_[pos] ? names_[pos] : choosers_[pos];
     }
 
@@ -34,10 +52,11 @@ public:
 private:
     // private member functions
     // construct the alias table
-    void InitTable(const std::unordered_map<Key, size_t>& count_dict) {
+    template<typename F>
+    void InitTable(const std::unordered_map<Key, F>& count_dict) {
         auto N = count_dict.size();
         init_vectors(N);
-        size_t count = 0;
+        double count = 0.;
         for(const auto& p : count_dict) {
             count += p.second;
         }
@@ -47,7 +66,7 @@ private:
             auto prob = static_cast<double>(p.second * N) / static_cast<double>(count);
             InsertAccordProb(p.first, prob, que1, que2);
         }
-        while(!(que1.empty() && que2.empty())) {
+        while(!que1.empty() && !que2.empty()) {
             const auto& ele1 = que1.front();
             const auto& ele2 = que2.front();
             probs_.emplace_back(ele2.second);
@@ -82,6 +101,10 @@ private:
     std::vector<Key> names_; //the main name
     std::vector<Key> choosers_; // the alias chooser
     std::vector<double> probs_; // the main prob
+
+    // the random pounter
+    RandomInt<size_t>* pos_sampler_;
+    RandomFloats<double>* prob_sampler_;
 };
 
 } //wzp
