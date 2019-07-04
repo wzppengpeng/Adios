@@ -138,23 +138,6 @@ inline ThreadPool::~ThreadPool() {
   }
 }
 
-// Get start and end index used in multi-thread training
-inline size_t getStart(size_t count, size_t total, size_t id) {
-  size_t gap = count / total;
-  size_t start_id = id * gap;
-  return start_id;
-}
-
-inline size_t getEnd(size_t count, size_t total, size_t id) {
-  size_t gap = count / total;
-  size_t remain = count % total;
-  size_t end_index = (id+1) * gap;
-  if (id == total-1) {
-    end_index += remain;
-  }
-  return end_index;
-}
-
 } //wzp
 
 #endif  // WZP_THREAD_SIMPLE_THREAD_POOL_H_
