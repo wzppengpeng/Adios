@@ -4,12 +4,13 @@
 #include <type_traits>
 #include <string>
 #include <cstdlib>
+#include <cstdint>
 #include <algorithm>
 #include <stdexcept>
 #include <cctype>
 #include <cstring>
 
-namespace wzp{
+namespace wzp {
 
 namespace detail
 {
@@ -65,6 +66,7 @@ namespace detail
         }
     };
 
+
     //for string
     template<>
     struct Converter<int, std::string>
@@ -99,10 +101,42 @@ namespace detail
     };
 
     template<>
+    struct Converter<long double, std::string>
+    {
+        inline static long double convert(const std::string& from) {
+            return std::stold(from);
+        }
+    };
+
+    template<>
     struct Converter<float, std::string>
     {
         inline static float convert(const std::string& from) {
             return std::stof(from);
+        }
+    };
+
+    template<>
+    struct Converter<uint32_t, std::string>
+    {
+        inline static uint32_t convert(const std::string& from) {
+            return std::stoul(from);
+        }
+    };
+
+    template<>
+    struct Converter<uint64_t, std::string>
+    {
+        inline static uint64_t convert(const std::string& from) {
+            return std::stoull(from);
+        }
+    };
+
+    template<>
+    struct Converter<size_t, std::string>
+    {
+        inline static size_t convert(const std::string& from) {
+            return std::stoul(from);
         }
     };
 
@@ -129,7 +163,7 @@ namespace detail
         return true;
     }
 
-    static bool convert(const char* from)
+    static bool bool_convert(const char* from)
     {
         const unsigned int len = strlen(from);
         if (len != 4 && len != 5)
@@ -159,7 +193,7 @@ namespace detail
     {
         inline static bool convert(const std::string& from)
         {
-            return detail::convert(from.c_str());
+            return bool_convert(from.c_str());
         }
     };
 
@@ -168,7 +202,7 @@ namespace detail
     {
         inline static bool convert(const char* from)
         {
-            return detail::convert(from);
+            return bool_convert(from);
         }
     };
 
@@ -177,7 +211,7 @@ namespace detail
     {
         inline static bool convert(char* from)
         {
-            return detail::convert(from);
+            return bool_convert(from);
         }
     };
 
@@ -186,7 +220,7 @@ namespace detail
     {
         inline static bool convert(const char(&from)[N])
         {
-            return detail::convert(from);
+            return bool_convert(from);
         }
     };
 
@@ -195,7 +229,7 @@ namespace detail
     {
         inline static bool convert(const char(&from)[N])
         {
-            return detail::convert(from);
+            return bool_convert(from);
         }
     };
 
@@ -208,7 +242,7 @@ namespace detail
             return std::to_string(from);
         }
     };
-}
+} // detail
 
 template <typename To, typename From>
 typename std::enable_if<!std::is_same<To, From>::value, To>::type lexical_cast(const From& from)

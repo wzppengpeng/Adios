@@ -6,6 +6,9 @@
  */
 #include "wzp_cpp_lib/uncopyable.hpp"
 
+// tools for big data
+#include "wzp_cpp_lib/big_data/alias_sample.hpp"
+
 // the config
 #include "wzp_cpp_lib/config/config_parser.hpp"
 #include "wzp_cpp_lib/config/click.hpp"
