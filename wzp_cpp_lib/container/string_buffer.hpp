@@ -2,6 +2,7 @@
 #define WZP_CPP_LIB_CONTAINER_STRING_BUFFER_HPP_
 
 #include <string>
+#include <fstream>
 #include <type_traits>
 
 #include "wzp_cpp_lib/uncopyable.hpp"
@@ -76,6 +77,26 @@ public:
     template<typename T>
     bool Read(T* t, typename std::enable_if<std::is_pod<T>::value, T*>::type t_ptr = nullptr) {
         return Read((void*)t, sizeof(T));
+    }
+
+    // read buffer from disk
+    bool ReadFromDisk(const std::string& file) {
+        std::ifstream ifile;
+        ifile.open(file);
+        if(!ifile) return false;
+        std::string tmp_buffer((std::istreambuf_iterator<char>(ifile)),
+            std::istreambuf_iterator<char>());
+        buffer_ = std::move(tmp_buffer);
+        ifile.close();
+        return true;
+    }
+
+    // write the buffer to disk
+    bool DumpToDisk(const std::string& file) {
+        std::ofstream ofile(file, std::ios::binary);
+        ofile.write(buffer_.c_str(), sizeof(char) * buffer_.size());
+        ofile.close();
+        return true;
     }
 
 private:
