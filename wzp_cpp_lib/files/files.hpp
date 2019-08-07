@@ -1,12 +1,13 @@
 #ifndef FILES_HPP_
 #define FILES_HPP_
 
+#include <cstdio>
 #include <vector>
 #include <string>
 #include <dirent.h>
 
-namespace wzp{
-    class file_system{
+namespace wzp {
+    class file_system {
     public:
         /*get all files info*/
         inline static bool get_all_files(const std::string& dir_path,
@@ -48,6 +49,13 @@ namespace wzp{
             cmd = "rm -rf " + dir_path + "/*";
             res = system(cmd.c_str());
         }
+
+        // remove a file
+        inline static bool remove_file(const std::string& path) {
+            int ret = remove(path.c_str());
+            return ret == 0;
+        }
+
     };
 }
 
