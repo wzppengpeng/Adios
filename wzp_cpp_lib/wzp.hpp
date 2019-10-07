@@ -30,7 +30,7 @@
 #include "wzp_cpp_lib/function/apply_tuple.hpp"
 
 // logging
-#include "wzp_cpp_lib/log/log.hpp"
+#include "wzp_cpp_lib/log/logging.hpp"
 
 // string handle
 #include "wzp_cpp_lib/my_string/char_args.hpp"
