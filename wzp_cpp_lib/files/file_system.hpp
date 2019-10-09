@@ -88,7 +88,12 @@ public:
 
     // begin and end for this range
     iterator begin() {
-        return is_open_ ? iterator(&buffer_, &ifile_) : iterator(&buffer_, &ifile_, -1);
+        if (is_open_) {
+            auto iter = iterator(&buffer_, &ifile_);
+            return ++iter;
+        } else {
+            return iterator(&buffer_, &ifile_, -1);
+        }
     }
 
     // the end
