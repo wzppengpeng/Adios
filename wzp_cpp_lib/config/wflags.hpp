@@ -1,219 +1,272 @@
-#ifndef WFLAGS_HPP_
-#define WFLAGS_HPP_
+#ifndef WZPCPPLIB_CONFIG_WFLAGS_HPP_
+#define WZPCPPLIB_CONFIG_WFLAGS_HPP_
+
+/**
+ * This file provides a similar flag method as gflags
+ * only save the int/double/bool/string four types
+ * used in each cpp files
+ * main file to define
+ * other cpp file can use declare to get the global ref of value
+ */
 
 #include <string>
-#include <iostream>
-#include <type_traits>
 #include <unordered_map>
+#include <algorithm>
+#include <iostream>
 
 #include "wzp_cpp_lib/common.h"
+#include "wzp_cpp_lib/uncopyable.hpp"
 
-#include "wzp_cpp_lib/my_string/string.hpp"
+namespace wzp
+{
 
-namespace wzp {
+namespace wflags
+{
 
-using std::string;
-
-namespace detail {
-inline static void log_err(const std::string& content) {
-    std::cerr << RED << "[Fatal] " << content << RESET << std::endl;
-    exit(-1);
-}
-// trim the str
-inline static bool trim(std::string& str) {
-    if (str.empty()) return false;
-    str.erase(str.find_last_not_of(" \f\t\n\r\v") + 1);
-    str.erase(0, str.find_first_not_of(" -\f\t\n\r\v"));
-    return true;
-}
-} // detail
-
-// the declare of the Getter and Setter
+// define the wflags command
 template<typename T>
-struct WFlagsGetter;
+struct WFlags {
+    T value;
+    std::string description;
+    bool is_init = false;
 
+    WFlags() = default;
+
+    WFlags(const T& val, const std::string& desc, bool init)
+        : value(val), description(desc), is_init(init) {}
+
+};
+
+// define different container to save the flags
 template<typename T>
-struct WFlagsSetter;
-
-class WFlags {
-// some typedef
-
-template<typename K, typename V>
-using Dict = std::unordered_map<K, V>;
-using ArgsDict = Dict<std::string, std::pair<std::string, std::string> >;
+class WFlagsRegister : Uncopyable {
 
 public:
-    // the map getter
-    static ArgsDict& Get() {
-        static ArgsDict args_map;
-        return args_map;
-    }
-    // the help function to print the args
-    static void Help() {
-        for(const auto& p : Get()) {
-            std::cout << "Key: " << YELLOW << p.first << RESET << " Describs: " << GREEN
-                << p.second.second << RESET << std::endl;
-        }
-    }
-    // parse functions
-    static void Parse(int argc, char** argv) noexcept {
-        if(argc != static_cast<int>(Get().size() + 1)) {
-            std::cout << MAGENTA << "[Warning] args size mismatch" << RESET << std::endl;
-            Help();
-        }
-        for(int i = 1; i < argc; ++i) {
-            parse(i, argv);
-        }
-    }
-    // the functions to add args
-    inline static void add_argument(const string& key, const string& desc) {
-        Get().emplace(key, std::make_pair("", desc));
-    }
-    //the right value type
-    inline static void add_argument(string&& key, string&& desc) {
-        Get().emplace(key, std::make_pair("", desc));
-    }
-    // add the default value
-    template<typename T>
-    inline static void add_argument(const string& key, T default_val, const string& desc) {
-        WFlagsSetter<T>::set(key, default_val, desc);
-    }
-    template<typename T>
-    inline static void add_argument(string&& key, T default_val, string&& desc) {
-        WFlagsSetter<T>::set(std::move(key), default_val, std::move(desc));
+    // register flags into map
+    void RegisterFlag(const std::string& name, const std::string& description) {
+        flags_[name] = WFlags<T>(T(), description, false);
     }
 
-private:
-    static void parse(int index, char** argv) {
-        string cache(argv[index]);
-        auto pos = cache.find('=');
-        if(pos == string::npos) {
-            Help();
-            detail::log_err("the Args is Set Not Right, USAGE: arg=xx");
-        }
-        auto key = std::move(cache.substr(0, pos));
-        detail::trim(key);
-        auto value = std::move(cache.substr(pos+ 1));
-        detail::trim(value);
-        auto it = Get().find(key);
-        if(it == Get().end()) {
-            Help();
-            detail::log_err("key not exist " + key);
-        }
-        it->second.first = std::move(value);
+    // register flags with default value
+    void RegisterFlag(const std::string& name, const T& default_val, const std::string& description) {
+        flags_[name] = WFlags<T>(default_val, description, true);
     }
 
-}; //WFlags
-
-template<typename T>
-struct WFlagsGetter {
-    static T get(const std::string& key) {
-        auto it = WFlags::Get().find(key);
-        if(it == WFlags::Get().end()) {
-            detail::log_err("the key is not exist: " + key);
-        }
-        else {
-            if(it->second.first.empty()) {
-                detail::log_err("the key is not given: " + key);
-            }
-            else return convert_string<T>(it->second.first);
-        }
-        return T();
-    }
-};
-
-template<>
-struct WFlagsGetter<std::string> {
-    static std::string get(const std::string& key) {
-        auto it = WFlags::Get().find(key);
-        if(it == WFlags::Get().end()) {
-            detail::log_err("the key is not exist: " + key);
-        }
-        else {
-            if(it->second.first.empty()) {
-                detail::log_err("the key is not given: " + key);
-            }
-            else return it->second.first;
-        }
-        return string();
-    }
-};
-
-template<>
-struct WFlagsGetter<bool> {
-    static bool get(const std::string& key) {
-        auto it = WFlags::Get().find(key);
-        if(it == WFlags::Get().end()) {
-            detail::log_err("the key is not exist: " + key);
-        }
-        else {
-            if(it->second.first.empty()) {
-                detail::log_err("the key is not given: " + key);
-            }
-            else return wzp::convert_string<bool>(it->second.first);
+    // set the flags if in the default list
+    bool SetFlagIfFound(const std::string& key, const T& val) {
+        if (flags_.find(key) != flags_.end()) {
+            flags_[key].value = val;
+            flags_[key].is_init = true;
+            return true;
         }
         return false;
     }
-};
 
+    // get the value in the flags
+    T& GetValue(const std::string& name) {
+        return flags_[name].value;
+    }
+
+    // get the description
+    const std::string& GetDescription(const std::string& name) {
+        return flags_[name].description;
+    }
+
+    // check for each value
+    bool CheckInit() {
+        for (const auto & p : flags_) {
+            if (!p.second.is_init) {
+                std::cerr << RED << "Miss Flag: --" << p.first << RESET << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // print the help info
+    void Help() {
+        for(const auto& p : flags_) {
+            std::cout << "Key: " << YELLOW << "--" << p.first << RESET << "   Describes: " << GREEN
+                << p.second.description << RESET << std::endl;
+        }
+    }
+
+    // the getter interface to get the instance
+    static WFlagsRegister* GetInstance() {
+        static WFlagsRegister instance;
+        return &instance;
+    }
+
+private:
+    // the map container to save flags from command
+    std::unordered_map<std::string, WFlags<T>> flags_;
+
+private:
+    // the constructor
+    WFlagsRegister() {}
+
+}; //WFlagsRegister
+
+
+// the register helper, use the constructor to register a flag into the map
 template<typename T>
-struct WFlagsSetter {
-    static void set(const std::string& key, T val, const string& desc) {
-        WFlags::Get().emplace(key, std::make_pair(std::to_string(val), desc));
+struct WFlagsRegisterHelper {
+    WFlagsRegisterHelper(const std::string& name, const T& val, const std::string& description) {
+        WFlagsRegister<T>::GetInstance()->RegisterFlag(name, val, description);
     }
 
-    static void set(std::string&& key, T val, std::string&& desc) {
-        WFlags::Get().emplace(std::move(key), std::make_pair(std::to_string(val), std::move(desc)));
-    }
-};
-
-template<>
-struct WFlagsSetter<bool> {
-    static void set(const std::string& key, bool val, const string& desc) {
-        WFlags::Get().emplace(key, std::make_pair(convert_to_string(val), desc));
-    }
-
-    static void set(std::string&& key, bool val, std::string&& desc) {
-        WFlags::Get().emplace(std::move(key), std::make_pair(convert_to_string(val), std::move(desc)));
+    WFlagsRegisterHelper(const std::string& name, const std::string& description) {
+        WFlagsRegister<T>::GetInstance()->RegisterFlag(name, description);
     }
 };
 
-template<>
-struct WFlagsSetter<std::string> {
-    static void set(const std::string& key, std::string val, const string& desc) {
-        WFlags::Get().emplace(key, std::make_pair(std::move(val), desc));
+// the set help function to set cmd flag
+template<typename T>
+inline bool SetCMDFlag(const std::string& name, const T& val) {
+    return WFlagsRegister<T>::GetInstance()->SetFlagIfFound(name, val);
+}
+
+// parse the command flags
+inline static void ParseCMDFlags(int* argc, char** argv) {
+    if (argc == nullptr || argv == nullptr) return;
+
+    int unused = 0;
+    size_t pos;
+    int intval;
+    bool boolval;
+    double dval;
+    std::string line, key, value;
+
+    for (int i = 0; i < *argc; ++i) {
+        line = argv[i];
+        if (line.find("--") != std::string::npos) {
+
+            pos = line.find("=");
+            if (pos == std::string::npos) {
+                std::cerr << RED << "Set CMD Flags as --ars=xxx" << RESET << std::endl;
+                throw std::runtime_error("Set CMD Flags as --ars=xxx");
+            }
+
+            key = line.substr(2, pos - 2);
+            value = line.substr(pos + 1);
+
+            if (WFlagsRegister<std::string>::GetInstance()->SetFlagIfFound(key, value)) {
+              continue;
+            }
+
+            intval = atoi(value.c_str());
+            if (WFlagsRegister<int>::GetInstance()->SetFlagIfFound(key, intval)) {
+              continue;
+            }
+
+            dval = strtod(value.c_str(), nullptr);
+            if (WFlagsRegister<double>::GetInstance()->SetFlagIfFound(key, dval)) {
+              continue;
+            }
+
+            std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+            boolval = (value == "true");
+            if (WFlagsRegister<bool>::GetInstance()->SetFlagIfFound(key, boolval)) {
+              continue;
+            }
+        }
+
+        std::swap(argv[unused++], argv[i]);
     }
 
-    static void set(std::string&& key, std::string val, std::string&& desc) {
-        WFlags::Get().emplace(std::move(key), std::make_pair(std::move(val), std::move(desc)));
-    }
-};
+    *argc = unused;
 
-template<>
-struct WFlagsSetter<const char*> {
-    static void set(const std::string& key, const char* val, const string& desc) {
-        WFlags::Get().emplace(key, std::make_pair(std::string(val), desc));
+    // finally check if has been init
+    if (!WFlagsRegister<std::string>::GetInstance()->CheckInit()
+        || !WFlagsRegister<int>::GetInstance()->CheckInit()
+        || !WFlagsRegister<double>::GetInstance()->CheckInit()
+        || !WFlagsRegister<bool>::GetInstance()->CheckInit()) {
+        WFlagsRegister<std::string>::GetInstance()->Help();
+        WFlagsRegister<int>::GetInstance()->Help();
+        WFlagsRegister<double>::GetInstance()->Help();
+        WFlagsRegister<bool>::GetInstance()->Help();
+        throw std::runtime_error("Miss Flags");
     }
+}
 
-    static void set(std::string&& key, const char* val, std::string&& desc) {
-        WFlags::Get().emplace(std::move(key), std::make_pair(std::string(val), std::move(desc)));
-    }
-};
-
+} //wflags
 
 } // wzp
 
-// the macro to help function calls
-#define WFLAGS_DEFINE(key, desc) wzp::WFlags::add_argument(#key, desc)
-#define WFLAGS_DEFINE_DEFAULT(key, default_val, desc) wzp::WFlags::add_argument(#key, default_val, desc)
-#define WFLAGS(Type, key) wzp::WFlagsGetter<Type>::get(#key)
-// the detail caller for different types
-#define WFLAGS_string(key) WFLAGS(std::string, key)
-#define WFLAGS_bool(key) WFLAGS(bool, key)
-#define WFLAGS_int(key) WFLAGS(int, key)
-#define WFLAGS_float(key) WFLAGS(float, key)
-#define WFLAGS_double(key) WFLAGS(double, key)
-#define WFLAGS_long_long(key) WFLAGS(long long, key)
-#define WFLAGS_char(key) WFLAGS(char, key)
 
-#endif // !WFLAGS_HPP_
+/**
+ * ***************************
+ * The Macro Part to define flags
+ * ***************************
+ */
+
+// declare the ref in one cpp file
+#define WFLAGS_DECLARE(type, name) \
+    static const type& WFLAGS_##name = \
+    wzp::wflags::WFlagsRegister<type>::GetInstance()->GetValue(#name);
+
+
+// define the flags without default value
+#define WFLAGS_DEFINE(type, name, description) \
+    namespace wzp \
+    { \
+        namespace wflags \
+        { \
+            WFlagsRegisterHelper<type> internal_wflags_helper_##name(#name, description); \
+        } \
+    } \
+    WFLAGS_DECLARE(type, name)
+
+// define the flags with default value
+#define WFLAGS_DEFINE_DEFAULT(type, name, default_val, description) \
+    namespace wzp \
+    { \
+        namespace wflags \
+         { \
+             WFlagsRegisterHelper<type> internal_wflags_helper_##name(#name, default_val, description); \
+         } \
+    } \
+    WFLAGS_DECLARE(type, name)
+
+
+// the alias of fixed types (int)
+#define WFLAGS_DEFINE_int(name, description) \
+    WFLAGS_DEFINE(int, name, description)
+
+#define WFLAGS_DEFINE_DEFAULT_int(name, default_val, description) \
+    WFLAGS_DEFINE_DEFAULT(int, name, default_val, description)
+
+#define WFLAGS_DECLARE_int(name) \
+    WFLAGS_DECLARE(int, name)
+
+// the alias of fixed types (string)
+#define WFLAGS_DEFINE_string(name, description) \
+    WFLAGS_DEFINE(std::string, name, description)
+
+#define WFLAGS_DEFINE_DEFAULT_string(name, default_val, description) \
+    WFLAGS_DEFINE_DEFAULT(std::string, name, default_val, description)
+
+#define WFLAGS_DECLARE_string(name) \
+    WFLAGS_DECLARE(std::string, name)
+
+// the alias of fixed types (double)
+#define WFLAGS_DEFINE_double(name, description) \
+    WFLAGS_DEFINE(double, name, description)
+
+#define WFLAGS_DEFINE_DEFAULT_double(name, default_val, description) \
+    WFLAGS_DEFINE_DEFAULT(double, name, default_val, description)
+
+#define WFLAGS_DECLARE_double(name) \
+    WFLAGS_DECLARE(double, name)
+
+// the alias of fixed types (bool)
+#define WFLAGS_DEFINE_bool(name, description) \
+    WFLAGS_DEFINE(bool, name, description)
+
+#define WFLAGS_DEFINE_DEFAULT_bool(name, default_val, description) \
+    WFLAGS_DEFINE_DEFAULT(bool, name, default_val, description)
+
+#define WFLAGS_DECLARE_bool(name) \
+    WFLAGS_DECLARE(bool, name)
+
+#endif /*WZPCPPLIB_CONFIG_WFLAGS_HPP_*/
