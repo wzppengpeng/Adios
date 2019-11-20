@@ -19,6 +19,10 @@ class StringBuffer : Uncopyable {
 public:
     StringBuffer() = default;
 
+    StringBuffer(size_t capacity) : offset_(0) {
+        Reserve(capacity);
+    }
+
     StringBuffer(const std::string& str) {
         FromString(str);
     }
@@ -33,6 +37,10 @@ public:
 
     void FromString(std::string&& str) noexcept {
         buffer_ = std::move(str);
+    }
+
+    inline void Reserve(size_t capacity) {
+        buffer_.reserve(capacity);
     }
 
     inline size_t Size() const { return buffer_.size(); }
@@ -53,8 +61,7 @@ public:
 
     void Write(const void* ptr, size_t len) {
         const char* loc = static_cast<const char*>(ptr);
-        std::string tmp(loc, loc + len);
-        buffer_.append(std::move(tmp));
+        buffer_.append(loc, len);
     }
 
     bool Read(void* ptr, size_t len) {
@@ -62,7 +69,7 @@ public:
             return false;
         char* loc = &buffer_[offset_];
         char* ptr_copy = static_cast<char*>(ptr);
-        for(size_t i = 0; i < len; ++i) {
+        for (size_t i = 0; i < len; ++i) {
             ptr_copy[i] = loc[i];
         }
         offset_ += len;
@@ -83,7 +90,7 @@ public:
     bool ReadFromDisk(const std::string& file) {
         std::ifstream ifile;
         ifile.open(file);
-        if(!ifile) return false;
+        if (!ifile) return false;
         std::string tmp_buffer((std::istreambuf_iterator<char>(ifile)),
             std::istreambuf_iterator<char>());
         buffer_ = std::move(tmp_buffer);
