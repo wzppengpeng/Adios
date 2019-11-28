@@ -171,6 +171,8 @@ inline static std::string format(std::string&& str, T&& t, Args&&... args) {
 
 
 /** format the string use c style */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 template<typename... Args>
 inline static std::string string_format(const std::string& format, Args... args) {
     size_t size = snprintf(nullptr, 0, format.c_str(), args... ) + 1; // Extra space for '\0'
@@ -178,18 +180,27 @@ inline static std::string string_format(const std::string& format, Args... args)
     snprintf(buffer.get(), size, format.c_str(), args...);
     return std::string(buffer.get(), buffer.get() + (size - 1));
 }
+#pragma GCC diagnostic pop
 
+
+template<typename... Args>
+inline static std::string c_string_format(const char* format, Args... args) {
+    size_t size = snprintf(nullptr, 0, format, args... ) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buffer(new char[size]);
+    snprintf(buffer.get(), size, format, args...);
+    return std::string(buffer.get(), buffer.get() + (size - 1));
+}
 
 namespace concat_details
 {
 
 template<typename A>
-void string_concat_with_stream(std::stringstream& ss, A&& a) {
+void string_concat_with_stream(std::ostringstream& ss, A&& a) {
     ss << std::forward<A>(a);
 }
 
 template<typename A, typename... Args>
-void string_concat_with_stream(std::stringstream& ss, A&& a, Args&&... args) {
+void string_concat_with_stream(std::ostringstream& ss, A&& a, Args&&... args) {
     string_concat_with_stream(ss, std::forward<A>(a));
     string_concat_with_stream(ss, std::forward<Args>(args)...);
 }
@@ -200,7 +211,7 @@ void string_concat_with_stream(std::stringstream& ss, A&& a, Args&&... args) {
 /** concat different part string into one string **/
 template<typename... Args>
 inline static std::string string_concat(Args&&... args) {
-    std::stringstream ss;
+    std::ostringstream ss;
     concat_details::string_concat_with_stream(ss, std::forward<Args>(args)...);
     return ss.str();
 }
